@@ -51,6 +51,16 @@ const navItems = [
         routeName: 'admin.contacts.index',
         icon: 'M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.86 9.86 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z',
     },
+    {
+        name: 'Users',
+        routeName: 'admin.users.index',
+        icon: 'M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975M15 6.75a3 3 0 11-6 0 3 3 0 016 0zM21 12a9 9 0 11-18 0 9 9 0 0118 0z',
+    },
+    {
+        name: 'Activity Logs',
+        routeName: 'admin.activity-logs.index',
+        icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',
+    },
 ];
 
 export default function AdminLayout({ header, children, headerAction = null }) {

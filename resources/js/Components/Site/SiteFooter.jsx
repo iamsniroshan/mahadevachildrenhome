@@ -1,10 +1,10 @@
 const galleryPhotos = [
-    { src: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=200', alt: 'Children home activity' },
-    { src: 'https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&q=80&w=200', alt: 'Education support' },
-    { src: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&q=80&w=200', alt: 'Medical care' },
-    { src: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&q=80&w=200', alt: 'Farm project' },
-    { src: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200', alt: 'Volunteer work' },
-    { src: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=200', alt: 'Daily life at home' },
+    { src: '/images/home/educational-excellence.jpg', alt: 'Children home activity' },
+    { src: '/images/home/life-skills.jpg', alt: 'Education support' },
+    { src: '/images/home/health-wellness.jpg', alt: 'Medical care' },
+    { src: '/images/about/history.jpg', alt: 'Farm project' },
+    { src: '/images/home/Priya.jpg', alt: 'Volunteer work' },
+    { src: '/images/home/emotional-support.jpg', alt: 'Daily life at home' },
 ];
 
 export default function SiteFooter() {

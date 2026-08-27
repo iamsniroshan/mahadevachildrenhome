@@ -1,5 +1,5 @@
 import { Head, Link } from '@inertiajs/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import SiteNav from '@/Components/Site/SiteNav';
 import SiteFooter from '@/Components/Site/SiteFooter';
 
@@ -88,64 +88,20 @@ const impactBadges = [
     },
 ];
 
-const pillars = [
-    {
-        img: 'https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&q=80&w=600',
-        alt: 'Education',
-        badge: 'Education',
-        badgeClass: 'bg-amber-100 text-amber-800',
-        title: 'Schooling & Tutoring',
-        text: 'Providing formal school materials, daily study hall support, and specialized tutoring for academic success.',
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&q=80&w=600',
-        alt: 'Healthcare',
-        badge: 'Healthcare',
-        badgeClass: 'bg-emerald-100 text-emerald-800',
-        title: 'Medical & Trauma Care',
-        text: 'On-site medical checkups, health management, and dedicated psychological counseling for emotional recovery.',
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&q=80&w=600',
-        alt: 'Agriculture',
-        badge: 'Sustainability',
-        badgeClass: 'bg-teal-100 text-teal-800',
-        title: 'Farming & Nutrition',
-        text: 'Operating integrated dairy farms and agriculture to ensure fresh, daily nutritious meals for every child.',
-    },
-];
-
-const causes = [
-    {
-        img: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&q=80&w=500',
-        title: 'Sponsor Daily Meals & Nutrition',
-        percent: 65,
-        raised: 'LKR 980,000',
-        goal: 'LKR 1,500,000',
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&q=80&w=500',
-        title: 'Playground & Infrastructure',
-        percent: 77,
-        raised: 'LKR 620,000',
-        goal: 'LKR 800,000',
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&q=80&w=500',
-        title: 'Medical Care & Rehab Fund',
-        percent: 38,
-        raised: 'LKR 450,000',
-        goal: 'LKR 1,200,000',
-    },
-];
+const causePercent = (cause) => {
+    if (!cause.goal_amount || cause.goal_amount <= 0) return 0;
+    return Math.min(100, Math.round((cause.current_amount / cause.goal_amount) * 100));
+};
 
 const fallbackHeroSlides = [
-    { image: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=800', title: 'Children smiling' },
+    { image: '/images/home/emotional-support.jpg', title: 'Children smiling' },
 ];
 
 function HeroSlider({ slides }) {
     const [active, setActive] = useState(0);
+    const [dragOffset, setDragOffset] = useState(0);
     const items = slides && slides.length > 0 ? slides : fallbackHeroSlides;
+    const touchState = useRef({ startX: 0, dragging: false });
 
     useEffect(() => {
         if (items.length <= 1) return;
@@ -155,24 +111,62 @@ function HeroSlider({ slides }) {
         return () => clearInterval(timer);
     }, [items.length]);
 
+    const goTo = (index) => {
+        setActive((index + items.length) % items.length);
+    };
+
+    const handleTouchStart = (e) => {
+        touchState.current = { startX: e.touches[0].clientX, dragging: true };
+    };
+
+    const handleTouchMove = (e) => {
+        if (!touchState.current.dragging) return;
+        setDragOffset(e.touches[0].clientX - touchState.current.startX);
+    };
+
+    const handleTouchEnd = () => {
+        if (!touchState.current.dragging) return;
+        touchState.current.dragging = false;
+
+        if (dragOffset < -50) {
+            goTo(active + 1);
+        } else if (dragOffset > 50) {
+            goTo(active - 1);
+        }
+        setDragOffset(0);
+    };
+
     return (
-        <div className="relative w-72 h-72 md:w-96 md:h-96 rounded-full border-8 border-rose-900/40 overflow-hidden shadow-2xl">
-            {items.map((slide, index) => (
-                <img
-                    key={slide.id ?? index}
-                    src={slide.image}
-                    alt={slide.title || 'Children smiling'}
-                    className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
-                        index === active ? 'opacity-100' : 'opacity-0'
-                    }`}
-                />
-            ))}
+        <div
+            className="relative w-72 h-72 md:w-96 md:h-96 rounded-full border-8 border-rose-900/40 overflow-hidden shadow-2xl touch-pan-y"
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+        >
+            <div
+                className="absolute inset-0 flex h-full transition-transform duration-500 ease-out"
+                style={{
+                    width: `${items.length * 100}%`,
+                    transform: `translateX(calc(${-active * (100 / items.length)}% + ${dragOffset}px))`,
+                }}
+            >
+                {items.map((slide, index) => (
+                    <img
+                        key={slide.id ?? index}
+                        src={slide.image}
+                        alt={slide.title || 'Children smiling'}
+                        className="h-full w-full object-cover flex-shrink-0"
+                        style={{ width: `${100 / items.length}%` }}
+                        draggable={false}
+                    />
+                ))}
+            </div>
             {items.length > 1 && (
                 <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
                     {items.map((_, index) => (
                         <button
                             key={index}
-                            onClick={() => setActive(index)}
+                            onClick={() => goTo(index)}
                             aria-label={`Show slide ${index + 1}`}
                             className={`w-2 h-2 rounded-full transition ${
                                 index === active ? 'bg-amber-500' : 'bg-white/50'
@@ -185,7 +179,7 @@ function HeroSlider({ slides }) {
     );
 }
 
-export default function Home({ sliders = [], newsItems = [] }) {
+export default function Home({ sliders = [], newsItems = [], causes = [] }) {
     return (
         <>
             <Head title="Mahadeva Swamigal Children Home" />
@@ -257,25 +251,55 @@ export default function Home({ sliders = [], newsItems = [] }) {
                             <h2 className="text-3xl font-bold mt-2 text-slate-900">
                                 Comprehensive Support Services
                             </h2>
+                            <p className="text-slate-600 mt-2">
+                                Support one of our active causes and help us continue this work.
+                            </p>
                         </div>
 
-                        <div className="grid md:grid-cols-3 gap-8">
-                            {pillars.map((pillar) => (
-                                <div
-                                    key={pillar.title}
-                                    className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-md transition"
-                                >
-                                    <img src={pillar.img} alt={pillar.alt} className="h-48 w-full object-cover" />
-                                    <div className="p-6">
-                                        <span className={`${pillar.badgeClass} text-xs font-bold px-2.5 py-1 rounded`}>
-                                            {pillar.badge}
-                                        </span>
-                                        <h3 className="text-xl font-bold mt-3 mb-2">{pillar.title}</h3>
-                                        <p className="text-slate-600 text-sm leading-relaxed">{pillar.text}</p>
+                        {causes.length > 0 ? (
+                            <div className="grid md:grid-cols-3 gap-8">
+                                {causes.map((cause) => (
+                                    <div
+                                        key={cause.id}
+                                        className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-md transition flex flex-col"
+                                    >
+                                        <img src={cause.image} alt={cause.title} className="h-48 w-full object-cover bg-slate-100" />
+                                        <div className="p-6 flex flex-col flex-1">
+                                            {cause.category && (
+                                                <span className="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-1 rounded self-start capitalize">
+                                                    {cause.category}
+                                                </span>
+                                            )}
+                                            <h3 className="text-xl font-bold mt-3 mb-2">{cause.title}</h3>
+                                            {cause.excerpt && (
+                                                <p className="text-slate-600 text-sm leading-relaxed flex-1">{cause.excerpt}</p>
+                                            )}
+
+                                            <div className="mt-4 space-y-2">
+                                                <div className="w-full bg-slate-100 rounded-full h-2.5">
+                                                    <div
+                                                        className="bg-emerald-500 h-2.5 rounded-full"
+                                                        style={{ width: `${causePercent(cause)}%` }}
+                                                    />
+                                                </div>
+                                                <div className="flex justify-between text-xs font-semibold text-slate-500">
+                                                    <span>Raised: {cause.currency} {Number(cause.current_amount ?? 0).toLocaleString()}</span>
+                                                    <span>Goal: {cause.currency} {Number(cause.goal_amount ?? 0).toLocaleString()}</span>
+                                                </div>
+                                                <a
+                                                    href="#donate"
+                                                    className="block text-center bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-full text-sm transition mt-3"
+                                                >
+                                                    Donate Now
+                                                </a>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
-                        </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <p className="text-center text-slate-400">No active causes at the moment. Please check back soon.</p>
+                        )}
                     </div>
                 </section>
 
@@ -298,7 +322,7 @@ export default function Home({ sliders = [], newsItems = [] }) {
                         </div>
                         <div className="rounded-2xl overflow-hidden shadow-lg h-64">
                             <img
-                                src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=800"
+                                src="/images/home/life-skills.jpg"
                                 alt="Children outdoors"
                                 className="w-full h-full object-cover"
                             />
@@ -312,12 +336,12 @@ export default function Home({ sliders = [], newsItems = [] }) {
                         <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
                             <div className="grid grid-cols-2 gap-4">
                                 <img
-                                    src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=400"
+                                    src="/images/home/educational-excellence.jpg"
                                     className="rounded-2xl h-48 w-full object-cover"
                                     alt="Children home"
                                 />
                                 <img
-                                    src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&q=80&w=400"
+                                    src="/images/home/health-wellness.jpg"
                                     className="rounded-2xl h-48 w-full object-cover mt-8"
                                     alt="Healthcare support"
                                 />
@@ -356,34 +380,6 @@ export default function Home({ sliders = [], newsItems = [] }) {
                     </div>
                 </section>
 
-                {/* 5. Active Fundraising Projects */}
-                <section id="causes" className="bg-teal-950 text-white py-20">
-                    <div className="max-w-7xl mx-auto px-6">
-                        <div className="text-center max-w-2xl mx-auto mb-16">
-                            <h2 className="text-3xl font-bold">Join Our Mission by Supporting Our Causes</h2>
-                        </div>
-
-                        <div className="grid md:grid-cols-3 gap-8">
-                            {causes.map((cause) => (
-                                <div key={cause.title} className="bg-white text-slate-900 rounded-2xl p-6 space-y-4">
-                                    <img src={cause.img} className="rounded-xl h-40 w-full object-cover" alt={cause.title} />
-                                    <h3 className="font-bold text-lg">{cause.title}</h3>
-                                    <div className="w-full bg-slate-100 rounded-full h-2.5">
-                                        <div
-                                            className="bg-emerald-500 h-2.5 rounded-full"
-                                            style={{ width: `${cause.percent}%` }}
-                                        />
-                                    </div>
-                                    <div className="flex justify-between text-xs font-semibold text-slate-500">
-                                        <span>Raised: {cause.raised}</span>
-                                        <span>Goal: {cause.goal}</span>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-
                 {/* 6. Vision Statement & Testimonial */}
                 <section className="py-20 bg-rose-950 text-white rounded-t-[3rem] text-center">
                     <div className="max-w-3xl mx-auto px-6 space-y-8">
@@ -391,7 +387,7 @@ export default function Home({ sliders = [], newsItems = [] }) {
                         <div className="relative pt-6">
                             <div className="w-20 h-20 rounded-full border-4 border-amber-500 mx-auto overflow-hidden mb-4">
                                 <img
-                                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200"
+                                    src="/images/home/Priya.jpg"
                                     className="w-full h-full object-cover"
                                     alt="Former resident"
                                 />
@@ -411,7 +407,7 @@ export default function Home({ sliders = [], newsItems = [] }) {
                     <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
                         <div className="h-80 rounded-2xl overflow-hidden shadow-md">
                             <img
-                                src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=800"
+                                src="/images/home/emotional-support.jpg"
                                 className="w-full h-full object-cover"
                                 alt="Children"
                             />

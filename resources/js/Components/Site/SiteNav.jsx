@@ -19,10 +19,10 @@ export default function SiteNav() {
                 </div>
                 <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600 self-center">
                     <Link href={route('home')} className="hover:text-rose-900 transition">Home</Link>
-                    <a href={`${route('home')}#about`} className="hover:text-rose-900 transition">About Us</a>
-                    <a href={`${route('home')}#programs`} className="hover:text-rose-900 transition">Our Team</a>
+                    <Link href={route('about')} className="hover:text-rose-900 transition">About Us</Link>
+                    <Link href={route('team.index')} className="hover:text-rose-900 transition">Our Team</Link>
                     <Link href={route('news.index')} className="hover:text-rose-900 transition">News</Link>
-                    <a href={`${route('home')}#contact`} className="hover:text-rose-900 transition">Contact</a>
+                    <Link href={route('contact')} className="hover:text-rose-900 transition">Contact</Link>
                 </div>
                 <a
                     href={`${route('home')}#donate`}

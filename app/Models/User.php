@@ -10,12 +10,20 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password'])]
+#[Fillable([
+    'name', 'email', 'password', 'first_name', 'last_name', 'title',
+    'department', 'status', 'role', 'join_date', 'profile_pic',
+])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->role === 'superadmin';
+    }
 
     /**
      * Get the attributes that should be cast.
@@ -27,6 +35,9 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'join_date' => 'date',
+            'last_active' => 'datetime',
+            'is_online' => 'boolean',
         ];
     }
 }

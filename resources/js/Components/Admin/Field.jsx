@@ -63,7 +63,7 @@ export default function Field({
                 </>
             )}
 
-            {['text', 'number', 'date', 'datetime-local', 'email'].includes(type) && (
+            {['text', 'number', 'date', 'datetime-local', 'email', 'password'].includes(type) && (
                 <input
                     id={name}
                     name={name}
