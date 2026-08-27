@@ -34,7 +34,7 @@ Route::get('/', function () {
         'causes' => Fundrise::where('status', 'active')
             ->orderByDesc('featured')
             ->orderByDesc('created_at')
-            ->limit(3)
+            ->limit(4)
             ->get(),
     ]);
 })->name('home');

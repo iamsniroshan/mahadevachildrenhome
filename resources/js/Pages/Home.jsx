@@ -5,19 +5,18 @@ import SiteFooter from '@/Components/Site/SiteFooter';
 
 const impactBadges = [
     {
-        bg: '#C01C28',
+        bg: '#9F1239',
         label: (
             <>
-                Halting Global
+                Safe Shelter
                 <br />
-                Warming
+                & Care
             </>
         ),
         path: (
             <>
-                <circle cx="12" cy="12" r="9" />
-                <path d="M3.6 9h16.8M3.6 15h16.8" />
-                <path d="M11.5 3a17 17 0 0 0 0 18M12.5 3a17 17 0 0 1 0 18" />
+                <path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-9.5z" />
+                <path d="M9 21v-6a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v6" />
             </>
         ),
     },
@@ -42,15 +41,15 @@ const impactBadges = [
         bg: '#1F75A8',
         label: (
             <>
-                Save
+                Healthcare
                 <br />
-                Environment
+                & Wellbeing
             </>
         ),
         path: (
             <>
-                <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" />
-                <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" />
+                <path d="M12 21s-7.5-4.9-9.8-9.4C.6 8 2 4.5 5.3 3.7c2-.5 3.9.4 5.2 2 .5.6.5.6 1 1.2 1.3-1.6 3.2-2.5 5.2-2 3.3.8 4.7 4.3 3.1 7.9C19.5 16.1 12 21 12 21z" />
+                <path d="M4 12h3l1.5-3 2 6 1.5-3H20" />
             </>
         ),
     },
@@ -58,7 +57,7 @@ const impactBadges = [
         bg: '#E19E16',
         label: (
             <>
-                Kids for
+                Quality
                 <br />
                 Education
             </>
@@ -71,18 +70,20 @@ const impactBadges = [
         ),
     },
     {
-        bg: '#1E1E1E',
+        bg: '#6D28D9',
         label: (
             <>
-                Support
+                Community
                 <br />
-                Homeless
+                & Family Support
             </>
         ),
         path: (
             <>
-                <path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-9.5z" />
-                <path d="M12 11a2.5 2.5 0 0 0-2.5 2.5c0 2 2.5 4.5 2.5 4.5s2.5-2.5 2.5-4.5A2.5 2.5 0 0 0 12 11z" />
+                <circle cx="8.5" cy="8" r="2.5" />
+                <circle cx="15.5" cy="8" r="2.5" />
+                <path d="M2.5 20v-1.5A4.5 4.5 0 0 1 7 14h3a4.5 4.5 0 0 1 4.5 4.5V20" />
+                <path d="M13 14.2a4.5 4.5 0 0 1 8.5 4.3V20" />
             </>
         ),
     },
@@ -257,7 +258,7 @@ export default function Home({ sliders = [], newsItems = [], causes = [] }) {
                         </div>
 
                         {causes.length > 0 ? (
-                            <div className="grid md:grid-cols-3 gap-8">
+                            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
                                 {causes.map((cause) => (
                                     <div
                                         key={cause.id}
