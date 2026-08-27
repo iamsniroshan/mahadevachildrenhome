@@ -22,6 +22,7 @@ export default function SiteNav() {
                     <Link href={route('about')} className="hover:text-rose-900 transition">About Us</Link>
                     <Link href={route('team.index')} className="hover:text-rose-900 transition">Our Team</Link>
                     <Link href={route('news.index')} className="hover:text-rose-900 transition">News</Link>
+                    <Link href={route('videos.index')} className="hover:text-rose-900 transition">Videos</Link>
                     <Link href={route('contact')} className="hover:text-rose-900 transition">Contact</Link>
                 </div>
                 <a
