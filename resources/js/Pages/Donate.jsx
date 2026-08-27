@@ -32,61 +32,57 @@ export default function Donate() {
     return (
         <>
             <Head title="Donate" />
-            <div className="bg-amber-50/20 text-slate-800 font-sans antialiased">
+            <div className="relative overflow-hidden bg-[radial-gradient(circle_at_top_left,_rgba(255,214,102,0.18),transparent_20%),radial-gradient(circle_at_bottom_right,_rgba(251,113,133,0.18),transparent_25%),linear-gradient(180deg,_#fffaf5_0%,_#fff7ed_35%,_#fffdfb_100%)] text-slate-800 font-sans antialiased">
+                <div className="pointer-events-none absolute inset-0 overflow-hidden">
+                    <div className="absolute -left-20 top-24 h-72 w-72 rounded-full bg-amber-300/40 blur-3xl" />
+                    <div className="absolute right-0 top-10 h-80 w-80 rounded-full bg-rose-300/30 blur-3xl" />
+                    <div className="absolute bottom-10 left-1/3 h-64 w-64 rounded-full bg-emerald-200/30 blur-3xl" />
+                </div>
+
                 <SiteNav />
 
-                <section className="bg-rose-950 text-white pt-16 pb-16 rounded-b-[3rem]">
-                    <div className="max-w-7xl mx-auto px-6 text-center space-y-3">
-                        <span className="bg-rose-900/60 text-rose-200 text-xs font-semibold uppercase tracking-wider px-3 py-1 rounded-full inline-block">
+                <section className="relative overflow-hidden rounded-b-[3rem] bg-gradient-to-br from-rose-950 via-rose-900 to-red-950 pt-16 pb-16 text-white shadow-[0_25px_60px_rgba(146,19,53,0.12)]">
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.12),transparent_40%)]" />
+                    <div className="relative mx-auto max-w-7xl px-6 text-center space-y-3">
+                        <span className="inline-block rounded-full bg-rose-900/60 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-rose-200">
                             Make a Donation
                         </span>
                         <h1 className="text-4xl font-extrabold tracking-tight">Support Our Children</h1>
-                        <p className="text-rose-100/80 max-w-2xl mx-auto">
+                        <p className="mx-auto max-w-2xl text-rose-100/80">
                             Your generous contribution helps us provide better care, education, and support for children in need. Every donation makes a meaningful difference.
                         </p>
                     </div>
                 </section>
 
                 {/* Bank Transfer Details */}
-                <section className="py-16">
-                    <div className="max-w-4xl mx-auto px-6">
-                        <div className="text-center max-w-2xl mx-auto mb-10">
-                            <span className="text-rose-900 font-bold text-sm uppercase tracking-wider">Bank Transfer Details</span>
-                            <h2 className="text-3xl font-bold mt-2 text-slate-900">You can make your donation directly to our Bank of Ceylon account</h2>
+                <section className="relative py-16">
+                    <div className="mx-auto max-w-5xl px-6">
+                        <div className="mx-auto mb-10 max-w-2xl text-center">
+                            <span className="text-sm font-bold uppercase tracking-wider text-rose-900">Bank Transfer Details</span>
+                            <h2 className="mt-2 text-3xl font-bold text-slate-900">You can make your donation directly to our Bank of Ceylon account</h2>
                         </div>
 
-                        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-                            <div className="bg-teal-950 text-white px-8 py-5">
+                        <div className="overflow-hidden rounded-[2rem] border border-white/70 bg-white/60 shadow-[0_20px_50px_rgba(15,23,42,0.08)] backdrop-blur-xl">
+                            <div className="bg-gradient-to-r from-teal-900 to-teal-800 px-8 py-5 text-white">
                                 <h3 className="text-lg font-bold">Bank of Ceylon</h3>
-                                <p className="text-teal-200 text-sm">Official Donation Account</p>
+                                <p className="text-sm text-teal-100">Official Donation Account</p>
                             </div>
-                            <div className="grid sm:grid-cols-2 gap-6 p-8">
-                                <div>
-                                    <span className="block text-[11px] font-bold uppercase text-rose-900 tracking-wide">Account Name</span>
-                                    <span className="text-slate-800 font-semibold">Mahadeva Swamigal Children Home</span>
-                                </div>
-                                <div>
-                                    <span className="block text-[11px] font-bold uppercase text-rose-900 tracking-wide">Account Number</span>
-                                    <span className="text-slate-800 font-semibold">9991351</span>
-                                </div>
-                                <div>
-                                    <span className="block text-[11px] font-bold uppercase text-rose-900 tracking-wide">Branch</span>
-                                    <span className="text-slate-800 font-semibold">Kilinochchi Branch</span>
-                                </div>
-                                <div>
-                                    <span className="block text-[11px] font-bold uppercase text-rose-900 tracking-wide">Branch Code</span>
-                                    <span className="text-slate-800 font-semibold">093</span>
-                                </div>
-                                <div>
-                                    <span className="block text-[11px] font-bold uppercase text-rose-900 tracking-wide">Bank Code</span>
-                                    <span className="text-slate-800 font-semibold">7010</span>
-                                </div>
-                                <div>
-                                    <span className="block text-[11px] font-bold uppercase text-rose-900 tracking-wide">Swift Code</span>
-                                    <span className="text-slate-800 font-semibold">BCEYLKLX</span>
-                                </div>
+                            <div className="grid gap-6 p-8 sm:grid-cols-2">
+                                {[
+                                    ['Account Name', 'Mahadeva Swamigal Children Home'],
+                                    ['Account Number', '9991351'],
+                                    ['Branch', 'Kilinochchi Branch'],
+                                    ['Branch Code', '093'],
+                                    ['Bank Code', '7010'],
+                                    ['Swift Code', 'BCEYLKLX'],
+                                ].map(([label, value]) => (
+                                    <div key={label} className="rounded-2xl border border-slate-200/80 bg-white/70 p-4 shadow-sm">
+                                        <span className="block text-[11px] font-bold uppercase tracking-wide text-rose-900">{label}</span>
+                                        <span className="mt-2 block text-slate-800 font-semibold">{value}</span>
+                                    </div>
+                                ))}
                             </div>
-                            <div className="bg-amber-50 border-t border-amber-100 px-8 py-4 text-sm text-amber-800">
+                            <div className="border-t border-amber-100 bg-amber-50/80 px-8 py-4 text-sm text-amber-800">
                                 <strong>Important:</strong> Please use your name as the reference when making the transfer for easy identification.
                             </div>
                         </div>
@@ -94,23 +90,23 @@ export default function Donate() {
                 </section>
 
                 {/* Donation Details Form */}
-                <section className="py-16 bg-white border-t border-slate-100">
-                    <div className="max-w-4xl mx-auto px-6">
-                        <div className="text-center max-w-2xl mx-auto mb-10">
-                            <span className="text-rose-900 font-bold text-sm uppercase tracking-wider">After Your Transfer</span>
-                            <h2 className="text-3xl font-bold mt-2 text-slate-900">Submit Your Donation Details</h2>
-                            <p className="text-slate-600 mt-2">
+                <section className="relative py-16">
+                    <div className="mx-auto max-w-5xl px-6">
+                        <div className="mx-auto mb-10 max-w-2xl text-center">
+                            <span className="text-sm font-bold uppercase tracking-wider text-rose-900">After Your Transfer</span>
+                            <h2 className="mt-2 text-3xl font-bold text-slate-900">Submit Your Donation Details</h2>
+                            <p className="mt-2 text-slate-600">
                                 After making your bank transfer, please fill out this form and upload your transaction receipt.
                             </p>
                         </div>
 
                         {flash?.success && (
-                            <div className="mb-6 bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-semibold rounded-xl px-4 py-3">
+                            <div className="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800">
                                 {flash.success}
                             </div>
                         )}
 
-                        <form onSubmit={submit} className="bg-amber-50/40 rounded-2xl border border-slate-100 p-8 space-y-6">
+                        <form onSubmit={submit} className="space-y-6 rounded-[2rem] border border-white/70 bg-white/60 p-8 shadow-[0_20px_50px_rgba(15,23,42,0.08)] backdrop-blur-xl">
                             <div>
                                 <h3 className="text-sm font-bold uppercase tracking-wide text-rose-900 mb-4">Personal Information</h3>
                                 <div className="grid sm:grid-cols-2 gap-5">
@@ -285,7 +281,7 @@ export default function Donate() {
                             </button>
                         </form>
 
-                        <div className="text-center mt-8 text-sm text-slate-600">
+                        <div className="mt-8 rounded-[2rem] border border-white/70 bg-white/60 p-6 text-center text-sm text-slate-600 shadow-[0_18px_40px_rgba(15,23,42,0.05)] backdrop-blur-xl">
                             <p className="font-semibold">Need Help?</p>
                             <p>If you have any questions about making a donation or need assistance with the process, please contact us:</p>
                             <p className="mt-2">📧 rasa46@yahoo.com &nbsp;·&nbsp; 📞 +94 21 228 5678 &nbsp;·&nbsp; 💬 WhatsApp +94 77 827 7450</p>
@@ -294,27 +290,26 @@ export default function Donate() {
                 </section>
 
                 {/* Safe & Secure */}
-                <section className="py-16 bg-teal-950 text-white text-center">
-                    <div className="max-w-4xl mx-auto px-6 space-y-8">
+                <section className="relative py-16 text-white">
+                    <div className="absolute inset-0 bg-gradient-to-br from-teal-950 via-sky-950 to-teal-900" />
+                    <div className="relative mx-auto max-w-5xl px-6 text-center">
                         <div className="space-y-2">
                             <h2 className="text-2xl font-bold">Your Donation is Safe & Secure</h2>
-                            <p className="text-teal-100/80">
+                            <p className="mx-auto max-w-3xl text-teal-100/80">
                                 We take the security of your donations seriously. All transactions are processed securely and 100% of your donation goes directly to supporting our children.
                             </p>
                         </div>
-                        <div className="grid sm:grid-cols-3 gap-6">
-                            <div className="bg-white/5 rounded-2xl p-6">
-                                <h3 className="font-bold mb-1">100% Secure</h3>
-                                <p className="text-sm text-teal-100/70">All donations are processed through secure banking channels</p>
-                            </div>
-                            <div className="bg-white/5 rounded-2xl p-6">
-                                <h3 className="font-bold mb-1">Transparent</h3>
-                                <p className="text-sm text-teal-100/70">We provide regular updates on how your donations are used</p>
-                            </div>
-                            <div className="bg-white/5 rounded-2xl p-6">
-                                <h3 className="font-bold mb-1">Direct Impact</h3>
-                                <p className="text-sm text-teal-100/70">Your donation directly supports the children in our care</p>
-                            </div>
+                        <div className="mt-8 grid gap-6 sm:grid-cols-3">
+                            {[
+                                ['100% Secure', 'All donations are processed through secure banking channels'],
+                                ['Transparent', 'We provide regular updates on how your donations are used'],
+                                ['Direct Impact', 'Your donation directly supports the children in our care'],
+                            ].map(([title, text]) => (
+                                <div key={title} className="rounded-[1.5rem] border border-white/10 bg-white/5 p-6 shadow-[0_18px_40px_rgba(15,23,42,0.12)] backdrop-blur-md">
+                                    <h3 className="mb-1 font-bold">{title}</h3>
+                                    <p className="text-sm text-teal-100/70">{text}</p>
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </section>

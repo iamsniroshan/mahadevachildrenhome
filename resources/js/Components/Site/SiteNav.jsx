@@ -2,8 +2,8 @@ import { Link } from '@inertiajs/react';
 
 export default function SiteNav() {
     return (
-        <nav className="bg-white border-b border-slate-100 sticky top-0 z-50">
-            <div className="max-w-7xl mx-auto px-6 h-20 flex items-end justify-between">
+        <nav className="sticky top-0 z-50 border-b border-sky-100 bg-[aliceblue]/90 backdrop-blur-md shadow-[0_10px_25px_rgba(148,163,184,0.12)]">
+            <div className="mx-auto flex h-20 max-w-7xl items-end justify-between px-6">
                 <div className="flex items-end gap-4">
                     <div className="relative w-24 h-24 md:w-28 md:h-28 translate-y-8 md:translate-y-10 rounded-full overflow-hidden ring-4 ring-white shadow-xl bg-white flex-shrink-0">
                         <img src="/storage/users/logo.jpg" alt="Mahadeva Home logo" className="w-full h-full object-cover" />
@@ -12,12 +12,12 @@ export default function SiteNav() {
                         <Link href={route('home')} className="font-serif font-extrabold text-xl md:text-2xl text-blue-900 tracking-tight">
                             Mahadeva Children Home
                         </Link>
-                        <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-blue-600">
+                        <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-blue-700">
                             Kilinochchi, Sri Lanka
                         </span>
                     </div>
                 </div>
-                <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600 self-center">
+                <div className="hidden md:flex items-center gap-8 text-sm font-bold text-slate-700 self-center">
                     <Link href={route('home')} className="hover:text-rose-900 transition">Home</Link>
                     <Link href={route('about')} className="hover:text-rose-900 transition">About Us</Link>
                     <Link href={route('team.index')} className="hover:text-rose-900 transition">Our Team</Link>
@@ -27,7 +27,7 @@ export default function SiteNav() {
                 </div>
                 <Link
                     href={route('donate')}
-                    className="self-center bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-6 py-2.5 rounded-full text-sm transition"
+                    className="self-center bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-2.5 rounded-full text-sm transition shadow-sm"
                 >
                     Donate Now
                 </Link>

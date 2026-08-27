@@ -139,7 +139,7 @@ function HeroSlider({ slides }) {
 
     return (
         <div
-            className="relative w-72 h-72 md:w-96 md:h-96 rounded-full border-8 border-rose-900/40 overflow-hidden shadow-2xl touch-pan-y"
+            className="relative w-72 h-72 md:w-[26rem] md:h-[26rem] rounded-full border-8 border-rose-900/40 overflow-hidden shadow-2xl touch-pan-y"
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
@@ -188,28 +188,28 @@ export default function Home({ sliders = [], newsItems = [], causes = [] }) {
                 <SiteNav />
 
                 {/* 1. Hero Section */}
-                <section className="bg-rose-950 text-white pt-16 pb-24 rounded-b-[3rem] relative overflow-hidden">
-                    <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
-                        <div className="space-y-6">
+                <section className="bg-rose-950 text-white pt-10 pb-14 rounded-b-[2rem] relative overflow-hidden">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+                        <div className="space-y-5 text-center lg:text-left">
                             <span className="bg-rose-900/60 text-rose-200 text-xs font-semibold uppercase tracking-wider px-3 py-1 rounded-full inline-block">
                                 Kilinochchi, Sri Lanka
                             </span>
-                            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight leading-tight">
+                            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-tight">
                                 Empowering & Nurturing Disadvantaged Children
                             </h1>
-                            <p className="text-rose-100/80 text-lg leading-relaxed">
+                            <p className="text-rose-100/80 text-base sm:text-lg leading-relaxed">
                                 Providing education, shelter, holistic healthcare, and hope for orphaned and vulnerable children in Northern Sri Lanka.
                             </p>
-                            <div className="flex flex-wrap gap-4 pt-2">
+                            <div className="flex flex-wrap justify-center lg:justify-start gap-3 sm:gap-4 pt-2">
                                 <Link
                                     href={route('donate')}
-                                    className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-8 py-3.5 rounded-full transition shadow-lg"
+                                    className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-6 sm:px-8 py-3 rounded-full transition shadow-lg text-sm sm:text-base"
                                 >
                                     Sponsor a Child
                                 </Link>
                                 <a
                                     href="#programs"
-                                    className="border border-white/30 hover:bg-white/10 text-white font-semibold px-8 py-3.5 rounded-full transition"
+                                    className="border border-white/30 hover:bg-white/10 text-white font-semibold px-6 sm:px-8 py-3 rounded-full transition text-sm sm:text-base"
                                 >
                                     Our Programs
                                 </a>
@@ -222,43 +222,47 @@ export default function Home({ sliders = [], newsItems = [], causes = [] }) {
                 </section>
 
                 {/* Impact Badges */}
-                <div className="flex flex-wrap justify-center gap-4 p-8 bg-white font-sans">
-                    {impactBadges.map((badge, index) => (
-                        <div
-                            key={index}
-                            className="flex flex-col items-center justify-center w-52 h-52 text-white rounded-lg p-6 text-center hover:opacity-95 transition-opacity cursor-pointer"
-                            style={{ backgroundColor: badge.bg }}
-                        >
-                            <svg
-                                className="w-16 h-16 mb-4 stroke-current stroke-2 fill-none"
-                                viewBox="0 0 24 24"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            >
-                                {badge.path}
-                            </svg>
-                            <span className="font-semibold text-lg leading-tight">{badge.label}</span>
+                <div className="bg-white font-sans">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+                        <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
+                            {impactBadges.map((badge, index) => (
+                                <div
+                                    key={index}
+                                    className="flex flex-col items-center justify-center w-[44vw] max-w-[180px] h-[44vw] max-h-[180px] sm:w-44 sm:h-44 lg:w-52 lg:h-52 text-white rounded-xl sm:rounded-lg p-4 sm:p-6 text-center hover:opacity-95 transition-opacity cursor-pointer"
+                                    style={{ backgroundColor: badge.bg }}
+                                >
+                                    <svg
+                                        className="w-10 h-10 sm:w-14 sm:h-14 lg:w-16 lg:h-16 mb-2 sm:mb-4 stroke-current stroke-2 fill-none"
+                                        viewBox="0 0 24 24"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    >
+                                        {badge.path}
+                                    </svg>
+                                    <span className="font-semibold text-xs sm:text-sm lg:text-lg leading-tight">{badge.label}</span>
+                                </div>
+                            ))}
                         </div>
-                    ))}
+                    </div>
                 </div>
 
                 {/* 2. Impact Pillars */}
-                <section id="programs" className="py-20">
-                    <div className="max-w-7xl mx-auto px-6">
-                        <div className="text-center max-w-2xl mx-auto mb-16">
+                <section id="programs" className="py-14 sm:py-20">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6">
+                        <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-16">
                             <span className="text-rose-900 font-bold text-sm uppercase tracking-wider">
                                 Our Core Pillars
                             </span>
-                            <h2 className="text-3xl font-bold mt-2 text-slate-900">
+                            <h2 className="text-2xl sm:text-3xl font-bold mt-2 text-slate-900">
                                 Comprehensive Support Services
                             </h2>
-                            <p className="text-slate-600 mt-2">
+                            <p className="text-slate-600 mt-2 text-sm sm:text-base">
                                 Support one of our active causes and help us continue this work.
                             </p>
                         </div>
 
                         {causes.length > 0 ? (
-                            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 sm:gap-8">
                                 {causes.map((cause) => (
                                     <div
                                         key={cause.id}
@@ -305,23 +309,23 @@ export default function Home({ sliders = [], newsItems = [], causes = [] }) {
                 </section>
 
                 {/* 3. Secondary Hero Banner */}
-                <section className="bg-amber-500 text-slate-900 py-16">
-                    <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-8 items-center">
-                        <div className="space-y-4">
-                            <h2 className="text-3xl font-extrabold tracking-tight">
+                <section className="bg-amber-500 text-slate-900 py-12 sm:py-16">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                        <div className="space-y-4 text-center lg:text-left">
+                            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
                                 Be Part of Their Journey to a Brighter Future
                             </h2>
-                            <p className="text-slate-800 text-base leading-relaxed">
+                            <p className="text-slate-800 text-sm sm:text-base leading-relaxed">
                                 Every contribution helps provide a safe home, balanced nutrition, and high-quality education for over 200 children in need.
                             </p>
                             <Link
                                 href={route('donate')}
-                                className="inline-block bg-teal-950 text-white font-bold px-8 py-3.5 rounded-full hover:bg-slate-900 transition"
+                                className="inline-block bg-teal-950 text-white font-bold px-6 sm:px-8 py-3 sm:py-3.5 rounded-full hover:bg-slate-900 transition text-sm sm:text-base"
                             >
                                 Donate Today
                             </Link>
                         </div>
-                        <div className="rounded-2xl overflow-hidden shadow-lg h-64">
+                        <div className="rounded-2xl overflow-hidden shadow-lg h-56 sm:h-64 lg:h-72">
                             <img
                                 src="/images/home/life-skills.jpg"
                                 alt="Children outdoors"
@@ -332,82 +336,82 @@ export default function Home({ sliders = [], newsItems = [], causes = [] }) {
                 </section>
 
                 {/* 4. Organization History & Stats */}
-                <section id="about" className="py-20 bg-white">
-                    <div className="max-w-7xl mx-auto px-6">
-                        <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
+                <section id="about" className="py-14 sm:py-20 bg-white">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center mb-12 lg:mb-16">
                             <div className="grid grid-cols-2 gap-4">
                                 <img
                                     src="/images/home/educational-excellence.jpg"
-                                    className="rounded-2xl h-48 w-full object-cover"
+                                    className="rounded-2xl h-40 sm:h-48 w-full object-cover"
                                     alt="Children home"
                                 />
                                 <img
                                     src="/images/home/health-wellness.jpg"
-                                    className="rounded-2xl h-48 w-full object-cover mt-8"
+                                    className="rounded-2xl h-40 sm:h-48 w-full object-cover mt-8"
                                     alt="Healthcare support"
                                 />
                             </div>
-                            <div className="space-y-4">
+                            <div className="space-y-4 text-center lg:text-left">
                                 <span className="text-rose-900 font-bold text-sm uppercase tracking-wider">
                                     Our History
                                 </span>
-                                <h2 className="text-3xl font-bold text-slate-900">
+                                <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">
                                     Supporting Vulnerable Children Since 2004
                                 </h2>
-                                <p className="text-slate-600 leading-relaxed">
+                                <p className="text-slate-600 leading-relaxed text-sm sm:text-base">
                                     Founded to care for children affected by conflict and severe hardship, Mahadeva Swamigal Children Home offers an oasis of safety, holistic care, and continuous educational advancement in Kilinochchi.
                                 </p>
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center pt-8 border-t border-slate-100">
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 text-center pt-8 border-t border-slate-100">
                             <div>
-                                <span className="block text-4xl font-extrabold text-teal-900">200+</span>
-                                <span className="text-sm font-medium text-slate-500">Children Supported</span>
+                                <span className="block text-2xl sm:text-4xl font-extrabold text-teal-900">200+</span>
+                                <span className="text-xs sm:text-sm font-medium text-slate-500">Children Supported</span>
                             </div>
                             <div>
-                                <span className="block text-4xl font-extrabold text-teal-900">100%</span>
-                                <span className="text-sm font-medium text-slate-500">School Enrollment</span>
+                                <span className="block text-2xl sm:text-4xl font-extrabold text-teal-900">100%</span>
+                                <span className="text-xs sm:text-sm font-medium text-slate-500">School Enrollment</span>
                             </div>
                             <div>
-                                <span className="block text-4xl font-extrabold text-teal-900">20+</span>
-                                <span className="text-sm font-medium text-slate-500">Years of Service</span>
+                                <span className="block text-2xl sm:text-4xl font-extrabold text-teal-900">20+</span>
+                                <span className="text-xs sm:text-sm font-medium text-slate-500">Years of Service</span>
                             </div>
                             <div>
-                                <span className="block text-4xl font-extrabold text-teal-900">3</span>
-                                <span className="text-sm font-medium text-slate-500">Sustainable Farms</span>
+                                <span className="block text-2xl sm:text-4xl font-extrabold text-teal-900">3</span>
+                                <span className="text-xs sm:text-sm font-medium text-slate-500">Sustainable Farms</span>
                             </div>
                         </div>
                     </div>
                 </section>
 
                 {/* 6. Vision Statement & Testimonial */}
-                <section className="py-10 bg-rose-950 text-white rounded-t-[3rem]">
-                    <div className="max-w-4xl mx-auto px-6 grid md:grid-cols-[0.75fr_1.25fr] gap-6 items-center">
-                        <div className="relative mx-auto w-full max-w-[280px]">
+                <section className="py-10 sm:py-14 bg-rose-950 text-white rounded-t-[3rem]">
+                    <div className="max-w-4xl mx-auto px-4 sm:px-6 grid grid-cols-1 md:grid-cols-[0.75fr_1.25fr] gap-6 items-center">
+                        <div className="relative mx-auto w-full max-w-[280px] md:max-w-[280px]">
                             <div className="absolute -inset-2 rounded-[1.4rem] bg-amber-500/20 blur-xl" />
                             <div className="relative overflow-hidden rounded-[1.4rem] border-4 border-amber-400/80 shadow-lg shadow-amber-950/30">
                                 <img
                                     src="/images/home/Priya.jpg"
-                                    className="w-full h-[270px] md:h-[320px] object-cover object-center"
+                                    className="w-full h-[240px] sm:h-[270px] md:h-[200px] object-cover object-center"
                                     alt="Former resident"
                                 />
                             </div>
                         </div>
 
-                        <div className="space-y-3 md:pl-1">
+                        <div className="space-y-3 text-center md:text-left md:pl-1">
                             <span className="inline-block bg-rose-800/70 text-amber-200 text-[9px] font-bold uppercase tracking-[0.2em] px-2.5 py-1 rounded-full">
                                 Our Mission
                             </span>
-                            <h2 className="text-xl md:text-3xl font-extrabold leading-tight text-left">
+                            <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold leading-tight">
                                 A Future Where Every Child Thrives
                             </h2>
-                            <div className="border-l-4 border-amber-400 pl-3">
-                                <p className="text-sm md:text-lg italic text-rose-100 leading-relaxed">
+                            <div className="border-l-4 border-amber-400 pl-3 text-left">
+                                <p className="text-sm sm:text-base md:text-lg italic text-rose-100 leading-relaxed">
                                     "Mahadeva Home provided me not just with shelter and schooling, but with a supportive family that believed in my dreams."
                                 </p>
                             </div>
-                            <span className="block text-xs md:text-sm font-semibold text-amber-300">
+                            <span className="block text-xs sm:text-sm font-semibold text-amber-300">
                                 — Former Resident & University Graduate
                             </span>
                         </div>
@@ -415,25 +419,25 @@ export default function Home({ sliders = [], newsItems = [], causes = [] }) {
                 </section>
 
                 {/* 7. Quick Donation Form */}
-                <section id="donate" className="py-16 bg-amber-500">
-                    <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
-                        <div className="h-80 rounded-2xl overflow-hidden shadow-md">
+                <section id="donate" className="py-12 sm:py-16 bg-amber-500">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+                        <div className="h-64 sm:h-80 rounded-2xl overflow-hidden shadow-md">
                             <img
                                 src="/images/home/emotional-support.jpg"
                                 className="w-full h-full object-cover"
                                 alt="Children"
                             />
                         </div>
-                        <div className="bg-white p-8 rounded-2xl shadow-xl space-y-6">
-                            <h3 className="text-2xl font-bold text-slate-900">Support Us! Every Contribution Counts</h3>
-                            <div className="flex gap-3">
-                                <button className="flex-1 py-2.5 border border-slate-300 rounded-lg text-sm font-semibold hover:border-emerald-600 hover:text-emerald-600">
+                        <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-xl space-y-6">
+                            <h3 className="text-xl sm:text-2xl font-bold text-slate-900">Support Us! Every Contribution Counts</h3>
+                            <div className="grid grid-cols-3 gap-2 sm:gap-3">
+                                <button className="py-2.5 border border-slate-300 rounded-lg text-xs sm:text-sm font-semibold hover:border-emerald-600 hover:text-emerald-600">
                                     LKR 2,500
                                 </button>
-                                <button className="flex-1 py-2.5 bg-emerald-600 text-white rounded-lg text-sm font-semibold">
+                                <button className="py-2.5 bg-emerald-600 text-white rounded-lg text-xs sm:text-sm font-semibold">
                                     LKR 5,000
                                 </button>
-                                <button className="flex-1 py-2.5 border border-slate-300 rounded-lg text-sm font-semibold hover:border-emerald-600 hover:text-emerald-600">
+                                <button className="py-2.5 border border-slate-300 rounded-lg text-xs sm:text-sm font-semibold hover:border-emerald-600 hover:text-emerald-600">
                                     LKR 10,000
                                 </button>
                             </div>
@@ -448,33 +452,33 @@ export default function Home({ sliders = [], newsItems = [], causes = [] }) {
                 </section>
 
                 {/* 8. Latest News & Alert */}
-                <section id="news" className="py-20 bg-white">
-                    <div className="max-w-7xl mx-auto px-6 space-y-12">
-                        <div className="flex items-center justify-between gap-4">
-                            <h2 className="text-3xl font-bold text-slate-900">See the Latest Stories & News</h2>
+                <section id="news" className="py-14 sm:py-20 bg-white">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-8 sm:space-y-12">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
+                            <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">See the Latest Stories & News</h2>
                             <Link href={route('news.index')} className="text-sm font-bold text-rose-900 hover:underline flex-shrink-0">
                                 View All News →
                             </Link>
                         </div>
 
-                        <div className="grid md:grid-cols-3 gap-8">
+                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8">
                             {newsItems.map((item) => (
                                 <Link
                                     key={item.id}
                                     href={route('news.show', item.id)}
                                     className="block border border-slate-100 rounded-2xl overflow-hidden p-4 space-y-3 hover:shadow-md transition"
                                 >
-                                    <img src={item.image} className="rounded-xl h-40 w-full object-cover bg-slate-100" alt={item.title} />
+                                    <img src={item.image} className="rounded-xl h-40 sm:h-44 w-full object-cover bg-slate-100" alt={item.title} />
                                     <h4 className="font-bold text-base">{item.title}</h4>
                                 </Link>
                             ))}
                             {newsItems.length === 0 && (
-                                <p className="col-span-3 text-center text-slate-400 text-sm">No news articles published yet.</p>
+                                <p className="col-span-full text-center text-slate-400 text-sm">No news articles published yet.</p>
                             )}
                         </div>
 
-                        <div className="bg-rose-500 text-white rounded-2xl p-8 text-center space-y-3">
-                            <h3 className="text-2xl font-bold">Want to volunteer or visit our home?</h3>
+                        <div className="bg-rose-500 text-white rounded-2xl p-6 sm:p-8 text-center space-y-3">
+                            <h3 className="text-xl sm:text-2xl font-bold">Want to volunteer or visit our home?</h3>
                             <a
                                 href="#contact"
                                 className="inline-block bg-white text-rose-950 font-bold px-6 py-2.5 rounded-full text-sm hover:bg-slate-100 transition"
