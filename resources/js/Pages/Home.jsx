@@ -1,5 +1,7 @@
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
+import SiteNav from '@/Components/Site/SiteNav';
+import SiteFooter from '@/Components/Site/SiteFooter';
 
 const impactBadges = [
     {
@@ -137,30 +139,6 @@ const causes = [
     },
 ];
 
-const newsItems = [
-    {
-        img: 'https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&q=80&w=500',
-        title: 'Annual Sports & Cultural Meet Success',
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&q=80&w=500',
-        title: 'Harvest Season at Our Sustainable Farm',
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&q=80&w=500',
-        title: 'Educational Workshop Hosted by Volunteers',
-    },
-];
-
-const galleryPhotos = [
-    { src: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=200', alt: 'Children home activity' },
-    { src: 'https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&q=80&w=200', alt: 'Education support' },
-    { src: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&q=80&w=200', alt: 'Medical care' },
-    { src: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&q=80&w=200', alt: 'Farm project' },
-    { src: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200', alt: 'Volunteer work' },
-    { src: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=200', alt: 'Daily life at home' },
-];
-
 const fallbackHeroSlides = [
     { image: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=800', title: 'Children smiling' },
 ];
@@ -207,37 +185,12 @@ function HeroSlider({ slides }) {
     );
 }
 
-export default function Home({ sliders = [] }) {
+export default function Home({ sliders = [], newsItems = [] }) {
     return (
         <>
             <Head title="Mahadeva Swamigal Children Home" />
             <div className="bg-amber-50/20 text-slate-800 font-sans antialiased">
-                {/* Navigation */}
-                <nav className="bg-white border-b border-slate-100 sticky top-0 z-50">
-                    <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
-                                <img src="/storage/users/logo.jpg" alt="Mahadeva Home logo" className="w-full h-full object-cover" />
-                            </div>
-                            <span className="font-bold text-lg text-rose-950 tracking-tight">
-                                Mahadeva Children Home
-                            </span>
-                        </div>
-                        <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
-                            <a href="#about" className="hover:text-rose-900 transition">About Us</a>
-                            <a href="#programs" className="hover:text-rose-900 transition">Our Team</a>
-                            <a href="#news" className="hover:text-rose-900 transition">News</a>
-                            <a href="#videos" className="hover:text-rose-900 transition">Videos</a>
-                            <a href="#contact" className="hover:text-rose-900 transition">Contact</a>
-                        </div>
-                        <a
-                            href="#donate"
-                            className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-6 py-2.5 rounded-full text-sm transition"
-                        >
-                            Donate Now
-                        </a>
-                    </div>
-                </nav>
+                <SiteNav />
 
                 {/* 1. Hero Section */}
                 <section className="bg-rose-950 text-white pt-16 pb-24 rounded-b-[3rem] relative overflow-hidden">
@@ -486,15 +439,27 @@ export default function Home({ sliders = [] }) {
                 {/* 8. Latest News & Alert */}
                 <section id="news" className="py-20 bg-white">
                     <div className="max-w-7xl mx-auto px-6 space-y-12">
-                        <h2 className="text-3xl font-bold text-slate-900 text-center">See the Latest Stories & News</h2>
+                        <div className="flex items-center justify-between gap-4">
+                            <h2 className="text-3xl font-bold text-slate-900">See the Latest Stories & News</h2>
+                            <Link href={route('news.index')} className="text-sm font-bold text-rose-900 hover:underline flex-shrink-0">
+                                View All News →
+                            </Link>
+                        </div>
 
                         <div className="grid md:grid-cols-3 gap-8">
                             {newsItems.map((item) => (
-                                <div key={item.title} className="border border-slate-100 rounded-2xl overflow-hidden p-4 space-y-3">
-                                    <img src={item.img} className="rounded-xl h-40 w-full object-cover" alt={item.title} />
+                                <Link
+                                    key={item.id}
+                                    href={route('news.show', item.id)}
+                                    className="block border border-slate-100 rounded-2xl overflow-hidden p-4 space-y-3 hover:shadow-md transition"
+                                >
+                                    <img src={item.image} className="rounded-xl h-40 w-full object-cover bg-slate-100" alt={item.title} />
                                     <h4 className="font-bold text-base">{item.title}</h4>
-                                </div>
+                                </Link>
                             ))}
+                            {newsItems.length === 0 && (
+                                <p className="col-span-3 text-center text-slate-400 text-sm">No news articles published yet.</p>
+                            )}
                         </div>
 
                         <div className="bg-rose-500 text-white rounded-2xl p-8 text-center space-y-3">
@@ -509,87 +474,7 @@ export default function Home({ sliders = [] }) {
                     </div>
                 </section>
 
-                {/* 9. Footer with Authentic Contact Details */}
-                <footer id="contact" className="bg-[#3b0a24] text-white pt-16 pb-8 border-t border-rose-900/40">
-                    <div className="max-w-7xl mx-auto px-6">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 pb-12 border-b border-rose-900/30">
-                            {/* Column 1: About */}
-                            <div className="space-y-4">
-                                <h3 className="text-sm font-bold uppercase tracking-wider text-rose-100">About Mahadeva Home</h3>
-                                <p className="text-xs text-rose-100/70 leading-relaxed font-light">
-                                    <span className="text-2xl font-serif font-bold float-left mr-2 leading-none text-amber-500">M</span>
-                                    ahadeva Swamigal Children Home (Mahadeva Achchirama Children Home) provides shelter, education, healthcare, and self-sustaining vocational development for over 200 orphaned and vulnerable children in Northern Sri Lanka.
-                                </p>
-                                <div className="pt-2">
-                                    <span className="block text-sm font-bold text-white">Mahadeva Swamigal Children Home</span>
-                                    <span className="block text-xs text-rose-300">Kilinochchi, Sri Lanka</span>
-                                </div>
-                            </div>
-
-                            {/* Column 2: Contact */}
-                            <div className="space-y-4">
-                                <h3 className="text-sm font-bold uppercase tracking-wider text-rose-100">Contact Us</h3>
-                                <div className="space-y-4">
-                                    <div className="flex items-start space-x-3">
-                                        <div className="bg-amber-500 text-slate-900 p-2.5 rounded-full flex-shrink-0">
-                                            <svg className="w-4 h-4 stroke-current" fill="none" strokeWidth={2} viewBox="0 0 24 24">
-                                                <path d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                <path d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
-                                            </svg>
-                                        </div>
-                                        <div>
-                                            <span className="block text-[11px] font-bold uppercase text-amber-500 tracking-wide">ADDRESS</span>
-                                            <span className="text-xs text-rose-100/80">Jayanthi Nagar, Kilinochchi, Northern Province, Sri Lanka</span>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex items-start space-x-3">
-                                        <div className="bg-amber-500 text-slate-900 p-2.5 rounded-full flex-shrink-0">
-                                            <svg className="w-4 h-4 stroke-current" fill="none" strokeWidth={2} viewBox="0 0 24 24">
-                                                <path d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-2.824-1.17-5.116-3.462-6.286-6.286l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
-                                            </svg>
-                                        </div>
-                                        <div>
-                                            <span className="block text-[11px] font-bold uppercase text-amber-500 tracking-wide">PHONE NO</span>
-                                            <span className="text-xs text-rose-100/80">+94 21 492 3118</span>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex items-start space-x-3">
-                                        <div className="bg-amber-500 text-slate-900 p-2.5 rounded-full flex-shrink-0">
-                                            <svg className="w-4 h-4 stroke-current" fill="none" strokeWidth={2} viewBox="0 0 24 24">
-                                                <path d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
-                                            </svg>
-                                        </div>
-                                        <div>
-                                            <span className="block text-[11px] font-bold uppercase text-amber-500 tracking-wide">WEBSITE & CONTACT</span>
-                                            <span className="text-xs text-rose-100/80">www.mahadevachildrenhome.com</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Column 3: Gallery */}
-                            <div className="space-y-4">
-                                <h3 className="text-sm font-bold uppercase tracking-wider text-rose-100">Gallery Photos</h3>
-                                <div className="grid grid-cols-3 gap-2">
-                                    {galleryPhotos.map((photo, index) => (
-                                        <img
-                                            key={index}
-                                            src={photo.src}
-                                            alt={photo.alt}
-                                            className="w-full h-16 object-cover rounded-md hover:opacity-80 transition cursor-pointer"
-                                        />
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="pt-6 text-center text-xs text-rose-200/50">
-                            © 2004 - 2026 Mahadeva Swamigal Children Home - All Rights Reserved | Probation Reg: NP/24/2/1/CH/13
-                        </div>
-                    </div>
-                </footer>
+                <SiteFooter />
             </div>
         </>
     );

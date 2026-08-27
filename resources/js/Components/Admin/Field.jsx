@@ -85,6 +85,18 @@ export default function Field({
                 />
             )}
 
+            {type === 'file-multi' && (
+                <input
+                    id={name}
+                    name={name}
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={(e) => onChange(Array.from(e.target.files ?? []))}
+                    className={`${baseClass} file:mr-3 file:rounded-md file:border-0 file:bg-rose-900 file:px-3 file:py-1.5 file:text-xs file:font-semibold file:text-white hover:file:bg-rose-950`}
+                />
+            )}
+
             {error && <p className="text-xs font-semibold text-rose-600">{error}</p>}
         </div>
     );
