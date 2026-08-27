@@ -1,4 +1,5 @@
 import { Head } from '@inertiajs/react';
+import { useEffect, useState } from 'react';
 
 const impactBadges = [
     {
@@ -160,7 +161,53 @@ const galleryPhotos = [
     { src: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=200', alt: 'Daily life at home' },
 ];
 
-export default function Home() {
+const fallbackHeroSlides = [
+    { image: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=800', title: 'Children smiling' },
+];
+
+function HeroSlider({ slides }) {
+    const [active, setActive] = useState(0);
+    const items = slides && slides.length > 0 ? slides : fallbackHeroSlides;
+
+    useEffect(() => {
+        if (items.length <= 1) return;
+        const timer = setInterval(() => {
+            setActive((prev) => (prev + 1) % items.length);
+        }, 4000);
+        return () => clearInterval(timer);
+    }, [items.length]);
+
+    return (
+        <div className="relative w-72 h-72 md:w-96 md:h-96 rounded-full border-8 border-rose-900/40 overflow-hidden shadow-2xl">
+            {items.map((slide, index) => (
+                <img
+                    key={slide.id ?? index}
+                    src={slide.image}
+                    alt={slide.title || 'Children smiling'}
+                    className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+                        index === active ? 'opacity-100' : 'opacity-0'
+                    }`}
+                />
+            ))}
+            {items.length > 1 && (
+                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+                    {items.map((_, index) => (
+                        <button
+                            key={index}
+                            onClick={() => setActive(index)}
+                            aria-label={`Show slide ${index + 1}`}
+                            className={`w-2 h-2 rounded-full transition ${
+                                index === active ? 'bg-amber-500' : 'bg-white/50'
+                            }`}
+                        />
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+}
+
+export default function Home({ sliders = [] }) {
     return (
         <>
             <Head title="Mahadeva Swamigal Children Home" />
@@ -169,8 +216,8 @@ export default function Home() {
                 <nav className="bg-white border-b border-slate-100 sticky top-0 z-50">
                     <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-rose-900 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                                M
+                            <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
+                                <img src="/storage/users/logo.jpg" alt="Mahadeva Home logo" className="w-full h-full object-cover" />
                             </div>
                             <span className="font-bold text-lg text-rose-950 tracking-tight">
                                 Mahadeva Children Home
@@ -221,13 +268,7 @@ export default function Home() {
                             </div>
                         </div>
                         <div className="flex justify-center">
-                            <div className="relative w-72 h-72 md:w-96 md:h-96 rounded-full border-8 border-rose-900/40 overflow-hidden shadow-2xl">
-                                <img
-                                    src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=800"
-                                    alt="Children smiling"
-                                    className="w-full h-full object-cover"
-                                />
-                            </div>
+                            <HeroSlider slides={sliders} />
                         </div>
                     </div>
                 </section>

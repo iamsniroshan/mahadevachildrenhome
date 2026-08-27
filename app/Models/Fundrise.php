@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Model;
 ])]
 class Fundrise extends Model
 {
+    protected $table = 'fundrise';
+
     protected function casts(): array
     {
         return [

@@ -8,15 +8,18 @@ use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\ProfileController;
+use App\Models\Slider;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
-    return Inertia::render('Home');
+    return Inertia::render('Home', [
+        'sliders' => Slider::where('status', 'active')->orderBy('display_order')->get(),
+    ]);
 })->name('home');
 
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
+    return Inertia::render('Admin/Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(function () {

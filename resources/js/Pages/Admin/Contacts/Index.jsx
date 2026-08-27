@@ -1,5 +1,7 @@
 import AdminLayout from '@/Layouts/AdminLayout';
 import StatusBadge from '@/Components/Admin/StatusBadge';
+import DataTable from '@/Components/Admin/DataTable';
+import ActionButtons from '@/Components/Admin/ActionButtons';
 import { Head, router } from '@inertiajs/react';
 
 const statusMap = {
@@ -20,6 +22,44 @@ export default function Index({ contacts }) {
         }
     };
 
+    const columns = [
+        {
+            key: 'name',
+            header: 'Name',
+            render: (contact) => (
+                <>
+                    <span className="font-semibold text-slate-800">{contact.first_name} {contact.last_name}</span>
+                    <span className="block text-xs font-normal text-slate-400">{contact.email}</span>
+                </>
+            ),
+        },
+        { key: 'subject', header: 'Subject', className: 'text-slate-600', render: (c) => c.subject },
+        { key: 'message', header: 'Message', className: 'text-slate-600 max-w-sm truncate', render: (c) => c.message },
+        {
+            key: 'status',
+            header: 'Status',
+            render: (contact) => (
+                <select
+                    value={contact.status}
+                    onChange={(e) => updateStatus(contact, e.target.value)}
+                    className="text-xs font-bold rounded-full border-slate-200 focus:ring-rose-900 focus:border-rose-900"
+                >
+                    {Object.keys(statusMap).map((key) => (
+                        <option key={key} value={key}>
+                            {statusMap[key].label}
+                        </option>
+                    ))}
+                </select>
+            ),
+        },
+        {
+            key: 'actions',
+            header: 'Actions',
+            align: 'right',
+            render: (contact) => <ActionButtons onDelete={() => handleDelete(contact)} />,
+        },
+    ];
+
     return (
         <AdminLayout header="Contact Messages">
             <Head title="Contacts" />
@@ -27,59 +67,7 @@ export default function Index({ contacts }) {
             <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-6">
                 <h2 className="font-bold text-lg text-slate-900">Inbound Messages</h2>
 
-                <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
-                        <thead>
-                            <tr className="border-b border-slate-100 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                                <th className="pb-3">Name</th>
-                                <th className="pb-3">Subject</th>
-                                <th className="pb-3">Message</th>
-                                <th className="pb-3">Status</th>
-                                <th className="pb-3 text-right">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-100 text-sm">
-                            {contacts.map((contact) => (
-                                <tr key={contact.id}>
-                                    <td className="py-4 font-semibold text-slate-800">
-                                        {contact.first_name} {contact.last_name}
-                                        <span className="block text-xs font-normal text-slate-400">{contact.email}</span>
-                                    </td>
-                                    <td className="py-4 text-slate-600">{contact.subject}</td>
-                                    <td className="py-4 text-slate-600 max-w-sm truncate">{contact.message}</td>
-                                    <td className="py-4">
-                                        <select
-                                            value={contact.status}
-                                            onChange={(e) => updateStatus(contact, e.target.value)}
-                                            className="text-xs font-bold rounded-full border-slate-200 focus:ring-rose-900 focus:border-rose-900"
-                                        >
-                                            {Object.keys(statusMap).map((key) => (
-                                                <option key={key} value={key}>
-                                                    {statusMap[key].label}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </td>
-                                    <td className="py-4 text-right">
-                                        <button
-                                            onClick={() => handleDelete(contact)}
-                                            className="text-xs font-bold text-slate-400 hover:text-rose-600"
-                                        >
-                                            Delete
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
-                            {contacts.length === 0 && (
-                                <tr>
-                                    <td colSpan={5} className="py-8 text-center text-sm text-slate-400">
-                                        No messages yet.
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
-                </div>
+                <DataTable columns={columns} data={contacts} emptyMessage="No messages yet." />
             </div>
         </AdminLayout>
     );

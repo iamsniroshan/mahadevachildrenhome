@@ -46,12 +46,12 @@ export default function UpdatePasswordForm({ className = '' }) {
 
     return (
         <section className={className}>
-            <header>
-                <h2 className="text-lg font-medium text-gray-900">
+            <header className="space-y-2">
+                <h2 className="text-xl font-bold text-slate-900">
                     Update Password
                 </h2>
 
-                <p className="mt-1 text-sm text-gray-600">
+                <p className="text-sm text-slate-600">
                     Ensure your account is using a long, random password to stay
                     secure.
                 </p>
@@ -62,6 +62,7 @@ export default function UpdatePasswordForm({ className = '' }) {
                     <InputLabel
                         htmlFor="current_password"
                         value="Current Password"
+                        className="text-slate-700"
                     />
 
                     <TextInput
@@ -72,7 +73,7 @@ export default function UpdatePasswordForm({ className = '' }) {
                             setData('current_password', e.target.value)
                         }
                         type="password"
-                        className="mt-1 block w-full"
+                        className="mt-1 block w-full rounded-xl border-slate-200 bg-slate-50 focus:border-rose-500 focus:ring-rose-500"
                         autoComplete="current-password"
                     />
 
@@ -83,7 +84,7 @@ export default function UpdatePasswordForm({ className = '' }) {
                 </div>
 
                 <div>
-                    <InputLabel htmlFor="password" value="New Password" />
+                    <InputLabel htmlFor="password" value="New Password" className="text-slate-700" />
 
                     <TextInput
                         id="password"
@@ -91,7 +92,7 @@ export default function UpdatePasswordForm({ className = '' }) {
                         value={data.password}
                         onChange={(e) => setData('password', e.target.value)}
                         type="password"
-                        className="mt-1 block w-full"
+                        className="mt-1 block w-full rounded-xl border-slate-200 bg-slate-50 focus:border-rose-500 focus:ring-rose-500"
                         autoComplete="new-password"
                     />
 
@@ -102,6 +103,7 @@ export default function UpdatePasswordForm({ className = '' }) {
                     <InputLabel
                         htmlFor="password_confirmation"
                         value="Confirm Password"
+                        className="text-slate-700"
                     />
 
                     <TextInput
@@ -111,7 +113,7 @@ export default function UpdatePasswordForm({ className = '' }) {
                             setData('password_confirmation', e.target.value)
                         }
                         type="password"
-                        className="mt-1 block w-full"
+                        className="mt-1 block w-full rounded-xl border-slate-200 bg-slate-50 focus:border-rose-500 focus:ring-rose-500"
                         autoComplete="new-password"
                     />
 
@@ -122,7 +124,12 @@ export default function UpdatePasswordForm({ className = '' }) {
                 </div>
 
                 <div className="flex items-center gap-4">
-                    <PrimaryButton disabled={processing}>Save</PrimaryButton>
+                    <PrimaryButton
+                        className="rounded-xl bg-rose-900 px-5 py-2.5 text-xs font-bold uppercase tracking-[0.12em] text-white hover:bg-rose-800"
+                        disabled={processing}
+                    >
+                        Save
+                    </PrimaryButton>
 
                     <Transition
                         show={recentlySuccessful}
@@ -131,7 +138,7 @@ export default function UpdatePasswordForm({ className = '' }) {
                         leave="transition ease-in-out"
                         leaveTo="opacity-0"
                     >
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-emerald-600">
                             Saved.
                         </p>
                     </Transition>

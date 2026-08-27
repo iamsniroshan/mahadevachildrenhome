@@ -1,6 +1,12 @@
 import AdminLayout from '@/Layouts/AdminLayout';
+import Field from '@/Components/Admin/Field';
 import StatusBadge from '@/Components/Admin/StatusBadge';
-import { Head, Link, router } from '@inertiajs/react';
+import DataTable from '@/Components/Admin/DataTable';
+import ActionButtons from '@/Components/Admin/ActionButtons';
+import Modal from '@/Components/Admin/Modal';
+import FormActions from '@/Components/Admin/FormActions';
+import { Head, router, useForm } from '@inertiajs/react';
+import { useState } from 'react';
 
 const statusMap = {
     draft: { label: 'Draft', className: 'bg-slate-100 text-slate-600' },
@@ -8,12 +14,90 @@ const statusMap = {
     archived: { label: 'Archived', className: 'bg-amber-100 text-amber-800' },
 };
 
+const emptyNews = {
+    title: '',
+    content: '',
+    excerpt: '',
+    image: '',
+    author: '',
+    category: 'general',
+    status: 'draft',
+    featured: false,
+    publish_date: '',
+};
+
+const toFormData = (item) => ({
+    title: item?.title ?? '',
+    content: item?.content ?? '',
+    excerpt: item?.excerpt ?? '',
+    image: item?.image ?? '',
+    author: item?.author ?? '',
+    category: item?.category ?? 'general',
+    status: item?.status ?? 'draft',
+    featured: item?.featured ?? false,
+    publish_date: item?.publish_date ?? '',
+});
+
 export default function Index({ newsItems }) {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [editingItem, setEditingItem] = useState(null);
+    const form = useForm(emptyNews);
+
+    const openCreateModal = () => {
+        setEditingItem(null);
+        form.reset();
+        form.setData(emptyNews);
+        setIsModalOpen(true);
+    };
+
+    const openEditModal = (item) => {
+        setEditingItem(item);
+        form.reset();
+        form.setData(toFormData(item));
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setEditingItem(null);
+        form.reset();
+    };
+
+    const submit = (e) => {
+        e.preventDefault();
+
+        if (editingItem) {
+            form.put(route('admin.news.update', editingItem.id), {
+                preserveScroll: true,
+                onSuccess: () => closeModal(),
+            });
+            return;
+        }
+
+        form.post(route('admin.news.store'), {
+            preserveScroll: true,
+            onSuccess: () => closeModal(),
+        });
+    };
+
     const handleDelete = (item) => {
         if (confirm(`Delete news article "${item.title}"?`)) {
             router.delete(route('admin.news.destroy', item.id));
         }
     };
+
+    const columns = [
+        { key: 'title', header: 'Title', className: 'font-semibold text-slate-800 max-w-md truncate', render: (n) => n.title },
+        { key: 'author', header: 'Author', className: 'text-slate-600', render: (n) => n.author ?? '—' },
+        { key: 'category', header: 'Category', className: 'text-slate-600 capitalize', render: (n) => n.category },
+        { key: 'status', header: 'Status', render: (n) => <StatusBadge value={n.status} map={statusMap} /> },
+        {
+            key: 'actions',
+            header: 'Actions',
+            align: 'right',
+            render: (item) => <ActionButtons onEdit={() => openEditModal(item)} onDelete={() => handleDelete(item)} />,
+        },
+    ];
 
     return (
         <AdminLayout header="News & Updates">
@@ -22,61 +106,49 @@ export default function Index({ newsItems }) {
             <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-6">
                 <div className="flex items-center justify-between">
                     <h2 className="font-bold text-lg text-slate-900">All News Articles</h2>
-                    <Link
-                        href={route('admin.news.create')}
+                    <button
+                        type="button"
+                        onClick={openCreateModal}
                         className="bg-rose-900 hover:bg-rose-950 text-white font-semibold px-5 py-2 rounded-full text-xs transition"
                     >
                         + New Article
-                    </Link>
+                    </button>
                 </div>
 
-                <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
-                        <thead>
-                            <tr className="border-b border-slate-100 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                                <th className="pb-3">Title</th>
-                                <th className="pb-3">Author</th>
-                                <th className="pb-3">Category</th>
-                                <th className="pb-3">Status</th>
-                                <th className="pb-3 text-right">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-100 text-sm">
-                            {newsItems.map((item) => (
-                                <tr key={item.id}>
-                                    <td className="py-4 font-semibold text-slate-800 max-w-md truncate">{item.title}</td>
-                                    <td className="py-4 text-slate-600">{item.author ?? '—'}</td>
-                                    <td className="py-4 text-slate-600 capitalize">{item.category}</td>
-                                    <td className="py-4">
-                                        <StatusBadge value={item.status} map={statusMap} />
-                                    </td>
-                                    <td className="py-4 text-right space-x-3">
-                                        <Link
-                                            href={route('admin.news.edit', item.id)}
-                                            className="text-xs font-bold text-rose-900 hover:underline"
-                                        >
-                                            Edit
-                                        </Link>
-                                        <button
-                                            onClick={() => handleDelete(item)}
-                                            className="text-xs font-bold text-slate-400 hover:text-rose-600"
-                                        >
-                                            Delete
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
-                            {newsItems.length === 0 && (
-                                <tr>
-                                    <td colSpan={5} className="py-8 text-center text-sm text-slate-400">
-                                        No news articles yet.
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
-                </div>
+                <DataTable columns={columns} data={newsItems} emptyMessage="No news articles yet." />
             </div>
+
+            <Modal open={isModalOpen} onClose={closeModal} eyebrow="News Article" title={editingItem ? 'Edit News Article' : 'New News Article'}>
+                <form onSubmit={submit} className="space-y-6">
+                    <Field label="Title" name="title" value={form.data.title} onChange={(v) => form.setData('title', v)} error={form.errors.title} required />
+
+                    <div className="grid md:grid-cols-2 gap-6">
+                        <Field label="Author" name="author" value={form.data.author} onChange={(v) => form.setData('author', v)} error={form.errors.author} />
+                        <Field label="Category" name="category" value={form.data.category} onChange={(v) => form.setData('category', v)} error={form.errors.category} />
+                        <Field label="Image Path" name="image" value={form.data.image} onChange={(v) => form.setData('image', v)} error={form.errors.image} />
+                        <Field
+                            label="Status"
+                            name="status"
+                            type="select"
+                            value={form.data.status}
+                            onChange={(v) => form.setData('status', v)}
+                            error={form.errors.status}
+                            options={[
+                                { value: 'draft', label: 'Draft' },
+                                { value: 'published', label: 'Published' },
+                                { value: 'archived', label: 'Archived' },
+                            ]}
+                        />
+                        <Field label="Publish Date" name="publish_date" type="datetime-local" value={form.data.publish_date} onChange={(v) => form.setData('publish_date', v)} error={form.errors.publish_date} />
+                        <Field label="Featured" name="featured" type="checkbox" value={form.data.featured} onChange={(v) => form.setData('featured', v)} error={form.errors.featured} />
+                    </div>
+
+                    <Field label="Excerpt" name="excerpt" type="textarea" rows={2} value={form.data.excerpt} onChange={(v) => form.setData('excerpt', v)} error={form.errors.excerpt} />
+                    <Field label="Content" name="content" type="textarea" rows={8} value={form.data.content} onChange={(v) => form.setData('content', v)} error={form.errors.content} required />
+
+                    <FormActions onCancel={closeModal} processing={form.processing} submitLabel={editingItem ? 'Save Changes' : 'Publish Article'} />
+                </form>
+            </Modal>
         </AdminLayout>
     );
 }
