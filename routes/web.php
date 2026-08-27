@@ -3,7 +3,8 @@
 use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\ContactController as AdminContactController;
-use App\Http\Controllers\Admin\DonationController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\DonationController as AdminDonationController;
 use App\Http\Controllers\Admin\FundriseController;
 use App\Http\Controllers\Admin\NewsController as AdminNewsController;
 use App\Http\Controllers\Admin\SliderController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\Admin\TeamController as AdminTeamController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\VideoController as AdminVideoController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\DonationController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TeamController;
@@ -41,6 +43,10 @@ Route::get('/news', [NewsController::class, 'index'])->name('news.index');
 Route::get('/news/{news}', [NewsController::class, 'show'])->name('news.show');
 Route::get('/team', [TeamController::class, 'index'])->name('team.index');
 Route::get('/videos', [VideoController::class, 'index'])->name('videos.index');
+Route::get('/donate', [DonationController::class, 'index'])->name('donate');
+Route::post('/donate', [DonationController::class, 'store'])
+    ->middleware('throttle:5,1')
+    ->name('donate.store');
 Route::get('/about', function () {
     return Inertia::render('About');
 })->name('about');
@@ -49,21 +55,17 @@ Route::post('/contact', [ContactController::class, 'store'])
     ->middleware('throttle:5,1')
     ->name('contact.store');
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Admin/Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('Admin/Dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('teams', AdminTeamController::class);
     Route::resource('sliders', SliderController::class);
     Route::resource('blogs', BlogController::class);
     Route::resource('news', AdminNewsController::class);
     Route::resource('fundrise', FundriseController::class);
-    Route::resource('donations', DonationController::class);
+    Route::resource('donations', AdminDonationController::class);
     Route::resource('users', AdminUserController::class)->except(['create', 'edit', 'show']);
     Route::resource('videos', AdminVideoController::class)->except(['create', 'edit', 'show']);
 

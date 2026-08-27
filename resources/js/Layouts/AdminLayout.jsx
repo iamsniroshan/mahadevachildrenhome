@@ -68,7 +68,7 @@ const navItems = [
     },
 ];
 
-export default function AdminLayout({ header, children, headerAction = null }) {
+export default function AdminLayout({ header, children, headerAction = null, fullHeight = false }) {
     const { auth } = usePage().props;
     const user = auth?.user;
     const initials = getInitials(user?.name ?? 'Administrator');
@@ -157,7 +157,7 @@ export default function AdminLayout({ header, children, headerAction = null }) {
                     </div>
                 </header>
 
-                <main className="flex-1 overflow-y-auto p-8 space-y-8">{children}</main>
+                <main className={fullHeight ? 'flex-1 min-h-0 overflow-hidden p-6' : 'flex-1 overflow-y-auto p-8 space-y-8'}>{children}</main>
             </div>
         </div>
     );

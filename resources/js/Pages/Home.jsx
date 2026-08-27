@@ -200,12 +200,12 @@ export default function Home({ sliders = [], newsItems = [], causes = [] }) {
                                 Providing education, shelter, holistic healthcare, and hope for orphaned and vulnerable children in Northern Sri Lanka.
                             </p>
                             <div className="flex flex-wrap gap-4 pt-2">
-                                <a
-                                    href="#donate"
+                                <Link
+                                    href={route('donate')}
                                     className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-8 py-3.5 rounded-full transition shadow-lg"
                                 >
                                     Sponsor a Child
-                                </a>
+                                </Link>
                                 <a
                                     href="#programs"
                                     className="border border-white/30 hover:bg-white/10 text-white font-semibold px-8 py-3.5 rounded-full transition"
@@ -286,12 +286,12 @@ export default function Home({ sliders = [], newsItems = [], causes = [] }) {
                                                     <span>Raised: {cause.currency} {Number(cause.current_amount ?? 0).toLocaleString()}</span>
                                                     <span>Goal: {cause.currency} {Number(cause.goal_amount ?? 0).toLocaleString()}</span>
                                                 </div>
-                                                <a
-                                                    href="#donate"
+                                                <Link
+                                                    href={route('donate')}
                                                     className="block text-center bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-full text-sm transition mt-3"
                                                 >
                                                     Donate Now
-                                                </a>
+                                                </Link>
                                             </div>
                                         </div>
                                     </div>
@@ -313,12 +313,12 @@ export default function Home({ sliders = [], newsItems = [], causes = [] }) {
                             <p className="text-slate-800 text-base leading-relaxed">
                                 Every contribution helps provide a safe home, balanced nutrition, and high-quality education for over 200 children in need.
                             </p>
-                            <a
-                                href="#donate"
+                            <Link
+                                href={route('donate')}
                                 className="inline-block bg-teal-950 text-white font-bold px-8 py-3.5 rounded-full hover:bg-slate-900 transition"
                             >
                                 Donate Today
-                            </a>
+                            </Link>
                         </div>
                         <div className="rounded-2xl overflow-hidden shadow-lg h-64">
                             <img
@@ -425,9 +425,12 @@ export default function Home({ sliders = [], newsItems = [], causes = [] }) {
                                     LKR 10,000
                                 </button>
                             </div>
-                            <button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl transition">
+                            <Link
+                                href={route('donate')}
+                                className="block text-center w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl transition"
+                            >
                                 Complete Donation
-                            </button>
+                            </Link>
                         </div>
                     </div>
                 </section>

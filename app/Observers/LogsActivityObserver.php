@@ -41,6 +41,11 @@ class LogsActivityObserver
     {
         $user = auth()->user();
 
+        // superadmin actions are intentionally not tracked
+        if ($user?->isSuperAdmin()) {
+            return;
+        }
+
         ActivityLog::create([
             'user_id' => $user?->id,
             'user_name' => $user?->name ?? 'System',

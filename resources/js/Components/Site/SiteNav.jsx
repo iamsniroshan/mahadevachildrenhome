@@ -25,12 +25,12 @@ export default function SiteNav() {
                     <Link href={route('videos.index')} className="hover:text-rose-900 transition">Videos</Link>
                     <Link href={route('contact')} className="hover:text-rose-900 transition">Contact</Link>
                 </div>
-                <a
-                    href={`${route('home')}#donate`}
+                <Link
+                    href={route('donate')}
                     className="self-center bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-6 py-2.5 rounded-full text-sm transition"
                 >
                     Donate Now
-                </a>
+                </Link>
             </div>
         </nav>
     );
