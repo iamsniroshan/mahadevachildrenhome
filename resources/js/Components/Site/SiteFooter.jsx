@@ -1,91 +1,140 @@
+import { Link } from '@inertiajs/react';
+
+const quickLinks = [
+    { label: 'Home', routeName: 'home' },
+    { label: 'About Us', routeName: 'about' },
+    { label: 'Our Team', routeName: 'team.index' },
+    { label: 'News', routeName: 'news.index' },
+    { label: 'Videos', routeName: 'videos.index' },
+    { label: 'Contact', routeName: 'contact' },
+];
+
+const socialLinks = [
+    {
+        label: 'Facebook',
+        href: 'https://www.facebook.com',
+        path: 'M13.5 9H15V6.5h-1.5C11.6 6.5 10 8.1 10 10.2V12H8v2.5h2V21h2.5v-6.5H15l.5-2.5h-3v-1.5c0-.6.4-1 1-1z',
+    },
+    {
+        label: 'Instagram',
+        href: 'https://www.instagram.com',
+        path: 'M12 8.25a3.75 3.75 0 100 7.5 3.75 3.75 0 000-7.5zM12 10a2 2 0 110 4 2 2 0 010-4zM17.25 6a1 1 0 100 2 1 1 0 000-2zM7 3.5h10A3.5 3.5 0 0120.5 7v10A3.5 3.5 0 0117 20.5H7A3.5 3.5 0 013.5 17V7A3.5 3.5 0 017 3.5zm0 1.5A2 2 0 005 7v10a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2H7z',
+    },
+    {
+        label: 'YouTube',
+        href: 'https://www.youtube.com',
+        path: 'M21.6 7.2s-.2-1.5-.8-2.1c-.8-.8-1.7-.8-2.1-.9C15.9 4 12 4 12 4h0s-3.9 0-6.7.2c-.4 0-1.3.1-2.1.9-.6.6-.8 2.1-.8 2.1S2.2 9 2.2 10.7v1.4C2.2 13.9 2.4 15.6 2.4 15.6s.2 1.5.8 2.1c.8.8 1.9.8 2.3.9 1.7.2 7.5.2 7.5.2s3.9 0 6.7-.2c.4 0 1.3-.1 2.1-.9.6-.6.8-2.1.8-2.1s.2-1.7.2-3.5v-1.4c0-1.7-.2-3.5-.2-3.5zM9.9 14.6V8.9l5.4 2.9-5.4 2.8z',
+    },
+    {
+        label: 'WhatsApp',
+        href: 'https://wa.me/94767053911',
+        path: 'M12 3.5a8.5 8.5 0 00-7.3 12.8L3.5 20.5l4.3-1.1A8.5 8.5 0 1012 3.5zm0 1.5a7 7 0 116.4 10 6.9 6.9 0 01-3.6 1L7.9 17l.6-2.8A7 7 0 0112 5zm-2.8 3.2c-.2 0-.5 0-.7.4-.2.3-.9.9-.9 2.1s.9 2.4 1 2.6c.1.2 1.8 2.8 4.4 3.8 2.2.9 2.6.7 3.1.7.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2-.1-.1-.3-.2-.6-.4-.3-.2-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.3-.6.8-.8 1-.1.2-.3.2-.5.1-.3-.1-1.1-.4-2.1-1.3-.8-.7-1.3-1.5-1.5-1.8-.1-.3 0-.4.1-.6l.4-.5c.1-.2.1-.3 0-.5-.1-.2-.6-1.4-.8-1.9-.2-.4-.4-.4-.6-.4h-.5z',
+    },
+];
+
 const galleryPhotos = [
     { src: '/images/home/educational-excellence.jpg', alt: 'Children home activity' },
     { src: '/images/home/life-skills.jpg', alt: 'Education support' },
     { src: '/images/home/health-wellness.jpg', alt: 'Medical care' },
     { src: '/images/about/history.jpg', alt: 'Farm project' },
-    { src: '/images/home/Priya.jpg', alt: 'Volunteer work' },
-    { src: '/images/home/emotional-support.jpg', alt: 'Daily life at home' },
 ];
 
 export default function SiteFooter() {
     return (
-        <footer id="contact" className="bg-[#3b0a24] text-white pt-16 pb-8 border-t border-rose-900/40">
+        <footer id="contact" className="bg-[#3b0a24] text-white pt-16 pb-8">
             <div className="max-w-7xl mx-auto px-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-12 pb-12 border-b border-rose-900/30">
-                    {/* Column 1: About */}
-                    <div className="space-y-4">
-                        <h3 className="text-sm font-bold uppercase tracking-wider text-rose-100">About Mahadeva Home</h3>
-                        <p className="text-xs text-rose-100/70 leading-relaxed font-light">
-                            <span className="text-2xl font-serif font-bold float-left mr-2 leading-none text-amber-500">M</span>
-                            ahadeva Swamigal Children Home (Mahadeva Achchirama Children Home) provides shelter, education, healthcare, and self-sustaining vocational development for over 200 orphaned and vulnerable children in Northern Sri Lanka.
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 pb-12">
+                    {/* Brand */}
+                    <div className="space-y-4 lg:col-span-1">
+                        <div className="flex items-center gap-3">
+                            <div className="w-11 h-11 rounded-full overflow-hidden ring-2 ring-amber-500/60 flex-shrink-0">
+                                <img src="/storage/users/logo.jpg" alt="Mahadeva Home logo" className="w-full h-full object-cover" />
+                            </div>
+                            <span className="font-serif font-bold text-white leading-tight">
+                                Mahadeva Swamigal
+                                <br />
+                                Children Home
+                            </span>
+                        </div>
+                        <p className="text-xs text-rose-100/70 leading-relaxed">
+                            Providing shelter, education, healthcare, and self-sustaining vocational development for over 200 orphaned and vulnerable children in Northern Sri Lanka.
                         </p>
-                        <div className="pt-2">
-                            <span className="block text-sm font-bold text-white">Mahadeva Swamigal Children Home</span>
-                            <span className="block text-xs text-rose-300">Kilinochchi, Sri Lanka</span>
+                        <div className="flex items-center gap-2 pt-1">
+                            {socialLinks.map((social) => (
+                                <a
+                                    key={social.label}
+                                    href={social.href}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    aria-label={social.label}
+                                    className="w-8 h-8 rounded-full bg-white/10 hover:bg-amber-500 hover:text-slate-900 flex items-center justify-center transition"
+                                >
+                                    <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                                        <path d={social.path} />
+                                    </svg>
+                                </a>
+                            ))}
                         </div>
                     </div>
 
-                    {/* Column 2: Contact */}
+                    {/* Quick Links */}
                     <div className="space-y-4">
-                        <h3 className="text-sm font-bold uppercase tracking-wider text-rose-100">Contact Us</h3>
-                        <div className="space-y-4">
-                            <div className="flex items-start space-x-3">
-                                <div className="bg-amber-500 text-slate-900 p-2.5 rounded-full flex-shrink-0">
-                                    <svg className="w-4 h-4 stroke-current" fill="none" strokeWidth={2} viewBox="0 0 24 24">
-                                        <path d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        <path d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
-                                    </svg>
-                                </div>
-                                <div>
-                                    <span className="block text-[11px] font-bold uppercase text-amber-500 tracking-wide">ADDRESS</span>
-                                    <span className="text-xs text-rose-100/80">Jayanthi Nagar, Kilinochchi, Northern Province, Sri Lanka</span>
-                                </div>
-                            </div>
-
-                            <div className="flex items-start space-x-3">
-                                <div className="bg-amber-500 text-slate-900 p-2.5 rounded-full flex-shrink-0">
-                                    <svg className="w-4 h-4 stroke-current" fill="none" strokeWidth={2} viewBox="0 0 24 24">
-                                        <path d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-2.824-1.17-5.116-3.462-6.286-6.286l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
-                                    </svg>
-                                </div>
-                                <div>
-                                    <span className="block text-[11px] font-bold uppercase text-amber-500 tracking-wide">PHONE NO</span>
-                                    <span className="text-xs text-rose-100/80">+94 21 492 3118</span>
-                                </div>
-                            </div>
-
-                            <div className="flex items-start space-x-3">
-                                <div className="bg-amber-500 text-slate-900 p-2.5 rounded-full flex-shrink-0">
-                                    <svg className="w-4 h-4 stroke-current" fill="none" strokeWidth={2} viewBox="0 0 24 24">
-                                        <path d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
-                                    </svg>
-                                </div>
-                                <div>
-                                    <span className="block text-[11px] font-bold uppercase text-amber-500 tracking-wide">WEBSITE & CONTACT</span>
-                                    <span className="text-xs text-rose-100/80">www.mahadevachildrenhome.com</span>
-                                </div>
-                            </div>
-                        </div>
+                        <h3 className="text-sm font-bold uppercase tracking-wider text-amber-500">Quick Links</h3>
+                        <ul className="space-y-2 text-sm text-rose-100/80">
+                            {quickLinks.map((link) => (
+                                <li key={link.label}>
+                                    <Link href={route(link.routeName)} className="hover:text-white transition">
+                                        {link.label}
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
                     </div>
 
-                    {/* Column 3: Gallery */}
+                    {/* Contact */}
                     <div className="space-y-4">
-                        <h3 className="text-sm font-bold uppercase tracking-wider text-rose-100">Gallery Photos</h3>
-                        <div className="grid grid-cols-3 gap-2">
+                        <h3 className="text-sm font-bold uppercase tracking-wider text-amber-500">Contact Us</h3>
+                        <ul className="space-y-3 text-sm text-rose-100/80">
+                            <li>
+                                <span className="block text-[11px] font-bold uppercase text-rose-200/60 tracking-wide">Address</span>
+                                Jayanthi Nagar, Kilinochchi, Sri Lanka
+                            </li>
+                            <li>
+                                <span className="block text-[11px] font-bold uppercase text-rose-200/60 tracking-wide">Phone</span>
+                                +94 21 228 5678
+                            </li>
+                            <li>
+                                <span className="block text-[11px] font-bold uppercase text-rose-200/60 tracking-wide">Email</span>
+                                rasa46@yahoo.com
+                            </li>
+                        </ul>
+                    </div>
+
+                    {/* Gallery */}
+                    <div className="space-y-4">
+                        <h3 className="text-sm font-bold uppercase tracking-wider text-amber-500">Gallery</h3>
+                        <div className="grid grid-cols-2 gap-2">
                             {galleryPhotos.map((photo, index) => (
                                 <img
                                     key={index}
                                     src={photo.src}
                                     alt={photo.alt}
-                                    className="w-full h-16 object-cover rounded-md hover:opacity-80 transition cursor-pointer"
+                                    className="w-full h-16 object-cover rounded-lg hover:opacity-80 transition cursor-pointer"
                                 />
                             ))}
                         </div>
+                        <Link
+                            href={route('donate')}
+                            className="inline-block bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-xs px-4 py-2 rounded-full transition"
+                        >
+                            Donate Now
+                        </Link>
                     </div>
                 </div>
 
-                <div className="pt-6 text-center text-xs text-rose-200/50">
-                    © 2004 - 2026 Mahadeva Swamigal Children Home - All Rights Reserved | Probation Reg: NP/24/2/1/CH/13
+                <div className="flex flex-col md:flex-row items-center justify-between gap-3 pt-6 border-t border-rose-900/30 text-xs text-rose-200/50">
+                    <span>© 2004 - 2026 Mahadeva Swamigal Children Home - All Rights Reserved</span>
+                    <span>Probation Reg: NP/24/2/1/CH/13</span>
                 </div>
             </div>
         </footer>
