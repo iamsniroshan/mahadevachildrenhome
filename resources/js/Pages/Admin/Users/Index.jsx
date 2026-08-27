@@ -15,6 +15,7 @@ const statusMap = {
 };
 
 const roleMap = {
+    superadmin: { label: 'Super Admin', className: 'bg-purple-100 text-purple-800' },
     admin: { label: 'Admin', className: 'bg-rose-100 text-rose-800' },
     manager: { label: 'Manager', className: 'bg-sky-100 text-sky-800' },
     user: { label: 'User', className: 'bg-slate-100 text-slate-600' },
@@ -112,12 +113,15 @@ export default function Index({ users }) {
             key: 'actions',
             header: 'Actions',
             align: 'right',
-            render: (user) => (
-                <ActionButtons
-                    onEdit={() => openEditModal(user)}
-                    onDelete={user.id === auth?.user?.id ? undefined : () => handleDelete(user)}
-                />
-            ),
+            render: (user) => {
+                const isLockedSuperAdmin = user.role === 'superadmin' && auth?.user?.role !== 'superadmin';
+                return (
+                    <ActionButtons
+                        onEdit={isLockedSuperAdmin ? undefined : () => openEditModal(user)}
+                        onDelete={isLockedSuperAdmin || user.id === auth?.user?.id ? undefined : () => handleDelete(user)}
+                    />
+                );
+            },
         },
     ];
 

@@ -13,10 +13,16 @@ use Inertia\Response;
 
 class UserController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request): Response
     {
+        $users = User::orderBy('name');
+
+        if (!$request->user()->isSuperAdmin()) {
+            $users->where('role', '!=', 'superadmin');
+        }
+
         return Inertia::render('Admin/Users/Index', [
-            'users' => User::orderBy('name')->get(),
+            'users' => $users->get(),
         ]);
     }
 
