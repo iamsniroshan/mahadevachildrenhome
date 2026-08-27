@@ -382,21 +382,32 @@ export default function Home({ sliders = [], newsItems = [], causes = [] }) {
                 </section>
 
                 {/* 6. Vision Statement & Testimonial */}
-                <section className="py-20 bg-rose-950 text-white rounded-t-[3rem] text-center">
-                    <div className="max-w-3xl mx-auto px-6 space-y-8">
-                        <h2 className="text-3xl md:text-4xl font-extrabold">A Future Where Every Child Thrives</h2>
-                        <div className="relative pt-6">
-                            <div className="w-20 h-20 rounded-full border-4 border-amber-500 mx-auto overflow-hidden mb-4">
+                <section className="py-10 bg-rose-950 text-white rounded-t-[3rem]">
+                    <div className="max-w-4xl mx-auto px-6 grid md:grid-cols-[0.75fr_1.25fr] gap-6 items-center">
+                        <div className="relative mx-auto w-full max-w-[280px]">
+                            <div className="absolute -inset-2 rounded-[1.4rem] bg-amber-500/20 blur-xl" />
+                            <div className="relative overflow-hidden rounded-[1.4rem] border-4 border-amber-400/80 shadow-lg shadow-amber-950/30">
                                 <img
                                     src="/images/home/Priya.jpg"
-                                    className="w-full h-full object-cover"
+                                    className="w-full h-[270px] md:h-[320px] object-cover object-center"
                                     alt="Former resident"
                                 />
                             </div>
-                            <p className="text-lg italic text-rose-100">
-                                "Mahadeva Home provided me not just with shelter and schooling, but with a supportive family that believed in my dreams."
-                            </p>
-                            <span className="block text-sm font-semibold text-amber-400 mt-3">
+                        </div>
+
+                        <div className="space-y-3 md:pl-1">
+                            <span className="inline-block bg-rose-800/70 text-amber-200 text-[9px] font-bold uppercase tracking-[0.2em] px-2.5 py-1 rounded-full">
+                                Our Mission
+                            </span>
+                            <h2 className="text-xl md:text-3xl font-extrabold leading-tight text-left">
+                                A Future Where Every Child Thrives
+                            </h2>
+                            <div className="border-l-4 border-amber-400 pl-3">
+                                <p className="text-sm md:text-lg italic text-rose-100 leading-relaxed">
+                                    "Mahadeva Home provided me not just with shelter and schooling, but with a supportive family that believed in my dreams."
+                                </p>
+                            </div>
+                            <span className="block text-xs md:text-sm font-semibold text-amber-300">
                                 — Former Resident & University Graduate
                             </span>
                         </div>
