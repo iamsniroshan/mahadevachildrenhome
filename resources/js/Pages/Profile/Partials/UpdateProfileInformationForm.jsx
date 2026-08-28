@@ -4,6 +4,7 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import { Transition } from '@headlessui/react';
 import { Link, useForm, usePage } from '@inertiajs/react';
+import { useState } from 'react';
 
 export default function UpdateProfileInformation({
     mustVerifyEmail,
@@ -11,17 +12,29 @@ export default function UpdateProfileInformation({
     className = '',
 }) {
     const user = usePage().props.auth.user;
+    const [previewUrl, setPreviewUrl] = useState(user.profile_pic ? `/storage/${user.profile_pic}` : null);
 
-    const { data, setData, patch, errors, processing, recentlySuccessful } =
+    const { data, setData, post, transform, errors, processing, recentlySuccessful } =
         useForm({
             name: user.name,
             email: user.email,
+            photo: null,
         });
 
     const submit = (e) => {
         e.preventDefault();
 
-        patch(route('profile.update'));
+        transform((data) => ({ ...data, _method: 'patch' }));
+        post(route('profile.update'), {
+            forceFormData: true,
+            onFinish: () => transform((data) => data),
+        });
+    };
+
+    const handlePhotoChange = (e) => {
+        const file = e.target.files?.[0] ?? null;
+        setData('photo', file);
+        setPreviewUrl(file ? URL.createObjectURL(file) : (user.profile_pic ? `/storage/${user.profile_pic}` : null));
     };
 
     return (
@@ -37,6 +50,30 @@ export default function UpdateProfileInformation({
             </header>
 
             <form onSubmit={submit} className="mt-6 space-y-6">
+                <div className="flex items-center gap-5">
+                    <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-full border-2 border-rose-100 bg-rose-50">
+                        {previewUrl ? (
+                            <img src={previewUrl} alt="Profile" className="h-full w-full object-cover" />
+                        ) : (
+                            <div className="flex h-full w-full items-center justify-center text-lg font-bold text-rose-900">
+                                {user.name?.[0]?.toUpperCase() ?? 'U'}
+                            </div>
+                        )}
+                    </div>
+                    <div className="space-y-1.5">
+                        <InputLabel htmlFor="photo" value="Profile Photo" className="text-slate-700" />
+                        <input
+                            id="photo"
+                            type="file"
+                            accept="image/jpeg,image/png,image/jpg"
+                            onChange={handlePhotoChange}
+                            className="block w-full text-xs text-slate-500 file:mr-3 file:rounded-lg file:border-0 file:bg-rose-900 file:px-3 file:py-1.5 file:text-xs file:font-semibold file:text-white hover:file:bg-rose-950"
+                        />
+                        <p className="text-xs text-slate-400">JPG or PNG, up to 2MB.</p>
+                        <InputError className="mt-1" message={errors.photo} />
+                    </div>
+                </div>
+
                 <div>
                     <InputLabel htmlFor="name" value="Name" className="text-slate-700" />
 

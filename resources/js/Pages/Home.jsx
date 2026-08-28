@@ -479,12 +479,12 @@ export default function Home({ sliders = [], newsItems = [], causes = [] }) {
 
                         <div className="bg-rose-500 text-white rounded-2xl p-6 sm:p-8 text-center space-y-3">
                             <h3 className="text-xl sm:text-2xl font-bold">Want to volunteer or visit our home?</h3>
-                            <a
-                                href="#contact"
+                            <Link
+                                href={route('contact')}
                                 className="inline-block bg-white text-rose-950 font-bold px-6 py-2.5 rounded-full text-sm hover:bg-slate-100 transition"
                             >
                                 Get In Touch
-                            </a>
+                            </Link>
                         </div>
                     </div>
                 </section>

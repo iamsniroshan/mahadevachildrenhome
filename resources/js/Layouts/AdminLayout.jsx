@@ -173,8 +173,12 @@ export default function AdminLayout({ header, children, headerAction = null, ful
                                     type="button"
                                     className="flex items-center gap-2 sm:gap-3 rounded-full border border-slate-200 bg-slate-50 px-2 py-1.5 sm:pr-3 text-left transition hover:border-rose-200 hover:bg-rose-50"
                                 >
-                                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-rose-900 text-sm font-bold text-white flex-shrink-0">
-                                        {initials}
+                                    <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-rose-900 text-sm font-bold text-white flex-shrink-0">
+                                        {user?.profile_pic ? (
+                                            <img src={`/storage/${user.profile_pic}`} alt={user?.name ?? 'Administrator'} className="h-full w-full object-cover" />
+                                        ) : (
+                                            initials
+                                        )}
                                     </div>
                                     <div className="hidden sm:block">
                                         <div className="text-sm font-semibold text-slate-800">{user?.name ?? 'Administrator'}</div>

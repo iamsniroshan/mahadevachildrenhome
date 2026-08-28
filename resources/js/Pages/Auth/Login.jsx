@@ -25,6 +25,12 @@ export default function Login({ status, canResetPassword }) {
         <GuestLayout>
             <Head title="Log in" />
 
+            <div className="mb-6 space-y-1">
+                <span className="text-xs font-bold uppercase tracking-wider text-rose-900">Admin Portal</span>
+                <h2 className="text-2xl font-bold text-slate-900">Welcome Back</h2>
+                <p className="text-sm text-slate-500">Sign in to manage the Mahadeva Children Home dashboard.</p>
+            </div>
+
             {status && (
                 <div className="mb-4 text-sm font-medium text-green-600">
                     {status}
@@ -84,7 +90,7 @@ export default function Login({ status, canResetPassword }) {
                     {canResetPassword && (
                         <Link
                             href={route('password.request')}
-                            className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                            className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-900 focus:ring-offset-2"
                         >
                             Forgot your password?
                         </Link>
