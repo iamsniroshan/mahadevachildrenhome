@@ -222,7 +222,7 @@ export default function Contact() {
                                     We are located in the heart of Jayanthi Nagar, Kilinochchi. Our facility is easily accessible by public transportation and has parking available for visitors.
                                 </p>
                                 <a
-                                    href="https://maps.google.com/?q=Jayanthi+Nagar+Kilinochchi+Sri+Lanka"
+                                    href="https://www.google.com/maps?cid=13750761810875853920"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="inline-block bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-2.5 rounded-full text-sm transition"

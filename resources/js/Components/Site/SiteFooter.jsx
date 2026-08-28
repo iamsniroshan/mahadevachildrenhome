@@ -32,7 +32,8 @@ const socialLinks = [
     },
 ];
 
-const locationMapUrl = 'https://www.google.com/maps?q=Mahadeva%20Swamigal%20Children%20Home%20Jayanthi%20Nagar%20Kilinochchi%20Sri%20Lanka&z=14&output=embed';
+const placeMapUrl = 'https://www.google.com/maps?cid=13750761810875853920';
+const locationMapUrl = 'https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3936.2999848148097!2d80.3788103!3d9.3950485!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3afe94bceea30b55%3A0xbed4850328432c60!2sMahadeva%20Swamikal%20Children%20Home!5e0!3m2!1sen!2slk!4v1787902169662!5m2!1sen!2slk';
 
 export default function SiteFooter() {
     return (
@@ -115,9 +116,17 @@ export default function SiteFooter() {
                                 className="h-40 w-full border-0"
                                 loading="lazy"
                                 allowFullScreen
-                                referrerPolicy="no-referrer-when-downgrade"
+                                referrerPolicy="strict-origin-when-cross-origin"
                             />
                         </div>
+                        <a
+                            href={placeMapUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-block text-xs font-bold text-amber-500 hover:text-amber-400"
+                        >
+                            View on Google Maps →
+                        </a>
                     </div>
                 </div>
 
