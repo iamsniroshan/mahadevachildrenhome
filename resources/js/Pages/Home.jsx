@@ -327,8 +327,8 @@ export default function Home({ sliders = [], newsItems = [], causes = [] }) {
                         </div>
                         <div className="rounded-2xl overflow-hidden shadow-lg h-56 sm:h-64 lg:h-72">
                             <img
-                                src="/images/home/life-skills.jpg"
-                                alt="Children outdoors"
+                                src="/images/home/priya-journey.webp"
+                                alt="Child on their journey to a brighter future"
                                 className="w-full h-full object-cover"
                             />
                         </div>
