@@ -39,8 +39,20 @@ class SitemapController extends Controller
 
         $urls = $urls->concat($newsUrls);
 
-        return response()
-            ->view('sitemap', ['urls' => $urls])
-            ->header('Content-Type', 'application/xml');
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>'."\n";
+        $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."\n";
+
+        foreach ($urls as $url) {
+            $xml .= '<url>'
+                .'<loc>'.htmlspecialchars($url['loc'], ENT_XML1 | ENT_QUOTES).'</loc>'
+                .'<lastmod>'.htmlspecialchars($url['lastmod'], ENT_XML1 | ENT_QUOTES).'</lastmod>'
+                .'<changefreq>'.htmlspecialchars($url['changefreq'], ENT_XML1 | ENT_QUOTES).'</changefreq>'
+                .'<priority>'.htmlspecialchars($url['priority'], ENT_XML1 | ENT_QUOTES).'</priority>'
+                .'</url>'."\n";
+        }
+
+        $xml .= '</urlset>';
+
+        return response($xml, 200)->header('Content-Type', 'application/xml');
     }
 }
