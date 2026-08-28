@@ -1,11 +1,14 @@
-import { Head } from '@inertiajs/react';
+import Seo from '@/Components/Seo';
 import SiteNav from '@/Components/Site/SiteNav';
 import SiteFooter from '@/Components/Site/SiteFooter';
 
 export default function Index({ videos = [] }) {
     return (
         <>
-            <Head title="Videos" />
+            <Seo
+                title="Videos"
+                description="Watch stories, events, and moments from Mahadeva Swamigal Children Home in Kilinochchi, Sri Lanka."
+            />
             <div className="bg-amber-50/20 text-slate-800 font-sans antialiased">
                 <SiteNav />
 

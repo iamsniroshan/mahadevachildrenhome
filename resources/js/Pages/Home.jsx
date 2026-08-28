@@ -1,5 +1,6 @@
-import { Head, Link } from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
 import { useEffect, useRef, useState } from 'react';
+import Seo from '@/Components/Seo';
 import SiteNav from '@/Components/Site/SiteNav';
 import SiteFooter from '@/Components/Site/SiteFooter';
 
@@ -183,7 +184,23 @@ function HeroSlider({ slides }) {
 export default function Home({ sliders = [], newsItems = [], causes = [] }) {
     return (
         <>
-            <Head title="Mahadeva Swamigal Children Home" />
+            <Seo
+                title="Home"
+                description="Mahadeva Swamigal Children Home provides shelter, education, healthcare, and holistic care for orphaned and vulnerable children in Kilinochchi, Sri Lanka."
+                jsonLd={{
+                    '@context': 'https://schema.org',
+                    '@type': 'NGO',
+                    name: 'Mahadeva Swamigal Children Home',
+                    url: typeof window !== 'undefined' ? window.location.origin : '',
+                    logo: typeof window !== 'undefined' ? `${window.location.origin}/storage/users/logo.jpg` : '/storage/users/logo.jpg',
+                    address: {
+                        '@type': 'PostalAddress',
+                        streetAddress: 'Jayanthi Nagar',
+                        addressLocality: 'Kilinochchi',
+                        addressCountry: 'LK',
+                    },
+                }}
+            />
             <div className="bg-amber-50/20 text-slate-800 font-sans antialiased">
                 <SiteNav />
 

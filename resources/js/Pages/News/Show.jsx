@@ -1,11 +1,27 @@
-import { Head, Link } from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
+import Seo from '@/Components/Seo';
 import SiteNav from '@/Components/Site/SiteNav';
 import SiteFooter from '@/Components/Site/SiteFooter';
 
 export default function Show({ newsItem, relatedNews = [] }) {
     return (
         <>
-            <Head title={newsItem.title} />
+            <Seo
+                title={newsItem.title}
+                description={newsItem.excerpt || `Read the latest news from Mahadeva Swamigal Children Home: ${newsItem.title}.`}
+                type="article"
+                image={newsItem.image}
+                jsonLd={{
+                    '@context': 'https://schema.org',
+                    '@type': 'NewsArticle',
+                    headline: newsItem.title,
+                    description: newsItem.excerpt || undefined,
+                    image: newsItem.image || undefined,
+                    datePublished: newsItem.publish_date || undefined,
+                    dateModified: newsItem.updated_at || newsItem.publish_date || undefined,
+                    author: newsItem.author ? { '@type': 'Person', name: newsItem.author } : undefined,
+                }}
+            />
             <div className="bg-amber-50/20 text-slate-800 font-sans antialiased">
                 <SiteNav />
 

@@ -1,11 +1,14 @@
-import { Head } from '@inertiajs/react';
+import Seo from '@/Components/Seo';
 import SiteNav from '@/Components/Site/SiteNav';
 import SiteFooter from '@/Components/Site/SiteFooter';
 
 export default function About() {
     return (
         <>
-            <Head title="About Us" />
+            <Seo
+                title="About Us"
+                description="Learn the story of Mahadeva Swamigal Children Home: our vision, mission, and unwavering commitment to the children of Kilinochchi, Sri Lanka."
+            />
             <div className="bg-amber-50/20 text-slate-800 font-sans antialiased">
                 <SiteNav />
 

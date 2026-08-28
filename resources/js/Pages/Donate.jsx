@@ -1,4 +1,5 @@
-import { Head, useForm, usePage } from '@inertiajs/react';
+import { useForm, usePage } from '@inertiajs/react';
+import Seo from '@/Components/Seo';
 import SiteNav from '@/Components/Site/SiteNav';
 import SiteFooter from '@/Components/Site/SiteFooter';
 
@@ -31,7 +32,10 @@ export default function Donate() {
 
     return (
         <>
-            <Head title="Donate" />
+            <Seo
+                title="Donate"
+                description="Support the children of Mahadeva Swamigal Children Home with a one-time or recurring donation towards education, healthcare, and shelter."
+            />
             <div className="relative overflow-hidden bg-[radial-gradient(circle_at_top_left,_rgba(255,214,102,0.18),transparent_20%),radial-gradient(circle_at_bottom_right,_rgba(251,113,133,0.18),transparent_25%),linear-gradient(180deg,_#fffaf5_0%,_#fff7ed_35%,_#fffdfb_100%)] text-slate-800 font-sans antialiased">
                 <div className="pointer-events-none absolute inset-0 overflow-hidden">
                     <div className="absolute -left-20 top-24 h-72 w-72 rounded-full bg-amber-300/40 blur-3xl" />

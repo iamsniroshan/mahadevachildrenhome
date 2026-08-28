@@ -1,5 +1,6 @@
-import { Head, Link, router } from '@inertiajs/react';
+import { Link, router } from '@inertiajs/react';
 import { useEffect, useRef, useState } from 'react';
+import Seo from '@/Components/Seo';
 import SiteNav from '@/Components/Site/SiteNav';
 import SiteFooter from '@/Components/Site/SiteFooter';
 
@@ -52,7 +53,10 @@ export default function Index({ newsItems }) {
 
     return (
         <>
-            <Head title="News & Updates" />
+            <Seo
+                title="News & Updates"
+                description="Read the latest news and updates from Mahadeva Swamigal Children Home in Kilinochchi, Sri Lanka."
+            />
             <div className="bg-amber-50/20 text-slate-800 font-sans antialiased">
                 <SiteNav />
 

@@ -1,5 +1,5 @@
-import { Head } from '@inertiajs/react';
 import { useState } from 'react';
+import Seo from '@/Components/Seo';
 import SiteNav from '@/Components/Site/SiteNav';
 import SiteFooter from '@/Components/Site/SiteFooter';
 
@@ -122,7 +122,10 @@ export default function Index({ committee = [], executive = [], staff = [] }) {
 
     return (
         <>
-            <Head title="Our Team" />
+            <Seo
+                title="Our Team"
+                description="Meet the committee, executives, and staff caring for the children of Mahadeva Swamigal Children Home."
+            />
             <div className="bg-amber-50/20 text-slate-800 font-sans antialiased">
                 <SiteNav />
 

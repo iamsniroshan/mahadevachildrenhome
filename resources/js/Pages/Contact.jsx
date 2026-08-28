@@ -1,4 +1,5 @@
-import { Head, useForm, usePage } from '@inertiajs/react';
+import { useForm, usePage } from '@inertiajs/react';
+import Seo from '@/Components/Seo';
 import SiteNav from '@/Components/Site/SiteNav';
 import SiteFooter from '@/Components/Site/SiteFooter';
 
@@ -24,7 +25,10 @@ export default function Contact() {
 
     return (
         <>
-            <Head title="Contact Us" />
+            <Seo
+                title="Contact Us"
+                description="Get in touch with Mahadeva Swamigal Children Home to learn about our programs, volunteer opportunities, or how you can support our mission."
+            />
             <div className="bg-amber-50/20 text-slate-800 font-sans antialiased">
                 <SiteNav />
 

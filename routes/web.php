@@ -15,6 +15,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\VideoController;
 use App\Models\Fundrise;
@@ -22,6 +23,21 @@ use App\Models\News;
 use App\Models\Slider;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+
+Route::get('/robots.txt', function () {
+    $lines = [
+        'User-agent: *',
+        'Disallow: /admin',
+        'Disallow: /dashboard',
+        'Disallow: /profile',
+        '',
+        'Sitemap: '.url('/sitemap.xml'),
+    ];
+
+    return response(implode("\n", $lines), 200)->header('Content-Type', 'text/plain');
+})->name('robots');
+
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
 Route::get('/', function () {
     return Inertia::render('Home', [
