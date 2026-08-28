@@ -2,17 +2,15 @@
 deployment:
   tasks:
     # DEPLOYPATH must match the "Repository Path" you set when creating the
-    # repository in cPanel > Git Version Control. It should point at the
-    # Laravel application root on the server (NOT public_html directly).
-    # rsync --delete wipes anything in DEPLOYPATH that no longer exists in the
-    # repo, giving a clean "delete then clone" deploy on every run, while
-    # keeping the runtime-only files below (.env, uploads, git metadata).
+    # repository in cPanel > Git Version Control (the domain's document root
+    # points at DEPLOYPATH/public). The repo is already checked out here by
+    # cPanel, so no copy/rsync step is needed — just install deps and cache.
+    # Each task below is self-contained (cd + command) since tasks may run
+    # in separate shells.
     - export DEPLOYPATH=/home/xwebbuil/mahadevachildrenhomeweb/
-    - /usr/bin/rsync -a --delete --exclude='.env' --exclude='.git' --exclude='storage/app/public' --exclude='node_modules' ./ $DEPLOYPATH
-    - cd $DEPLOYPATH
-    - composer install --no-dev --optimize-autoloader --no-interaction
-    - php artisan storage:link || true
-    - php artisan config:cache
-    - php artisan route:cache
-    - php artisan view:cache
-    - php artisan migrate --force
+    - cd $DEPLOYPATH && $(command -v composer || echo /opt/cpanel/composer/bin/composer) install --no-dev --optimize-autoloader --no-interaction
+    - cd $DEPLOYPATH && php artisan storage:link || true
+    - cd $DEPLOYPATH && php artisan config:cache
+    - cd $DEPLOYPATH && php artisan route:cache
+    - cd $DEPLOYPATH && php artisan view:cache
+    - cd $DEPLOYPATH && php artisan migrate --force
