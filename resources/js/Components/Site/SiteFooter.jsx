@@ -32,12 +32,7 @@ const socialLinks = [
     },
 ];
 
-const galleryPhotos = [
-    { src: '/images/home/educational-excellence.jpg', alt: 'Children home activity' },
-    { src: '/images/home/life-skills.jpg', alt: 'Education support' },
-    { src: '/images/home/health-wellness.jpg', alt: 'Medical care' },
-    { src: '/images/about/history.jpg', alt: 'Farm project' },
-];
+const locationMapUrl = 'https://www.google.com/maps?q=Mahadeva%20Swamigal%20Children%20Home%20Jayanthi%20Nagar%20Kilinochchi%20Sri%20Lanka&z=14&output=embed';
 
 export default function SiteFooter() {
     return (
@@ -110,25 +105,19 @@ export default function SiteFooter() {
                         </ul>
                     </div>
 
-                    {/* Gallery */}
+                    {/* Location */}
                     <div className="space-y-4">
-                        <h3 className="text-sm font-bold uppercase tracking-wider text-amber-500">Gallery</h3>
-                        <div className="grid grid-cols-2 gap-2">
-                            {galleryPhotos.map((photo, index) => (
-                                <img
-                                    key={index}
-                                    src={photo.src}
-                                    alt={photo.alt}
-                                    className="w-full h-16 object-cover rounded-lg hover:opacity-80 transition cursor-pointer"
-                                />
-                            ))}
+                        <h3 className="text-sm font-bold uppercase tracking-wider text-amber-500">Location</h3>
+                        <div className="overflow-hidden rounded-xl border border-rose-300/20 shadow-lg">
+                            <iframe
+                                title="Mahadeva Children Home location"
+                                src={locationMapUrl}
+                                className="h-40 w-full border-0"
+                                loading="lazy"
+                                allowFullScreen
+                                referrerPolicy="no-referrer-when-downgrade"
+                            />
                         </div>
-                        <Link
-                            href={route('donate')}
-                            className="inline-block bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-xs px-4 py-2 rounded-full transition"
-                        >
-                            Donate Now
-                        </Link>
                     </div>
                 </div>
 
