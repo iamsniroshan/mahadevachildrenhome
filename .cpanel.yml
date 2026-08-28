@@ -4,9 +4,11 @@ deployment:
     # DEPLOYPATH must match the "Repository Path" you set when creating the
     # repository in cPanel > Git Version Control. It should point at the
     # Laravel application root on the server (NOT public_html directly).
+    # rsync --delete wipes anything in DEPLOYPATH that no longer exists in the
+    # repo, giving a clean "delete then clone" deploy on every run, while
+    # keeping the runtime-only files below (.env, uploads, git metadata).
     - export DEPLOYPATH=/home/xwebbuil/mahadevachildrenhomeweb/
-    - /bin/cp -R * $DEPLOYPATH
-    - /bin/cp -R .cpanel.yml $DEPLOYPATH
+    - /usr/bin/rsync -a --delete --exclude='.env' --exclude='.git' --exclude='storage/app/public' --exclude='node_modules' ./ $DEPLOYPATH
     - cd $DEPLOYPATH
     - composer install --no-dev --optimize-autoloader --no-interaction
     - php artisan storage:link || true
