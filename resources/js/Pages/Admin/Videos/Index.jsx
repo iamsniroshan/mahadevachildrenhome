@@ -101,8 +101,8 @@ export default function Index({ videos }) {
         <AdminLayout header="Videos">
             <Head title="Videos" />
 
-            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-6">
-                <div className="flex items-center justify-between">
+            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 sm:p-6 space-y-5 sm:space-y-6">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <h2 className="font-bold text-lg text-slate-900">Homepage Videos</h2>
                     <button
                         type="button"

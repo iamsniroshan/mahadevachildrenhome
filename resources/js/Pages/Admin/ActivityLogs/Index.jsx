@@ -40,8 +40,8 @@ export default function Index({ logs }) {
         <AdminLayout header="Activity Logs">
             <Head title="Activity Logs" />
 
-            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-6">
-                <div className="flex items-center justify-between">
+            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 sm:p-6 space-y-5 sm:space-y-6">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <h2 className="font-bold text-lg text-slate-900">All User Actions</h2>
                     <span className="text-xs font-semibold text-slate-400">Read-only · records cannot be deleted</span>
                 </div>

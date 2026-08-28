@@ -103,8 +103,8 @@ export default function Index({ blogs }) {
         <AdminLayout header="Blog Posts">
             <Head title="Blogs" />
 
-            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-6">
-                <div className="flex items-center justify-between">
+            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 sm:p-6 space-y-5 sm:space-y-6">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <h2 className="font-bold text-lg text-slate-900">All Blog Posts</h2>
                     <button
                         type="button"
