@@ -200,20 +200,30 @@ export default function Dashboard({
 
                         <div className={`rounded-2xl border-t-4 ${panelAccents[4]} bg-white/70 shadow-[0_8px_30px_rgba(15,23,42,0.08)] backdrop-blur-xl p-4 flex flex-col min-h-0`}>
                             <h2 className="font-bold text-sm text-slate-900 mb-2 flex-shrink-0">Cause Goals Progress</h2>
-                            <div className="flex-1 min-h-0 overflow-y-auto space-y-3">
-                                {causeGoals.map((goal) => (
-                                    <div key={goal.name} className="space-y-1">
-                                        <div className="flex justify-between text-[11px] font-bold">
-                                            <span className="text-slate-800 truncate pr-2">{goal.name}</span>
-                                            <span className="text-emerald-600 flex-shrink-0">{goal.percent}%</span>
-                                        </div>
-                                        <div className="w-full bg-slate-100 rounded-full h-1.5">
-                                            <div className="bg-gradient-to-r from-emerald-400 to-teal-600 h-1.5 rounded-full" style={{ width: `${goal.percent}%` }} />
-                                        </div>
+                            <div className="flex-1 min-h-0">
+                                {causeGoals.length > 0 ? (
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <PieChart>
+                                            <Pie
+                                                data={causeGoals}
+                                                dataKey="percent"
+                                                nameKey="name"
+                                                innerRadius="45%"
+                                                outerRadius="70%"
+                                                paddingAngle={2}
+                                            >
+                                                {causeGoals.map((goal, index) => (
+                                                    <Cell key={goal.name} fill={PIE_COLORS[index % PIE_COLORS.length]} />
+                                                ))}
+                                            </Pie>
+                                            <Tooltip formatter={(value) => `${value}% funded`} />
+                                            <Legend wrapperStyle={{ fontSize: 11 }} />
+                                        </PieChart>
+                                    </ResponsiveContainer>
+                                ) : (
+                                    <div className="h-full flex items-center justify-center text-xs text-slate-400">
+                                        No active causes right now.
                                     </div>
-                                ))}
-                                {causeGoals.length === 0 && (
-                                    <p className="text-xs text-slate-400">No active causes right now.</p>
                                 )}
                             </div>
                         </div>

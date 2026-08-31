@@ -66,6 +66,7 @@ class DashboardController extends Controller
         ]);
 
         $recentLogs = ActivityLog::with('user:id,name')
+            ->whereDoesntHave('user', fn ($query) => $query->where('role', 'superadmin'))
             ->latest('created_at')
             ->limit(10)
             ->get();

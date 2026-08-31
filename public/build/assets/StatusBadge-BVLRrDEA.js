@@ -1,0 +1,1 @@
+import{t as e}from"./app-eMBpRIVI.js";var t=e();function n({value:e,map:n}){let r=n[e]??{label:e,className:`bg-slate-100 text-slate-700`};return(0,t.jsx)(`span`,{className:`text-xs font-bold px-2.5 py-1 rounded-full ${r.className}`,children:r.label})}export{n as t};
