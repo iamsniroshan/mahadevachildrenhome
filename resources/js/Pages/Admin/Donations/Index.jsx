@@ -36,6 +36,9 @@ const emptyDonation = {
 export default function Index({ donations }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingDonation, setEditingDonation] = useState(null);
+    const [viewingDonation, setViewingDonation] = useState(null);
+
+    const statusForm = useForm({ status: 'pending' });
 
     const form = useForm(editingDonation ? {
         donor_name: editingDonation.donor_name ?? '',
@@ -89,6 +92,25 @@ export default function Index({ donations }) {
         form.reset();
     };
 
+    const openViewModal = (donation) => {
+        setViewingDonation(donation);
+        statusForm.setData('status', donation.status ?? 'pending');
+    };
+
+    const closeViewModal = () => {
+        setViewingDonation(null);
+        statusForm.reset();
+        statusForm.clearErrors();
+    };
+
+    const submitStatus = (e) => {
+        e.preventDefault();
+        statusForm.patch(route('admin.donations.update-status', viewingDonation.id), {
+            preserveScroll: true,
+            onSuccess: () => closeViewModal(),
+        });
+    };
+
     const submit = (e) => {
         e.preventDefault();
 
@@ -135,7 +157,11 @@ export default function Index({ donations }) {
             header: 'Actions',
             align: 'right',
             render: (donation) => (
-                <ActionButtons onEdit={() => openEditModal(donation)} onDelete={() => handleDelete(donation)} />
+                <ActionButtons
+                    onView={() => openViewModal(donation)}
+                    onEdit={() => openEditModal(donation)}
+                    onDelete={() => handleDelete(donation)}
+                />
             ),
         },
     ];
@@ -247,6 +273,86 @@ export default function Index({ donations }) {
                     <FormActions onCancel={closeModal} processing={form.processing} submitLabel={editingDonation ? 'Save Changes' : 'Record Donation'} />
                 </form>
             </Modal>
+
+            <Modal
+                open={!!viewingDonation}
+                onClose={closeViewModal}
+                eyebrow="Donation"
+                title="Donation Details"
+            >
+                {viewingDonation && (
+                    <div className="space-y-6">
+                        <div className="grid gap-4 sm:grid-cols-2">
+                            <DetailItem label="Donor Name" value={viewingDonation.is_anonymous ? 'Anonymous Donor' : viewingDonation.donor_name} />
+                            <DetailItem label="Email" value={viewingDonation.email} />
+                            <DetailItem label="Phone" value={viewingDonation.phone || '—'} />
+                            <DetailItem label="Address" value={viewingDonation.address || '—'} />
+                            <DetailItem label="Donation Type" value={viewingDonation.donation_type} className="capitalize" />
+                            <DetailItem label="Category" value={viewingDonation.category} className="capitalize" />
+                            <DetailItem label="Amount" value={`${viewingDonation.currency} ${Number(viewingDonation.amount).toLocaleString()}`} />
+                            <DetailItem label="Payment Method" value={viewingDonation.payment_method || '—'} className="capitalize" />
+                            <DetailItem label="Payment Reference" value={viewingDonation.payment_reference || '—'} />
+                            <DetailItem
+                                label="Receipt"
+                                value={
+                                    viewingDonation.document_path ? (
+                                        <a
+                                            href={`/storage/${viewingDonation.document_path}`}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            className="text-rose-900 font-semibold hover:underline"
+                                        >
+                                            View Document
+                                        </a>
+                                    ) : '—'
+                                }
+                            />
+                        </div>
+
+                        {viewingDonation.message && (
+                            <div>
+                                <p className="text-xs font-bold uppercase tracking-wide text-slate-400">Message</p>
+                                <p className="mt-1 text-sm text-slate-700 whitespace-pre-line">{viewingDonation.message}</p>
+                            </div>
+                        )}
+
+                        {viewingDonation.admin_notes && (
+                            <div>
+                                <p className="text-xs font-bold uppercase tracking-wide text-slate-400">Admin Notes</p>
+                                <p className="mt-1 text-sm text-slate-700 whitespace-pre-line">{viewingDonation.admin_notes}</p>
+                            </div>
+                        )}
+
+                        <form onSubmit={submitStatus} className="border-t border-slate-100 pt-4">
+                            <Field
+                                label="Status"
+                                name="status"
+                                type="select"
+                                value={statusForm.data.status}
+                                onChange={(v) => statusForm.setData('status', v)}
+                                error={statusForm.errors.status}
+                                options={[
+                                    { value: 'pending', label: 'Pending' },
+                                    { value: 'confirmed', label: 'Confirmed' },
+                                    { value: 'processing', label: 'Processing' },
+                                    { value: 'completed', label: 'Completed' },
+                                    { value: 'cancelled', label: 'Cancelled' },
+                                ]}
+                            />
+                            <FormActions onCancel={closeViewModal} processing={statusForm.processing} submitLabel="Update Status" />
+                        </form>
+                    </div>
+                )}
+            </Modal>
         </AdminLayout>
+    );
+}
+
+function DetailItem({ label, value, className = '' }) {
+    return (
+        <div>
+            <p className="text-xs font-bold uppercase tracking-wide text-slate-400">{label}</p>
+            <p className={`mt-1 text-sm font-semibold text-slate-800 ${className}`}>{value}</p>
+        </div>
     );
 }

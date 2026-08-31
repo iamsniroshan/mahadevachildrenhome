@@ -82,6 +82,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     Route::resource('news', AdminNewsController::class);
     Route::resource('fundrise', FundriseController::class);
     Route::resource('donations', AdminDonationController::class);
+    Route::patch('donations/{donation}/status', [AdminDonationController::class, 'updateStatus'])->name('donations.update-status');
     Route::resource('users', AdminUserController::class)->except(['create', 'edit', 'show']);
     Route::resource('videos', AdminVideoController::class)->except(['create', 'edit', 'show']);
 

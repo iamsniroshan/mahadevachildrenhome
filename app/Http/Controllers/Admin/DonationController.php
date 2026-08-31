@@ -42,6 +42,17 @@ class DonationController extends Controller
         return redirect()->route('admin.donations.index')->with('success', 'Donation updated.');
     }
 
+    public function updateStatus(Request $request, Donation $donation): RedirectResponse
+    {
+        $data = $request->validate([
+            'status' => ['required', 'in:pending,confirmed,processing,completed,cancelled'],
+        ]);
+
+        $donation->update($data);
+
+        return redirect()->route('admin.donations.index')->with('success', 'Donation status updated.');
+    }
+
     public function destroy(Donation $donation): RedirectResponse
     {
         $donation->delete();
