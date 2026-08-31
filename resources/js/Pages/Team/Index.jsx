@@ -40,16 +40,21 @@ function MemberCard({ member, group, onSelect }) {
         <button
             type="button"
             onClick={() => onSelect(member, group)}
-            className={`text-left bg-white rounded-2xl shadow-sm ring-1 ${group.ringClass} overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all`}
+            className={`text-left bg-white rounded-2xl shadow-sm ring-1 ${group.ringClass} overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all flex flex-col`}
         >
-            <img src={member.image || fallbackImage} alt={member.name} className="h-56 w-full object-cover bg-slate-100" />
-            <div className="p-5 space-y-1.5">
-                <span className={`${group.badgeClass} text-[11px] font-bold uppercase tracking-wide px-2.5 py-1 rounded-full inline-block`}>
+            <img
+                src={member.image || fallbackImage}
+                alt={member.name}
+                loading="lazy"
+                className="h-32 sm:h-40 md:h-48 w-full object-cover object-top bg-slate-100"
+            />
+            <div className="p-3 sm:p-5 space-y-1 sm:space-y-1.5">
+                <span className={`${group.badgeClass} text-[10px] sm:text-[11px] font-bold uppercase tracking-wide px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full inline-block max-w-full truncate`}>
                     {member.position}
                 </span>
-                <h3 className="text-lg font-bold text-slate-900">{member.name}</h3>
+                <h3 className="text-sm sm:text-lg font-bold text-slate-900 break-words">{member.name}</h3>
                 {member.qualifications && (
-                    <p className="text-sm text-slate-600 leading-relaxed line-clamp-2">{member.qualifications}</p>
+                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed line-clamp-2">{member.qualifications}</p>
                 )}
             </div>
         </button>
@@ -145,15 +150,15 @@ export default function Index({ committee = [], executive = [], staff = [] }) {
                     const members = dataByKey[group.key];
 
                     return (
-                        <section key={group.key} className={`py-20 ${group.sectionClass}`}>
-                            <div className="max-w-7xl mx-auto px-6">
-                                <div className="text-center max-w-2xl mx-auto mb-16">
-                                    <h2 className={`text-3xl font-bold ${group.accentClass}`}>{group.title}</h2>
-                                    <p className="text-slate-600 mt-2">{group.subtitle}</p>
+                        <section key={group.key} className={`py-12 sm:py-20 ${group.sectionClass}`}>
+                            <div className="max-w-7xl mx-auto px-4 sm:px-6">
+                                <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-16">
+                                    <h2 className={`text-2xl sm:text-3xl font-bold ${group.accentClass}`}>{group.title}</h2>
+                                    <p className="text-sm sm:text-base text-slate-600 mt-2">{group.subtitle}</p>
                                 </div>
 
                                 {members.length > 0 ? (
-                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+                                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-6 md:gap-8">
                                         {members.map((member) => (
                                             <MemberCard key={member.id} member={member} group={group} onSelect={openMember} />
                                         ))}
