@@ -206,7 +206,7 @@ export default function AdminLayout({ header, children, headerAction = null, ful
                     </div>
                 </header>
 
-                <main className={fullHeight ? 'flex-1 min-h-0 overflow-hidden p-3 sm:p-6' : 'flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8'}>{children}</main>
+                <main className={fullHeight ? 'flex-1 min-h-0 overflow-y-auto p-3 sm:p-6 lg:overflow-hidden' : 'flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8'}>{children}</main>
             </div>
         </div>
     );

@@ -13,6 +13,7 @@ class ActivityLogController extends Controller
     {
         return Inertia::render('Admin/ActivityLogs/Index', [
             'logs' => ActivityLog::with('user:id,name,email')
+                ->whereDoesntHave('user', fn ($query) => $query->where('role', 'superadmin'))
                 ->latest('created_at')
                 ->paginate(25)
                 ->withQueryString(),

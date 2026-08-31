@@ -78,20 +78,20 @@ export default function Dashboard({
         <AdminLayout header="Overview Dashboard" fullHeight>
             <Head title="Admin Dashboard" />
 
-            <div className="relative h-full min-h-0">
+            <div className="relative lg:h-full lg:min-h-0">
                 {/* Decorative crystal glow blobs */}
                 <div className="pointer-events-none absolute -left-10 -top-10 h-56 w-56 rounded-full bg-teal-300/25 blur-3xl" />
                 <div className="pointer-events-none absolute right-0 top-1/4 h-64 w-64 rounded-full bg-rose-300/25 blur-3xl" />
                 <div className="pointer-events-none absolute bottom-0 left-1/3 h-52 w-52 rounded-full bg-amber-300/25 blur-3xl" />
                 <div className="pointer-events-none absolute right-1/4 bottom-1/4 h-48 w-48 rounded-full bg-sky-300/20 blur-3xl" />
 
-                <div className="relative h-full min-h-0 grid grid-rows-[auto_1fr_1fr] gap-4">
+                <div className="relative grid gap-4 lg:h-full lg:min-h-0 lg:grid-rows-[auto_minmax(0,1fr)_minmax(0,1fr)]">
                     {/* Key Performance Indicators */}
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 flex-shrink-0">
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4 flex-shrink-0">
                         {kpiCards.map((kpi) => (
                             <div
                                 key={kpi.label}
-                                className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${kpi.gradient} p-4 space-y-1 text-white shadow-[0_10px_30px_rgba(15,23,42,0.18)]`}
+                                className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${kpi.gradient} p-3 sm:p-4 space-y-1 text-white shadow-[0_10px_30px_rgba(15,23,42,0.18)]`}
                             >
                                 <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/15 blur-2xl" />
                                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-white/10 via-transparent to-transparent" />
@@ -110,8 +110,8 @@ export default function Dashboard({
                     </div>
 
                     {/* Charts */}
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 min-h-0">
-                        <div className={`lg:col-span-2 rounded-2xl border-t-4 ${panelAccents[0]} bg-white/70 shadow-[0_8px_30px_rgba(15,23,42,0.08)] backdrop-blur-xl p-4 flex flex-col min-h-0`}>
+                    <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:min-h-0">
+                        <div className={`min-h-72 lg:min-h-0 lg:col-span-2 rounded-2xl border-t-4 ${panelAccents[0]} bg-white/70 shadow-[0_8px_30px_rgba(15,23,42,0.08)] backdrop-blur-xl p-4 flex flex-col`}>
                             <h2 className="font-bold text-sm text-slate-900 mb-2 flex-shrink-0">Donations Trend (Last 6 Months)</h2>
                             <div className="flex-1 min-h-0">
                                 <ResponsiveContainer width="100%" height="100%">
@@ -132,7 +132,7 @@ export default function Dashboard({
                             </div>
                         </div>
 
-                        <div className={`rounded-2xl border-t-4 ${panelAccents[1]} bg-white/70 shadow-[0_8px_30px_rgba(15,23,42,0.08)] backdrop-blur-xl p-4 flex flex-col min-h-0`}>
+                        <div className={`min-h-72 lg:min-h-0 rounded-2xl border-t-4 ${panelAccents[1]} bg-white/70 shadow-[0_8px_30px_rgba(15,23,42,0.08)] backdrop-blur-xl p-4 flex flex-col`}>
                             <h2 className="font-bold text-sm text-slate-900 mb-2 flex-shrink-0">Donations by Category</h2>
                             <div className="flex-1 min-h-0">
                                 {categoryBreakdown.length > 0 ? (
@@ -164,8 +164,8 @@ export default function Dashboard({
                     </div>
 
                     {/* Recent Contributions, Cause Goals & Activity */}
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 min-h-0">
-                        <div className={`rounded-2xl border-t-4 ${panelAccents[2]} bg-white/70 shadow-[0_8px_30px_rgba(15,23,42,0.08)] backdrop-blur-xl p-4 flex flex-col min-h-0`}>
+                    <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:min-h-0">
+                        <div className={`min-h-72 lg:min-h-0 rounded-2xl border-t-4 ${panelAccents[2]} bg-white/70 shadow-[0_8px_30px_rgba(15,23,42,0.08)] backdrop-blur-xl p-4 flex flex-col`}>
                             <h2 className="font-bold text-sm text-slate-900 mb-2 flex-shrink-0">Recent Contributions</h2>
                             <div className="flex-1 min-h-0 overflow-y-auto">
                                 <table className="w-full text-left border-collapse">
@@ -198,7 +198,7 @@ export default function Dashboard({
                             </div>
                         </div>
 
-                        <div className={`rounded-2xl border-t-4 ${panelAccents[4]} bg-white/70 shadow-[0_8px_30px_rgba(15,23,42,0.08)] backdrop-blur-xl p-4 flex flex-col min-h-0`}>
+                        <div className={`min-h-72 lg:min-h-0 rounded-2xl border-t-4 ${panelAccents[4]} bg-white/70 shadow-[0_8px_30px_rgba(15,23,42,0.08)] backdrop-blur-xl p-4 flex flex-col`}>
                             <h2 className="font-bold text-sm text-slate-900 mb-2 flex-shrink-0">Cause Goals Progress</h2>
                             <div className="flex-1 min-h-0">
                                 {causeGoals.length > 0 ? (
@@ -228,7 +228,7 @@ export default function Dashboard({
                             </div>
                         </div>
 
-                        <div className={`rounded-2xl border-t-4 ${panelAccents[5]} bg-white/70 shadow-[0_8px_30px_rgba(15,23,42,0.08)] backdrop-blur-xl p-4 flex flex-col min-h-0`}>
+                        <div className={`min-h-72 lg:min-h-0 rounded-2xl border-t-4 ${panelAccents[5]} bg-white/70 shadow-[0_8px_30px_rgba(15,23,42,0.08)] backdrop-blur-xl p-4 flex flex-col`}>
                             <div className="flex items-center justify-between flex-shrink-0 mb-2">
                                 <h2 className="font-bold text-sm text-slate-900">Recent Activity</h2>
                                 <a href={route('admin.activity-logs.index')} className="text-[10px] font-bold text-rose-900 hover:underline">
