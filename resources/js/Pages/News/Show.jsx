@@ -1,9 +1,68 @@
+import { useState } from 'react';
 import { Link } from '@inertiajs/react';
 import Seo from '@/Components/Seo';
 import SiteNav from '@/Components/Site/SiteNav';
 import SiteFooter from '@/Components/Site/SiteFooter';
 
+function GalleryLightbox({ images, index, onClose, onPrev, onNext }) {
+    if (index === null) return null;
+
+    return (
+        <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/80 p-4 backdrop-blur-sm"
+            onClick={onClose}
+        >
+            <button
+                type="button"
+                onClick={onClose}
+                className="absolute top-4 right-4 bg-white/90 hover:bg-white text-slate-700 rounded-full w-9 h-9 flex items-center justify-center text-lg font-bold shadow"
+            >
+                ×
+            </button>
+
+            {images.length > 1 && (
+                <button
+                    type="button"
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        onPrev();
+                    }}
+                    className="absolute left-2 sm:left-6 bg-white/90 hover:bg-white text-slate-700 rounded-full w-10 h-10 flex items-center justify-center text-xl font-bold shadow"
+                >
+                    ‹
+                </button>
+            )}
+
+            <img
+                src={images[index]}
+                alt={`Gallery image ${index + 1}`}
+                className="max-h-[85vh] max-w-full rounded-xl object-contain"
+                onClick={(e) => e.stopPropagation()}
+            />
+
+            {images.length > 1 && (
+                <button
+                    type="button"
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        onNext();
+                    }}
+                    className="absolute right-2 sm:right-6 bg-white/90 hover:bg-white text-slate-700 rounded-full w-10 h-10 flex items-center justify-center text-xl font-bold shadow"
+                >
+                    ›
+                </button>
+            )}
+        </div>
+    );
+}
+
 export default function Show({ newsItem, relatedNews = [] }) {
+    const [activeImageIndex, setActiveImageIndex] = useState(null);
+    const galleryImages = newsItem.images || [];
+
+    const showPrev = () => setActiveImageIndex((i) => (i - 1 + galleryImages.length) % galleryImages.length);
+    const showNext = () => setActiveImageIndex((i) => (i + 1) % galleryImages.length);
+
     return (
         <>
             <Seo
@@ -61,12 +120,18 @@ export default function Show({ newsItem, relatedNews = [] }) {
                                 <h2 className="text-lg font-bold text-slate-900">Gallery</h2>
                                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                                     {newsItem.images.map((src, index) => (
-                                        <img
+                                        <button
                                             key={index}
-                                            src={src}
-                                            alt={`${newsItem.title} additional image ${index + 1}`}
-                                            className="h-32 w-full rounded-xl object-cover bg-slate-100"
-                                        />
+                                            type="button"
+                                            onClick={() => setActiveImageIndex(index)}
+                                            className="block"
+                                        >
+                                            <img
+                                                src={src}
+                                                alt={`${newsItem.title} additional image ${index + 1}`}
+                                                className="h-32 w-full rounded-xl object-cover bg-slate-100 hover:opacity-80 transition"
+                                            />
+                                        </button>
                                     ))}
                                 </div>
                             </div>
@@ -96,6 +161,14 @@ export default function Show({ newsItem, relatedNews = [] }) {
 
                 <SiteFooter />
             </div>
+
+            <GalleryLightbox
+                images={galleryImages}
+                index={activeImageIndex}
+                onClose={() => setActiveImageIndex(null)}
+                onPrev={showPrev}
+                onNext={showNext}
+            />
         </>
     );
 }

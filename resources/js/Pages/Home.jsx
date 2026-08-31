@@ -494,7 +494,7 @@ export default function Home({ sliders = [], newsItems = [], causes = [] }) {
                             )}
                         </div>
 
-                        <div className="bg-rose-500 text-white rounded-2xl p-6 sm:p-8 text-center space-y-3">
+                        <div className="bg-teal-950 text-white rounded-2xl p-6 sm:p-8 text-center space-y-3">
                             <h3 className="text-xl sm:text-2xl font-bold">Want to volunteer or visit our home?</h3>
                             <Link
                                 href={route('contact')}
