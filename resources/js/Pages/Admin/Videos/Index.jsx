@@ -101,20 +101,16 @@ export default function Index({ videos }) {
         <AdminLayout header="Videos">
             <Head title="Videos" />
 
-            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 sm:p-6 space-y-5 sm:space-y-6">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                    <h2 className="font-bold text-lg text-slate-900">Homepage Videos</h2>
-                    <button
-                        type="button"
-                        onClick={openCreateModal}
-                        className="bg-rose-900 hover:bg-rose-950 text-white font-semibold px-5 py-2 rounded-full text-xs transition"
-                    >
+            <DataTable
+                columns={columns}
+                data={videos}
+                emptyMessage="No videos yet."
+                actions={(
+                    <button type="button" onClick={openCreateModal} className="whitespace-nowrap rounded-lg bg-rose-900 px-4 py-2 text-xs font-semibold text-white transition hover:bg-rose-950">
                         + Add Video
                     </button>
-                </div>
-
-                <DataTable columns={columns} data={videos} emptyMessage="No videos yet." />
-            </div>
+                )}
+            />
 
             <Modal open={isModalOpen} onClose={closeModal} eyebrow="Video" title={editingVideo ? 'Edit Video' : 'Add Video'}>
                 <form onSubmit={submit} className="space-y-6">

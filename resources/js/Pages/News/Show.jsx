@@ -108,7 +108,7 @@ export default function Show({ newsItem, relatedNews = [] }) {
                         </div>
 
                         {newsItem.image && (
-                            <img src={newsItem.image} alt={newsItem.title} className="rounded-2xl w-full h-80 object-cover bg-slate-100" />
+                            <img src={newsItem.image} alt={newsItem.title} className="rounded-2xl w-full object-cover bg-slate-100" />
                         )}
 
                         <div className="prose max-w-none text-slate-700 leading-relaxed whitespace-pre-line">
@@ -129,7 +129,7 @@ export default function Show({ newsItem, relatedNews = [] }) {
                                             <img
                                                 src={src}
                                                 alt={`${newsItem.title} additional image ${index + 1}`}
-                                                className="h-32 w-full rounded-xl object-cover bg-slate-100 hover:opacity-80 transition"
+                                                className="w-full rounded-xl object-cover bg-slate-100 hover:opacity-80 transition"
                                             />
                                         </button>
                                     ))}

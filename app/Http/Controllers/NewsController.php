@@ -15,8 +15,7 @@ class NewsController extends Controller
             'newsItems' => News::where('status', 'published')
                 ->orderByDesc('publish_date')
                 ->orderByDesc('created_at')
-                ->paginate(9)
-                ->withQueryString(),
+                ->get(),
         ]);
     }
 

@@ -1,7 +1,7 @@
 import AdminLayout from '@/Layouts/AdminLayout';
 import DataTable from '@/Components/Admin/DataTable';
 import StatusBadge from '@/Components/Admin/StatusBadge';
-import { Head, Link } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
 
 const actionMap = {
     created: { label: 'Created', className: 'bg-emerald-100 text-emerald-800' },
@@ -10,8 +10,7 @@ const actionMap = {
 };
 
 export default function Index({ logs }) {
-    const entries = logs?.data ?? [];
-    const links = logs?.links ?? [];
+    const entries = logs ?? [];
 
     const columns = [
         {
@@ -39,35 +38,12 @@ export default function Index({ logs }) {
     return (
         <AdminLayout header="Activity Logs">
             <Head title="Activity Logs" />
-
-            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 sm:p-6 space-y-5 sm:space-y-6">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                    <h2 className="font-bold text-lg text-slate-900">All User Actions</h2>
-                    <span className="text-xs font-semibold text-slate-400">Read-only · records cannot be deleted</span>
-                </div>
-
-                <DataTable columns={columns} data={entries} emptyMessage="No activity recorded yet." />
-
-                {links.length > 3 && (
-                    <div className="flex flex-wrap justify-center gap-2 pt-2">
-                        {links.map((link, index) => (
-                            <Link
-                                key={index}
-                                href={link.url || '#'}
-                                preserveScroll
-                                className={`px-4 py-2 rounded-full text-sm font-semibold transition ${
-                                    link.active
-                                        ? 'bg-rose-900 text-white'
-                                        : link.url
-                                        ? 'bg-white border border-slate-200 text-slate-600 hover:border-rose-900'
-                                        : 'bg-slate-100 text-slate-300 pointer-events-none'
-                                }`}
-                                dangerouslySetInnerHTML={{ __html: link.label }}
-                            />
-                        ))}
-                    </div>
-                )}
-            </div>
+            <DataTable
+                columns={columns}
+                data={entries}
+                emptyMessage="No activity recorded yet."
+                actions={<span className="whitespace-nowrap text-xs font-semibold text-slate-400">Read-only · records cannot be deleted</span>}
+            />
         </AdminLayout>
     );
 }

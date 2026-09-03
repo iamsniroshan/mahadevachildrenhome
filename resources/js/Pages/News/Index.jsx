@@ -1,55 +1,10 @@
-import { Link, router } from '@inertiajs/react';
-import { useEffect, useRef, useState } from 'react';
+import { Link } from '@inertiajs/react';
 import Seo from '@/Components/Seo';
 import SiteNav from '@/Components/Site/SiteNav';
 import SiteFooter from '@/Components/Site/SiteFooter';
 
 export default function Index({ newsItems }) {
-    const [items, setItems] = useState(newsItems?.data ?? []);
-    const [nextPageUrl, setNextPageUrl] = useState(newsItems?.next_page_url ?? null);
-    const [loading, setLoading] = useState(false);
-    const sentinelRef = useRef(null);
-
-    useEffect(() => {
-        setItems(newsItems?.data ?? []);
-        setNextPageUrl(newsItems?.next_page_url ?? null);
-    }, [newsItems]);
-
-    const loadMore = () => {
-        if (!nextPageUrl || loading) return;
-        setLoading(true);
-
-        router.visit(nextPageUrl, {
-            preserveState: true,
-            preserveScroll: true,
-            only: ['newsItems'],
-            onSuccess: (page) => {
-                const fresh = page.props.newsItems;
-                setItems((prev) => [...prev, ...(fresh?.data ?? [])]);
-                setNextPageUrl(fresh?.next_page_url ?? null);
-                setLoading(false);
-            },
-            onError: () => setLoading(false),
-        });
-    };
-
-    useEffect(() => {
-        const sentinel = sentinelRef.current;
-        if (!sentinel) return;
-
-        const observer = new IntersectionObserver(
-            (entries) => {
-                if (entries[0].isIntersecting) {
-                    loadMore();
-                }
-            },
-            { rootMargin: '300px' }
-        );
-
-        observer.observe(sentinel);
-        return () => observer.disconnect();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [nextPageUrl, loading]);
+    const items = newsItems ?? [];
 
     return (
         <>
@@ -81,7 +36,7 @@ export default function Index({ newsItems }) {
                                     href={route('news.show', item.id)}
                                     className="block bg-white border border-slate-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition"
                                 >
-                                    <img src={item.image} alt={item.title} className="h-48 w-full object-cover bg-slate-100" />
+                                    <img src={item.image} alt={item.title} className="h-64 w-full object-cover bg-slate-100" />
                                     <div className="p-5 space-y-2">
                                         {item.category && (
                                             <span className="text-xs font-bold uppercase tracking-wide text-rose-900">{item.category}</span>
@@ -96,14 +51,6 @@ export default function Index({ newsItems }) {
                             )}
                         </div>
 
-                        <div ref={sentinelRef} className="h-4" />
-
-                        {loading && (
-                            <p className="text-center text-sm font-semibold text-slate-400">Loading more stories…</p>
-                        )}
-                        {!nextPageUrl && items.length > 0 && (
-                            <p className="text-center text-sm text-slate-400">You've reached the end.</p>
-                        )}
                     </div>
                 </section>
 

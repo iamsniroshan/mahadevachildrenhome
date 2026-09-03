@@ -170,23 +170,19 @@ export default function Index({ donations }) {
         <AdminLayout header="Donations">
             <Head title="Donations" />
 
-            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 sm:p-6 space-y-5 sm:space-y-6">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                    <h2 className="font-bold text-lg text-slate-900">All Donations</h2>
-                    <button
-                        type="button"
-                        onClick={openCreateModal}
-                        className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-5 py-2 rounded-full text-xs transition flex items-center gap-2"
-                    >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+            <DataTable
+                columns={columns}
+                data={donations}
+                emptyMessage="No donations recorded yet."
+                actions={(
+                        <button type="button" onClick={openCreateModal} className="flex items-center gap-2 whitespace-nowrap rounded-lg bg-rose-900 px-4 py-2 text-xs font-semibold text-white transition hover:bg-rose-950">
+                        <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                             <path d="M12 4v16m8-8H4" />
                         </svg>
                         Record New Donation
                     </button>
-                </div>
-
-                <DataTable columns={columns} data={donations} emptyMessage="No donations recorded yet." />
-            </div>
+                )}
+            />
 
             <Modal
                 open={isModalOpen}
@@ -195,76 +191,76 @@ export default function Index({ donations }) {
                 title={editingDonation ? 'Edit Donation' : 'Record New Donation'}
             >
                 <form onSubmit={submit} className="space-y-6">
-                            <div className="grid gap-6 md:grid-cols-2">
-                                <Field label="Donor Name" name="donor_name" value={form.data.donor_name} onChange={(v) => form.setData('donor_name', v)} error={form.errors.donor_name} required />
-                                <Field label="Email" name="email" type="email" value={form.data.email} onChange={(v) => form.setData('email', v)} error={form.errors.email} required />
-                                <Field label="Phone" name="phone" value={form.data.phone} onChange={(v) => form.setData('phone', v)} error={form.errors.phone} />
-                                <Field label="Amount" name="amount" type="number" value={form.data.amount} onChange={(v) => form.setData('amount', v)} error={form.errors.amount} required />
-                                <Field label="Currency" name="currency" value={form.data.currency} onChange={(v) => form.setData('currency', v)} error={form.errors.currency} />
-                                <Field
-                                    label="Donation Type"
-                                    name="donation_type"
-                                    type="select"
-                                    value={form.data.donation_type}
-                                    onChange={(v) => form.setData('donation_type', v)}
-                                    error={form.errors.donation_type}
-                                    options={[
-                                        { value: 'one_time', label: 'One Time' },
-                                        { value: 'monthly', label: 'Monthly' },
-                                        { value: 'yearly', label: 'Yearly' },
-                                    ]}
-                                />
-                                <Field
-                                    label="Category"
-                                    name="category"
-                                    type="select"
-                                    value={form.data.category}
-                                    onChange={(v) => form.setData('category', v)}
-                                    error={form.errors.category}
-                                    options={[
-                                        { value: 'general', label: 'General' },
-                                        { value: 'education', label: 'Education' },
-                                        { value: 'healthcare', label: 'Healthcare' },
-                                        { value: 'shelter', label: 'Shelter' },
-                                        { value: 'food', label: 'Food' },
-                                        { value: 'emergency', label: 'Emergency' },
-                                    ]}
-                                />
-                                <Field
-                                    label="Payment Method"
-                                    name="payment_method"
-                                    type="select"
-                                    value={form.data.payment_method}
-                                    onChange={(v) => form.setData('payment_method', v)}
-                                    error={form.errors.payment_method}
-                                    options={[
-                                        { value: '', label: 'Select method' },
-                                        { value: 'bank_transfer', label: 'Bank Transfer' },
-                                        { value: 'credit_card', label: 'Credit Card' },
-                                        { value: 'paypal', label: 'PayPal' },
-                                        { value: 'cash', label: 'Cash' },
-                                        { value: 'check', label: 'Check' },
-                                        { value: 'other', label: 'Other' },
-                                    ]}
-                                />
-                                <Field label="Payment Reference" name="payment_reference" value={form.data.payment_reference} onChange={(v) => form.setData('payment_reference', v)} error={form.errors.payment_reference} />
-                                <Field
-                                    label="Status"
-                                    name="status"
-                                    type="select"
-                                    value={form.data.status}
-                                    onChange={(v) => form.setData('status', v)}
-                                    error={form.errors.status}
-                                    options={[
-                                        { value: 'pending', label: 'Pending' },
-                                        { value: 'confirmed', label: 'Confirmed' },
-                                        { value: 'processing', label: 'Processing' },
-                                        { value: 'completed', label: 'Completed' },
-                                        { value: 'cancelled', label: 'Cancelled' },
-                                    ]}
-                                />
-                                <Field label="Anonymous" name="is_anonymous" type="checkbox" value={form.data.is_anonymous} onChange={(v) => form.setData('is_anonymous', v)} error={form.errors.is_anonymous} />
-                            </div>
+                    <div className="grid gap-6 md:grid-cols-2">
+                        <Field label="Donor Name" name="donor_name" value={form.data.donor_name} onChange={(v) => form.setData('donor_name', v)} error={form.errors.donor_name} required />
+                        <Field label="Email" name="email" type="email" value={form.data.email} onChange={(v) => form.setData('email', v)} error={form.errors.email} required />
+                        <Field label="Phone" name="phone" value={form.data.phone} onChange={(v) => form.setData('phone', v)} error={form.errors.phone} />
+                        <Field label="Amount" name="amount" type="number" value={form.data.amount} onChange={(v) => form.setData('amount', v)} error={form.errors.amount} required />
+                        <Field label="Currency" name="currency" value={form.data.currency} onChange={(v) => form.setData('currency', v)} error={form.errors.currency} />
+                        <Field
+                            label="Donation Type"
+                            name="donation_type"
+                            type="select"
+                            value={form.data.donation_type}
+                            onChange={(v) => form.setData('donation_type', v)}
+                            error={form.errors.donation_type}
+                            options={[
+                                { value: 'one_time', label: 'One Time' },
+                                { value: 'monthly', label: 'Monthly' },
+                                { value: 'yearly', label: 'Yearly' },
+                            ]}
+                        />
+                        <Field
+                            label="Category"
+                            name="category"
+                            type="select"
+                            value={form.data.category}
+                            onChange={(v) => form.setData('category', v)}
+                            error={form.errors.category}
+                            options={[
+                                { value: 'general', label: 'General' },
+                                { value: 'education', label: 'Education' },
+                                { value: 'healthcare', label: 'Healthcare' },
+                                { value: 'shelter', label: 'Shelter' },
+                                { value: 'food', label: 'Food' },
+                                { value: 'emergency', label: 'Emergency' },
+                            ]}
+                        />
+                        <Field
+                            label="Payment Method"
+                            name="payment_method"
+                            type="select"
+                            value={form.data.payment_method}
+                            onChange={(v) => form.setData('payment_method', v)}
+                            error={form.errors.payment_method}
+                            options={[
+                                { value: '', label: 'Select method' },
+                                { value: 'bank_transfer', label: 'Bank Transfer' },
+                                { value: 'credit_card', label: 'Credit Card' },
+                                { value: 'paypal', label: 'PayPal' },
+                                { value: 'cash', label: 'Cash' },
+                                { value: 'check', label: 'Check' },
+                                { value: 'other', label: 'Other' },
+                            ]}
+                        />
+                        <Field label="Payment Reference" name="payment_reference" value={form.data.payment_reference} onChange={(v) => form.setData('payment_reference', v)} error={form.errors.payment_reference} />
+                        <Field
+                            label="Status"
+                            name="status"
+                            type="select"
+                            value={form.data.status}
+                            onChange={(v) => form.setData('status', v)}
+                            error={form.errors.status}
+                            options={[
+                                { value: 'pending', label: 'Pending' },
+                                { value: 'confirmed', label: 'Confirmed' },
+                                { value: 'processing', label: 'Processing' },
+                                { value: 'completed', label: 'Completed' },
+                                { value: 'cancelled', label: 'Cancelled' },
+                            ]}
+                        />
+                        <Field label="Anonymous" name="is_anonymous" type="checkbox" value={form.data.is_anonymous} onChange={(v) => form.setData('is_anonymous', v)} error={form.errors.is_anonymous} />
+                    </div>
 
                     <Field label="Address" name="address" type="textarea" rows={2} value={form.data.address} onChange={(v) => form.setData('address', v)} error={form.errors.address} />
                     <Field label="Message" name="message" type="textarea" rows={2} value={form.data.message} onChange={(v) => form.setData('message', v)} error={form.errors.message} />

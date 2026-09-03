@@ -285,7 +285,7 @@ export default function Home({ sliders = [], newsItems = [], causes = [] }) {
                                         key={cause.id}
                                         className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-md transition flex flex-col"
                                     >
-                                        <img src={cause.image} alt={cause.title} className="h-48 w-full object-cover bg-slate-100" />
+                                        <img src={cause.image} alt={cause.title} className="h-56 w-full object-cover bg-slate-100" />
                                         <div className="p-6 flex flex-col flex-1">
                                             {cause.category && (
                                                 <span className="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-1 rounded self-start capitalize">
@@ -485,7 +485,7 @@ export default function Home({ sliders = [], newsItems = [], causes = [] }) {
                                     href={route('news.show', item.id)}
                                     className="block border border-slate-100 rounded-2xl overflow-hidden p-4 space-y-3 hover:shadow-md transition"
                                 >
-                                    <img src={item.image} className="rounded-xl h-40 sm:h-44 w-full object-cover bg-slate-100" alt={item.title} />
+                                    <img src={item.image} className="rounded-xl h-60 sm:h-60 w-full object-cover bg-slate-100" alt={item.title} />
                                     <h4 className="font-bold text-base">{item.title}</h4>
                                 </Link>
                             ))}

@@ -63,12 +63,7 @@ export default function Index({ contacts }) {
     return (
         <AdminLayout header="Contact Messages">
             <Head title="Contacts" />
-
-            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 sm:p-6 space-y-5 sm:space-y-6">
-                <h2 className="font-bold text-lg text-slate-900">Inbound Messages</h2>
-
                 <DataTable columns={columns} data={contacts} emptyMessage="No messages yet." />
-            </div>
         </AdminLayout>
     );
 }

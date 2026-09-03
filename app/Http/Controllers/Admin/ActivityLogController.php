@@ -15,8 +15,7 @@ class ActivityLogController extends Controller
             'logs' => ActivityLog::with('user:id,name,email')
                 ->whereDoesntHave('user', fn ($query) => $query->where('role', 'superadmin'))
                 ->latest('created_at')
-                ->paginate(25)
-                ->withQueryString(),
+                ->get(),
         ]);
     }
 }
