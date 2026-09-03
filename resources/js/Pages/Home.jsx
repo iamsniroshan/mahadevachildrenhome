@@ -205,7 +205,7 @@ export default function Home({ sliders = [], newsItems = [], causes = [] }) {
                 <SiteNav />
 
                 {/* 1. Hero Section */}
-                <section className="bg-rose-950 text-white pt-10 pb-14 rounded-b-[2rem] relative overflow-hidden">
+                <section className="bg-blue-950 text-white pt-10 pb-14 rounded-b-[2rem] relative overflow-hidden">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
                         <div className="space-y-5 text-center lg:text-left">
                             <span className="bg-rose-900/60 text-rose-200 text-xs font-semibold uppercase tracking-wider px-3 py-1 rounded-full inline-block">

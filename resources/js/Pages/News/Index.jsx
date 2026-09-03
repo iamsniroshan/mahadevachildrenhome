@@ -60,7 +60,7 @@ export default function Index({ newsItems }) {
             <div className="bg-amber-50/20 text-slate-800 font-sans antialiased">
                 <SiteNav />
 
-                <section className="bg-rose-950 text-white pt-16 pb-16 rounded-b-[3rem]">
+                <section className="bg-blue-950 text-white pt-16 pb-16 rounded-b-[3rem]">
                     <div className="max-w-7xl mx-auto px-6 text-center space-y-3">
                         <span className="bg-rose-900/60 text-rose-200 text-xs font-semibold uppercase tracking-wider px-3 py-1 rounded-full inline-block">
                             Updates
