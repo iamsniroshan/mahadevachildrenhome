@@ -1,3 +1,9 @@
+
+1. php artisan serve
+2. npm run dev
+
+
+
 # Mahadeva Children Home
 
 Laravel + Inertia (React) application.
