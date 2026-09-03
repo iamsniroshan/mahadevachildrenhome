@@ -20,6 +20,7 @@ const emptyTeam = {
     phone: '',
     email: '',
     image: null,
+    remove_image: false,
     team_type: 'staff',
     status: 'active',
     display_order: 0,
@@ -32,6 +33,7 @@ const toFormData = (team) => ({
     phone: team?.phone ?? '',
     email: team?.email ?? '',
     image: null,
+    remove_image: false,
     team_type: team?.team_type ?? 'staff',
     status: team?.status ?? 'active',
     display_order: team?.display_order ?? 0,
@@ -90,6 +92,15 @@ export default function Index({ teams }) {
     };
 
     const columns = [
+        {
+            key: 'image',
+            header: 'Photo',
+            render: (team) => team.image ? (
+                <img src={team.image} alt={`${team.name} profile`} className="h-10 w-10 rounded-full object-cover" />
+            ) : (
+                <div className="h-10 w-10 rounded-full bg-slate-100" />
+            ),
+        },
         { key: 'name', header: 'Name', className: 'font-semibold text-slate-800', render: (t) => t.name },
         { key: 'position', header: 'Position', className: 'text-slate-600', render: (t) => t.position },
         { key: 'team_type', header: 'Type', className: 'text-slate-600 capitalize', render: (t) => t.team_type },
@@ -129,7 +140,25 @@ export default function Index({ teams }) {
                         <Field label="Position" name="position" value={form.data.position} onChange={(v) => form.setData('position', v)} error={form.errors.position} required />
                         <Field label="Phone" name="phone" value={form.data.phone} onChange={(v) => form.setData('phone', v)} error={form.errors.phone} />
                         <Field label="Email" name="email" type="email" value={form.data.email} onChange={(v) => form.setData('email', v)} error={form.errors.email} />
-                        <Field label="Photo" name="image" type="file" onChange={(file) => form.setData('image', file)} error={form.errors.image} />
+                        <div className="space-y-2">
+                            {editingTeam?.image && !form.data.remove_image && !form.data.image && (
+                                <div className="flex items-center gap-3">
+                                    <img src={editingTeam.image} alt={`${editingTeam.name} profile`} className="h-12 w-12 rounded-full object-cover" />
+                                    <button type="button" onClick={() => form.setData('remove_image', true)} className="text-xs font-semibold text-rose-700 hover:text-rose-900">
+                                        Remove photo
+                                    </button>
+                                </div>
+                            )}
+                            {form.data.remove_image && (
+                                <button type="button" onClick={() => form.setData('remove_image', false)} className="text-xs font-semibold text-slate-600 hover:text-slate-900">
+                                    Keep current photo
+                                </button>
+                            )}
+                            <Field label={editingTeam?.image ? 'Replace Photo' : 'Photo'} name="image" type="file" onChange={(file) => {
+                                form.setData('image', file);
+                                form.setData('remove_image', false);
+                            }} error={form.errors.image} />
+                        </div>
                         <Field
                             label="Team Type"
                             name="team_type"

@@ -12,6 +12,7 @@ export default function Form({ team }) {
         phone: team?.phone ?? '',
         email: team?.email ?? '',
         image: null,
+        remove_image: false,
         team_type: team?.team_type ?? 'staff',
         status: team?.status ?? 'active',
         display_order: team?.display_order ?? 0,
@@ -40,7 +41,25 @@ export default function Form({ team }) {
                     <Field label="Position" name="position" value={data.position} onChange={(v) => setData('position', v)} error={errors.position} required />
                     <Field label="Phone" name="phone" value={data.phone} onChange={(v) => setData('phone', v)} error={errors.phone} />
                     <Field label="Email" name="email" type="email" value={data.email} onChange={(v) => setData('email', v)} error={errors.email} />
-                    <Field label="Photo" name="image" type="file" onChange={(file) => setData('image', file)} error={errors.image} />
+                    <div className="space-y-2">
+                        {team?.image && !data.remove_image && !data.image && (
+                            <div className="flex items-center gap-3">
+                                <img src={team.image} alt={`${team.name} profile`} className="h-12 w-12 rounded-full object-cover" />
+                                <button type="button" onClick={() => setData('remove_image', true)} className="text-xs font-semibold text-rose-700 hover:text-rose-900">
+                                    Remove photo
+                                </button>
+                            </div>
+                        )}
+                        {data.remove_image && (
+                            <button type="button" onClick={() => setData('remove_image', false)} className="text-xs font-semibold text-slate-600 hover:text-slate-900">
+                                Keep current photo
+                            </button>
+                        )}
+                        <Field label={team?.image ? 'Replace Photo' : 'Photo'} name="image" type="file" onChange={(file) => {
+                            setData('image', file);
+                            setData('remove_image', false);
+                        }} error={errors.image} />
+                    </div>
                     <Field
                         label="Team Type"
                         name="team_type"
