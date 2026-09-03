@@ -25,7 +25,10 @@ class BlogController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        Blog::create($this->validated($request));
+        $data = $this->validated($request);
+        $data['image'] = $this->normalizeImagePath($data['image'] ?? null);
+
+        Blog::create($data);
 
         return redirect()->route('admin.blogs.index')->with('success', 'Blog post created.');
     }
@@ -37,7 +40,10 @@ class BlogController extends Controller
 
     public function update(Request $request, Blog $blog): RedirectResponse
     {
-        $blog->update($this->validated($request));
+        $data = $this->validated($request);
+        $data['image'] = $this->normalizeImagePath($data['image'] ?? null);
+
+        $blog->update($data);
 
         return redirect()->route('admin.blogs.index')->with('success', 'Blog post updated.');
     }
@@ -62,5 +68,12 @@ class BlogController extends Controller
             'featured' => ['nullable', 'boolean'],
             'publish_date' => ['nullable', 'date'],
         ]);
+    }
+
+    private function normalizeImagePath(?string $path): ?string
+    {
+        return $path && !str_starts_with($path, 'http') && !str_starts_with($path, '/')
+            ? '/'.$path
+            : $path;
     }
 }

@@ -29,13 +29,13 @@ class NewsController extends Controller
         unset($data['existing_images']);
 
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('uploads/news', 'public');
+            $data['image'] = '/'.$request->file('image')->store('uploads/news', 'public');
         } else {
             unset($data['image']);
         }
 
         $data['images'] = $request->hasFile('images')
-            ? collect($request->file('images'))->map(fn ($file) => $file->store('uploads/news', 'public'))->values()->all()
+            ? collect($request->file('images'))->map(fn ($file) => '/'.$file->store('uploads/news', 'public'))->values()->all()
             : [];
 
         News::create($data);
@@ -53,7 +53,7 @@ class NewsController extends Controller
         $data = $this->validated($request);
 
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('uploads/news', 'public');
+            $data['image'] = '/'.$request->file('image')->store('uploads/news', 'public');
         } else {
             unset($data['image']);
         }
@@ -62,7 +62,7 @@ class NewsController extends Controller
         unset($data['existing_images']);
 
         $newImages = $request->hasFile('images')
-            ? collect($request->file('images'))->map(fn ($file) => $file->store('uploads/news', 'public'))->values()->all()
+            ? collect($request->file('images'))->map(fn ($file) => '/'.$file->store('uploads/news', 'public'))->values()->all()
             : [];
 
         $data['images'] = array_values(array_merge($existingImages, $newImages));

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Team;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -25,7 +26,15 @@ class TeamController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        Team::create($this->validated($request));
+        $data = $this->validated($request);
+
+        if ($request->hasFile('image')) {
+            $data['image'] = $this->storeImage($request, $data['name']);
+        } else {
+            unset($data['image']);
+        }
+
+        Team::create($data);
 
         return redirect()->route('admin.teams.index')->with('success', 'Team member added.');
     }
@@ -37,7 +46,15 @@ class TeamController extends Controller
 
     public function update(Request $request, Team $team): RedirectResponse
     {
-        $team->update($this->validated($request));
+        $data = $this->validated($request);
+
+        if ($request->hasFile('image')) {
+            $data['image'] = $this->storeImage($request, $data['name']);
+        } else {
+            unset($data['image']);
+        }
+
+        $team->update($data);
 
         return redirect()->route('admin.teams.index')->with('success', 'Team member updated.');
     }
@@ -57,10 +74,18 @@ class TeamController extends Controller
             'qualifications' => ['nullable', 'string'],
             'phone' => ['nullable', 'string', 'max:20'],
             'email' => ['nullable', 'string', 'email', 'max:255'],
-            'image' => ['nullable', 'string', 'max:255'],
+            'image' => ['nullable', 'file', 'image', 'max:5120'],
             'team_type' => ['required', 'in:committee,executive,staff'],
             'status' => ['required', 'in:active,inactive'],
             'display_order' => ['nullable', 'integer'],
         ]);
+    }
+
+    private function storeImage(Request $request, string $name): string
+    {
+        $image = $request->file('image');
+        $filename = Str::slug($name).'.'.$image->extension();
+
+        return $image->storeAs('uploads/teams', $filename, 'public');
     }
 }

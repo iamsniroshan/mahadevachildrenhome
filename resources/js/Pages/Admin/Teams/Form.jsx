@@ -5,13 +5,13 @@ import { Head, Link, useForm } from '@inertiajs/react';
 export default function Form({ team }) {
     const isEdit = !!team;
 
-    const { data, setData, post, put, processing, errors } = useForm({
+    const { data, setData, post, transform, processing, errors } = useForm({
         name: team?.name ?? '',
         position: team?.position ?? '',
         qualifications: team?.qualifications ?? '',
         phone: team?.phone ?? '',
         email: team?.email ?? '',
-        image: team?.image ?? '',
+        image: null,
         team_type: team?.team_type ?? 'staff',
         status: team?.status ?? 'active',
         display_order: team?.display_order ?? 0,
@@ -20,9 +20,13 @@ export default function Form({ team }) {
     const submit = (e) => {
         e.preventDefault();
         if (isEdit) {
-            put(route('admin.teams.update', team.id));
+            transform((formData) => ({ ...formData, _method: 'put' }));
+            post(route('admin.teams.update', team.id), {
+                forceFormData: true,
+            });
         } else {
-            post(route('admin.teams.store'));
+            transform((formData) => formData);
+            post(route('admin.teams.store'), { forceFormData: true });
         }
     };
 
@@ -36,7 +40,7 @@ export default function Form({ team }) {
                     <Field label="Position" name="position" value={data.position} onChange={(v) => setData('position', v)} error={errors.position} required />
                     <Field label="Phone" name="phone" value={data.phone} onChange={(v) => setData('phone', v)} error={errors.phone} />
                     <Field label="Email" name="email" type="email" value={data.email} onChange={(v) => setData('email', v)} error={errors.email} />
-                    <Field label="Image Path" name="image" value={data.image} onChange={(v) => setData('image', v)} error={errors.image} />
+                    <Field label="Photo" name="image" type="file" onChange={(file) => setData('image', file)} error={errors.image} />
                     <Field
                         label="Team Type"
                         name="team_type"

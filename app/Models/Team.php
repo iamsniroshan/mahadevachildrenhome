@@ -23,7 +23,7 @@ class Team extends Model
     {
         return Attribute::make(
             get: fn (?string $value) => $value && !str_starts_with($value, 'http') && !str_starts_with($value, '/storage')
-                ? asset('storage'.$value)
+                ? asset('storage/'.$value)
                 : $value,
         );
     }

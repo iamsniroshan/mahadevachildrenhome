@@ -19,7 +19,7 @@ const emptyTeam = {
     qualifications: '',
     phone: '',
     email: '',
-    image: '',
+    image: null,
     team_type: 'staff',
     status: 'active',
     display_order: 0,
@@ -31,7 +31,7 @@ const toFormData = (team) => ({
     qualifications: team?.qualifications ?? '',
     phone: team?.phone ?? '',
     email: team?.email ?? '',
-    image: team?.image ?? '',
+    image: null,
     team_type: team?.team_type ?? 'staff',
     status: team?.status ?? 'active',
     display_order: team?.display_order ?? 0,
@@ -66,15 +66,19 @@ export default function Index({ teams }) {
         e.preventDefault();
 
         if (editingTeam) {
-            form.put(route('admin.teams.update', editingTeam.id), {
+            form.transform((data) => ({ ...data, _method: 'put' }));
+            form.post(route('admin.teams.update', editingTeam.id), {
                 preserveScroll: true,
+                forceFormData: true,
                 onSuccess: () => closeModal(),
             });
             return;
         }
 
+        form.transform((data) => data);
         form.post(route('admin.teams.store'), {
             preserveScroll: true,
+            forceFormData: true,
             onSuccess: () => closeModal(),
         });
     };
@@ -125,7 +129,7 @@ export default function Index({ teams }) {
                         <Field label="Position" name="position" value={form.data.position} onChange={(v) => form.setData('position', v)} error={form.errors.position} required />
                         <Field label="Phone" name="phone" value={form.data.phone} onChange={(v) => form.setData('phone', v)} error={form.errors.phone} />
                         <Field label="Email" name="email" type="email" value={form.data.email} onChange={(v) => form.setData('email', v)} error={form.errors.email} />
-                        <Field label="Image Path" name="image" value={form.data.image} onChange={(v) => form.setData('image', v)} error={form.errors.image} />
+                        <Field label="Photo" name="image" type="file" onChange={(file) => form.setData('image', file)} error={form.errors.image} />
                         <Field
                             label="Team Type"
                             name="team_type"
