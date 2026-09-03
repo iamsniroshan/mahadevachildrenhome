@@ -23,7 +23,7 @@ class News extends Model
     protected function image(): Attribute
     {
         return Attribute::make(
-            get: fn (?string $value) => $value && !str_starts_with($value, 'http') && !str_starts_with($value, '/storage/')
+            get: fn (?string $value) => $value && !str_starts_with($value, 'http') && !str_starts_with($value, '/storage')
                 ? asset('storage'.$value)
                 : $value,
         );
@@ -49,7 +49,7 @@ class News extends Model
                 }
 
                 return array_values(array_map(
-                    fn ($path) => $path && !str_starts_with($path, 'http') && !str_starts_with($path, '/storage/')
+                    fn ($path) => $path && !str_starts_with($path, 'http') && !str_starts_with($path, '/storage')
                         ? asset('storage'.$path)
                         : $path,
                     $paths
