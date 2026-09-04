@@ -30,11 +30,16 @@ const emptyDonation = {
     admin_notes: '',
 };
 
-export default function Index({ donations }) {
+export default function Index({ donations, confirmationMailEnabled }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [viewingDonation, setViewingDonation] = useState(null);
+    const [confirmingDonation, setConfirmingDonation] = useState(null);
+    const [mailPreview, setMailPreview] = useState(null);
+    const [previewLoading, setPreviewLoading] = useState(false);
+    const [previewError, setPreviewError] = useState(null);
 
     const statusForm = useForm({ status: 'pending', admin_notes: '' });
+    const confirmForm = useForm({ admin_notes: '' });
 
     const form = useForm(emptyDonation);
 
@@ -65,10 +70,60 @@ export default function Index({ donations }) {
 
     const submitStatus = (e) => {
         e.preventDefault();
+
+        // When confirming, show the email preview first so the admin can review before sending.
+        if (confirmationMailEnabled && statusForm.data.status === 'confirmed' && viewingDonation.status !== 'confirmed') {
+            openConfirmModal(viewingDonation);
+            return;
+        }
+
         statusForm.patch(route('admin.donations.update-status', viewingDonation.id), {
             preserveScroll: true,
             onSuccess: () => closeViewModal(),
         });
+    };
+
+    const openConfirmModal = async (donation) => {
+        setConfirmingDonation(donation);
+        setMailPreview(null);
+        setPreviewError(null);
+        setPreviewLoading(true);
+
+        try {
+            const response = await fetch(route('admin.donations.confirmation-preview', donation.id), {
+                headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to generate preview');
+            }
+
+            setMailPreview(await response.json());
+        } catch (err) {
+            setPreviewError('Could not load the email preview. Please try again.');
+        } finally {
+            setPreviewLoading(false);
+        }
+    };
+
+    const closeConfirmModal = () => {
+        setConfirmingDonation(null);
+        setMailPreview(null);
+        setPreviewError(null);
+        confirmForm.reset();
+        confirmForm.clearErrors();
+    };
+
+    const submitConfirmAndSend = (e) => {
+        e.preventDefault();
+        confirmForm.transform(() => ({ admin_notes: statusForm.data.admin_notes }));
+        confirmForm.post(route('admin.donations.confirm-send', confirmingDonation.id), {
+            preserveScroll: true,
+            onSuccess: () => {
+                closeConfirmModal();
+                closeViewModal();
+                },
+            });
     };
 
     const submit = (e) => {
@@ -283,6 +338,60 @@ export default function Index({ donations }) {
                                 error={statusForm.errors.admin_notes}
                             />
                             <FormActions onCancel={closeViewModal} processing={statusForm.processing} submitLabel="Save Changes" />
+                        </form>
+                    </div>
+                )}
+            </Modal>
+
+            <Modal
+                open={!!confirmingDonation}
+                onClose={closeConfirmModal}
+                eyebrow="Donation"
+                title="Review Confirmation Email"
+            >
+                {confirmingDonation && (
+                    <div className="space-y-4">
+                        <p className="text-sm text-slate-600">
+                            The following email will be sent to{' '}
+                            <span className="font-semibold text-slate-800">{confirmingDonation.email}</span> when you
+                            confirm this donation. Please review it before sending.
+                        </p>
+
+                        {previewLoading && (
+                            <div className="flex items-center justify-center rounded-xl border border-slate-200 bg-slate-50 py-16 text-sm text-slate-500">
+                                Generating preview…
+                            </div>
+                        )}
+
+                        {previewError && (
+                            <div className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+                                {previewError}
+                            </div>
+                        )}
+
+                        {mailPreview && !previewLoading && (
+                            <>
+                                <div>
+                                    <p className="text-xs font-bold uppercase tracking-wide text-slate-400">Subject</p>
+                                    <p className="mt-1 text-sm font-semibold text-slate-800">{mailPreview.subject}</p>
+                                </div>
+                                <div className="overflow-hidden rounded-xl border border-slate-200">
+                                    <iframe
+                                        title="Confirmation email preview"
+                                        srcDoc={mailPreview.html}
+                                        className="h-96 w-full bg-white"
+                                        sandbox=""
+                                    />
+                                </div>
+                            </>
+                        )}
+
+                        <form onSubmit={submitConfirmAndSend}>
+                            <FormActions
+                                onCancel={closeConfirmModal}
+                                processing={confirmForm.processing || previewLoading}
+                                submitLabel="Confirm & Send Email"
+                            />
                         </form>
                     </div>
                 )}

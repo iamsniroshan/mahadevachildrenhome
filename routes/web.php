@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\ContactController as AdminContactController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DonationController as AdminDonationController;
 use App\Http\Controllers\Admin\FundriseController;
+use App\Http\Controllers\Admin\MailSettingController;
 use App\Http\Controllers\Admin\NewsController as AdminNewsController;
 use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\TeamController as AdminTeamController;
@@ -83,8 +84,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     Route::resource('fundrise', FundriseController::class);
     Route::resource('donations', AdminDonationController::class);
     Route::patch('donations/{donation}/status', [AdminDonationController::class, 'updateStatus'])->name('donations.update-status');
+    Route::get('donations/{donation}/confirmation-preview', [AdminDonationController::class, 'confirmationPreview'])->name('donations.confirmation-preview');
+    Route::post('donations/{donation}/confirm-send', [AdminDonationController::class, 'confirmAndSend'])->name('donations.confirm-send');
     Route::resource('users', AdminUserController::class)->except(['create', 'edit', 'show']);
     Route::resource('videos', AdminVideoController::class)->except(['create', 'edit', 'show']);
+
+    Route::get('settings/mail', [MailSettingController::class, 'edit'])->name('settings.mail.edit');
+    Route::put('settings/mail', [MailSettingController::class, 'update'])->name('settings.mail.update');
 
     Route::get('activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
 
