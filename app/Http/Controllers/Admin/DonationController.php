@@ -45,12 +45,13 @@ class DonationController extends Controller
     public function updateStatus(Request $request, Donation $donation): RedirectResponse
     {
         $data = $request->validate([
-            'status' => ['required', 'in:pending,confirmed,processing,completed,cancelled'],
+            'status' => ['required', 'in:pending,confirmed'],
+            'admin_notes' => ['nullable', 'string'],
         ]);
 
         $donation->update($data);
 
-        return redirect()->route('admin.donations.index')->with('success', 'Donation status updated.');
+        return redirect()->route('admin.donations.index')->with('success', 'Donation updated.');
     }
 
     public function destroy(Donation $donation): RedirectResponse
@@ -75,7 +76,7 @@ class DonationController extends Controller
             'is_anonymous' => ['nullable', 'boolean'],
             'payment_method' => ['nullable', 'in:bank_transfer,credit_card,paypal,cash,check,other'],
             'payment_reference' => ['nullable', 'string', 'max:255'],
-            'status' => ['required', 'in:pending,confirmed,processing,completed,cancelled'],
+            'status' => ['required', 'in:pending,confirmed'],
             'admin_notes' => ['nullable', 'string'],
         ]);
     }

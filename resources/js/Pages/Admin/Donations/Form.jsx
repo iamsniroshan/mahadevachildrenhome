@@ -99,9 +99,6 @@ export default function Form({ donation }) {
                         options={[
                             { value: 'pending', label: 'Pending' },
                             { value: 'confirmed', label: 'Confirmed' },
-                            { value: 'processing', label: 'Processing' },
-                            { value: 'completed', label: 'Completed' },
-                            { value: 'cancelled', label: 'Cancelled' },
                         ]}
                     />
                     <Field label="Anonymous" name="is_anonymous" type="checkbox" value={data.is_anonymous} onChange={(v) => setData('is_anonymous', v)} error={errors.is_anonymous} />

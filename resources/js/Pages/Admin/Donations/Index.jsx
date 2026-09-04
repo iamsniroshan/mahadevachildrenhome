@@ -11,9 +11,6 @@ import { useState } from 'react';
 const statusMap = {
     pending: { label: 'Pending', className: 'bg-amber-100 text-amber-800' },
     confirmed: { label: 'Confirmed', className: 'bg-teal-100 text-teal-800' },
-    processing: { label: 'Processing', className: 'bg-sky-100 text-sky-800' },
-    completed: { label: 'Completed', className: 'bg-emerald-100 text-emerald-800' },
-    cancelled: { label: 'Cancelled', className: 'bg-rose-100 text-rose-800' },
 };
 
 const emptyDonation = {
@@ -35,66 +32,29 @@ const emptyDonation = {
 
 export default function Index({ donations }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [editingDonation, setEditingDonation] = useState(null);
     const [viewingDonation, setViewingDonation] = useState(null);
 
-    const statusForm = useForm({ status: 'pending' });
+    const statusForm = useForm({ status: 'pending', admin_notes: '' });
 
-    const form = useForm(editingDonation ? {
-        donor_name: editingDonation.donor_name ?? '',
-        email: editingDonation.email ?? '',
-        phone: editingDonation.phone ?? '',
-        address: editingDonation.address ?? '',
-        donation_type: editingDonation.donation_type ?? 'one_time',
-        amount: editingDonation.amount ?? '',
-        currency: editingDonation.currency ?? 'LKR',
-        category: editingDonation.category ?? 'general',
-        message: editingDonation.message ?? '',
-        is_anonymous: editingDonation.is_anonymous ?? false,
-        payment_method: editingDonation.payment_method ?? '',
-        payment_reference: editingDonation.payment_reference ?? '',
-        status: editingDonation.status ?? 'pending',
-        admin_notes: editingDonation.admin_notes ?? '',
-    } : emptyDonation);
+    const form = useForm(emptyDonation);
 
     const openCreateModal = () => {
-        setEditingDonation(null);
         form.reset();
         form.setData(emptyDonation);
         setIsModalOpen(true);
     };
 
-    const openEditModal = (donation) => {
-        setEditingDonation(donation);
-        form.reset();
-        form.setData({
-            donor_name: donation.donor_name ?? '',
-            email: donation.email ?? '',
-            phone: donation.phone ?? '',
-            address: donation.address ?? '',
-            donation_type: donation.donation_type ?? 'one_time',
-            amount: donation.amount ?? '',
-            currency: donation.currency ?? 'LKR',
-            category: donation.category ?? 'general',
-            message: donation.message ?? '',
-            is_anonymous: donation.is_anonymous ?? false,
-            payment_method: donation.payment_method ?? '',
-            payment_reference: donation.payment_reference ?? '',
-            status: donation.status ?? 'pending',
-            admin_notes: donation.admin_notes ?? '',
-        });
-        setIsModalOpen(true);
-    };
-
     const closeModal = () => {
         setIsModalOpen(false);
-        setEditingDonation(null);
         form.reset();
     };
 
     const openViewModal = (donation) => {
         setViewingDonation(donation);
-        statusForm.setData('status', donation.status ?? 'pending');
+        statusForm.setData({
+            status: donation.status ?? 'pending',
+            admin_notes: donation.admin_notes ?? '',
+        });
     };
 
     const closeViewModal = () => {
@@ -113,14 +73,6 @@ export default function Index({ donations }) {
 
     const submit = (e) => {
         e.preventDefault();
-
-        if (editingDonation) {
-            form.put(route('admin.donations.update', editingDonation.id), {
-                preserveScroll: true,
-                onSuccess: () => closeModal(),
-            });
-            return;
-        }
 
         form.post(route('admin.donations.store'), {
             preserveScroll: true,
@@ -159,7 +111,6 @@ export default function Index({ donations }) {
             render: (donation) => (
                 <ActionButtons
                     onView={() => openViewModal(donation)}
-                    onEdit={() => openEditModal(donation)}
                     onDelete={() => handleDelete(donation)}
                 />
             ),
@@ -188,7 +139,7 @@ export default function Index({ donations }) {
                 open={isModalOpen}
                 onClose={closeModal}
                 eyebrow="Donation"
-                title={editingDonation ? 'Edit Donation' : 'Record New Donation'}
+                title="Record New Donation"
             >
                 <form onSubmit={submit} className="space-y-6">
                     <div className="grid gap-6 md:grid-cols-2">
@@ -254,9 +205,6 @@ export default function Index({ donations }) {
                             options={[
                                 { value: 'pending', label: 'Pending' },
                                 { value: 'confirmed', label: 'Confirmed' },
-                                { value: 'processing', label: 'Processing' },
-                                { value: 'completed', label: 'Completed' },
-                                { value: 'cancelled', label: 'Cancelled' },
                             ]}
                         />
                         <Field label="Anonymous" name="is_anonymous" type="checkbox" value={form.data.is_anonymous} onChange={(v) => form.setData('is_anonymous', v)} error={form.errors.is_anonymous} />
@@ -266,7 +214,7 @@ export default function Index({ donations }) {
                     <Field label="Message" name="message" type="textarea" rows={2} value={form.data.message} onChange={(v) => form.setData('message', v)} error={form.errors.message} />
                     <Field label="Admin Notes" name="admin_notes" type="textarea" rows={2} value={form.data.admin_notes} onChange={(v) => form.setData('admin_notes', v)} error={form.errors.admin_notes} />
 
-                    <FormActions onCancel={closeModal} processing={form.processing} submitLabel={editingDonation ? 'Save Changes' : 'Record Donation'} />
+                    <FormActions onCancel={closeModal} processing={form.processing} submitLabel="Record Donation" />
                 </form>
             </Modal>
 
@@ -312,14 +260,7 @@ export default function Index({ donations }) {
                             </div>
                         )}
 
-                        {viewingDonation.admin_notes && (
-                            <div>
-                                <p className="text-xs font-bold uppercase tracking-wide text-slate-400">Admin Notes</p>
-                                <p className="mt-1 text-sm text-slate-700 whitespace-pre-line">{viewingDonation.admin_notes}</p>
-                            </div>
-                        )}
-
-                        <form onSubmit={submitStatus} className="border-t border-slate-100 pt-4">
+                        <form onSubmit={submitStatus} className="space-y-4 border-t border-slate-100 pt-4">
                             <Field
                                 label="Status"
                                 name="status"
@@ -330,12 +271,18 @@ export default function Index({ donations }) {
                                 options={[
                                     { value: 'pending', label: 'Pending' },
                                     { value: 'confirmed', label: 'Confirmed' },
-                                    { value: 'processing', label: 'Processing' },
-                                    { value: 'completed', label: 'Completed' },
-                                    { value: 'cancelled', label: 'Cancelled' },
                                 ]}
                             />
-                            <FormActions onCancel={closeViewModal} processing={statusForm.processing} submitLabel="Update Status" />
+                            <Field
+                                label="Admin Notes"
+                                name="admin_notes"
+                                type="textarea"
+                                rows={3}
+                                value={statusForm.data.admin_notes}
+                                onChange={(v) => statusForm.setData('admin_notes', v)}
+                                error={statusForm.errors.admin_notes}
+                            />
+                            <FormActions onCancel={closeViewModal} processing={statusForm.processing} submitLabel="Save Changes" />
                         </form>
                     </div>
                 )}

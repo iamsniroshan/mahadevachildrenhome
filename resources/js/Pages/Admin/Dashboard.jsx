@@ -18,9 +18,6 @@ import {
 const donationStatusMap = {
     pending: { label: 'Pending', className: 'bg-amber-100 text-amber-800' },
     confirmed: { label: 'Confirmed', className: 'bg-teal-100 text-teal-800' },
-    processing: { label: 'Processing', className: 'bg-sky-100 text-sky-800' },
-    completed: { label: 'Completed', className: 'bg-emerald-100 text-emerald-800' },
-    cancelled: { label: 'Cancelled', className: 'bg-rose-100 text-rose-800' },
 };
 
 const actionMap = {
