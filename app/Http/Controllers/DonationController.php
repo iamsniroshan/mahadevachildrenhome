@@ -21,7 +21,7 @@ class DonationController extends Controller
         $data = $request->validate([
             'donor_name' => ['required', 'string', 'max:200'],
             'email' => ['required', 'string', 'email', 'max:255'],
-            'phone' => ['nullable', 'string', 'max:20'],
+            'phone' => ['required', 'string', 'max:20'],
             'address' => ['nullable', 'string'],
             'donation_type' => ['required', 'in:one_time,monthly,yearly'],
             'amount' => ['required', 'numeric', 'min:1'],
@@ -32,7 +32,7 @@ class DonationController extends Controller
             'payment_method' => ['nullable', 'in:bank_transfer,credit_card,paypal,cash,check,other'],
             'payment_reference' => ['nullable', 'string', 'max:255'],
             'document' => [
-                'nullable',
+                'required',
                 'file',
                 'mimes:jpg,jpeg,png,pdf',
                 'mimetypes:image/jpeg,image/png,application/pdf',

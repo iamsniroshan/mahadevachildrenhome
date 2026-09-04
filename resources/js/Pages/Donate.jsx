@@ -15,7 +15,6 @@ export default function Donate() {
         currency: 'LKR',
         category: 'general',
         message: '',
-        is_anonymous: false,
         payment_method: 'bank_transfer',
         payment_reference: '',
         document: null,
@@ -104,12 +103,6 @@ export default function Donate() {
                             </p>
                         </div>
 
-                        {flash?.success && (
-                            <div className="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800">
-                                {flash.success}
-                            </div>
-                        )}
-
                         <form onSubmit={submit} className="space-y-6 rounded-[2rem] border border-white/70 bg-white/60 p-8 shadow-[0_20px_50px_rgba(15,23,42,0.08)] backdrop-blur-xl">
                             <div>
                                 <h3 className="text-sm font-bold uppercase tracking-wide text-rose-900 mb-4">Personal Information</h3>
@@ -155,15 +148,6 @@ export default function Donate() {
                                         {errors.address && <p className="text-xs font-semibold text-rose-600">{errors.address}</p>}
                                     </div>
                                 </div>
-                                <label className="flex items-center gap-2 mt-4 text-sm text-slate-600">
-                                    <input
-                                        type="checkbox"
-                                        checked={data.is_anonymous}
-                                        onChange={(e) => setData('is_anonymous', e.target.checked)}
-                                        className="w-4 h-4 rounded border-slate-300 text-rose-900 focus:ring-rose-900"
-                                    />
-                                    Make this donation anonymous
-                                </label>
                             </div>
 
                             <div>
@@ -275,7 +259,11 @@ export default function Donate() {
                                 />
                                 {errors.message && <p className="text-xs font-semibold text-rose-600">{errors.message}</p>}
                             </div>
-
+                            {flash?.success && (
+                                <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800">
+                                    {flash.success}
+                                </div>
+                            )}
                             <button
                                 type="submit"
                                 disabled={processing}
