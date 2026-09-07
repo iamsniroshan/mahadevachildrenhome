@@ -26,6 +26,7 @@ class MailSettingController extends Controller
                 'encryption' => $settings->encryption,
                 'from_address' => $settings->from_address,
                 'from_name' => $settings->from_name,
+                'cc_address' => $settings->cc_address,
                 'donation_confirmation_enabled' => $settings->donation_confirmation_enabled,
                 'has_password' => filled($settings->password),
             ],
@@ -48,6 +49,7 @@ class MailSettingController extends Controller
             'encryption' => ['nullable', 'in:tls,ssl'],
             'from_address' => ['required', 'email', 'max:255'],
             'from_name' => ['required', 'string', 'max:255'],
+            'cc_address' => ['nullable', 'email', 'max:255'],
             'donation_confirmation_enabled' => ['boolean'],
         ]);
 

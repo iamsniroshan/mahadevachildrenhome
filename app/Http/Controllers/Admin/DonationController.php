@@ -128,8 +128,16 @@ class DonationController extends Controller
                 'invoice_source_path' => $sourceInvoicePath,
             ]);
 
-            if (MailSetting::current()->donation_confirmation_enabled) {
-                Mail::to($donation->email)->send(new DonationConfirmed($donation, $template));
+            $mailSettings = MailSetting::current();
+
+            if ($mailSettings->donation_confirmation_enabled) {
+                $pendingMail = Mail::to($donation->email);
+
+                if (filled($mailSettings->cc_address)) {
+                    $pendingMail->cc($mailSettings->cc_address);
+                }
+
+                $pendingMail->send(new DonationConfirmed($donation, $template));
 
                 return redirect()->route('admin.donations.index')->with('success', 'Donation confirmed and email sent to the donor.');
             }
