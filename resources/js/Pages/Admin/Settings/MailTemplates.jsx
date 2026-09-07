@@ -19,6 +19,7 @@ const previewTemplate = (body) => {
         category: 'Education',
         donation_type: 'One Time',
         status: 'Confirmed',
+        invoice_number: 'INV-2026-0001',
         app_name: 'Mahadeva Children Home',
     };
 
@@ -229,7 +230,7 @@ export default function MailTemplates({ templates = [] }) {
                                         {selectedTemplate.is_active ? 'Active' : 'Inactive'}
                                     </span>
                                 </div>
-                                <div className="overflow-hidden rounded-xl border border-slate-200 bg-[#edf6fb]">
+                                <div className="overflow-hidden rounded-xl border border-slate-200 p-3">
                                     <iframe
                                         title="Email template preview"
                                         srcDoc={previewTemplate(selectedTemplate.body)}
@@ -283,7 +284,7 @@ export default function MailTemplates({ templates = [] }) {
                             />
 
                             <p className="text-xs text-slate-500">
-                                Available placeholders: {'{{ donor_name }}'}, {'{{ amount }}'}, {'{{ currency }}'}, {'{{ category }}'}, {'{{ donation_type }}'}, {'{{ status }}'}, {'{{ app_name }}'}
+                                Available placeholders: {'{{ donor_name }}'}, {'{{ amount }}'}, {'{{ currency }}'}, {'{{ category }}'}, {'{{ donation_type }}'}, {'{{ status }}'}, {'{{ invoice_number }}'}, {'{{ app_name }}'}
                             </p>
 
                             <FormActions
@@ -430,7 +431,7 @@ function RichEmailEditor({ editorKey, value, onChange, error }) {
 
             {error && <p className="text-xs font-semibold text-rose-600">{error}</p>}
             <p className="text-xs text-slate-500">
-                Use the toolbar to format the email. Placeholders remain available: {'{{ donor_name }}'}, {'{{ amount }}'}, {'{{ currency }}'}, {'{{ category }}'}, {'{{ donation_type }}'}, {'{{ status }}'}, {'{{ app_name }}'}
+                Use the toolbar to format the email. Placeholders remain available: {'{{ donor_name }}'}, {'{{ amount }}'}, {'{{ currency }}'}, {'{{ category }}'}, {'{{ donation_type }}'}, {'{{ status }}'}, {'{{ invoice_number }}'}, {'{{ app_name }}'}
             </p>
         </div>
     );

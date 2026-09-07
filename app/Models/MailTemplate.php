@@ -40,6 +40,7 @@ class MailTemplate extends Model
             'category' => ucfirst((string) ($donation->category ?? '')),
             'donation_type' => str_replace('_', ' ', (string) ($donation->donation_type ?? '')),
             'payment_reference' => $donation->payment_reference ?? 'N/A',
+            'invoice_number' => $donation->invoice_number ?? 'N/A',
             'status' => ucfirst((string) ($donation->status ?? 'pending')),
             'date' => $donation->created_at ? $donation->created_at->format('d M Y') : now()->format('d M Y'),
             'app_name' => config('app.name'),

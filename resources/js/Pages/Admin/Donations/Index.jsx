@@ -39,8 +39,8 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
     const [previewError, setPreviewError] = useState(null);
     const [selectedTemplateId, setSelectedTemplateId] = useState(mailTemplates[0]?.id ?? '');
 
-    const statusForm = useForm({ status: 'pending', admin_notes: '' });
-    const confirmForm = useForm({ admin_notes: '', template_id: mailTemplates[0]?.id ?? '' });
+    const statusForm = useForm({ status: 'pending', admin_notes: '', invoice_number: '' });
+    const confirmForm = useForm({ admin_notes: '', invoice_number: '', template_id: mailTemplates[0]?.id ?? '' });
 
     const form = useForm(emptyDonation);
 
@@ -60,6 +60,7 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
         statusForm.setData({
             status: donation.status ?? 'pending',
             admin_notes: donation.admin_notes ?? '',
+            invoice_number: donation.invoice_number ?? '',
         });
     };
 
@@ -84,7 +85,7 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
         });
     };
 
-    const loadMailPreview = async (donation, templateId) => {
+    const loadMailPreview = async (donation, templateId, invoiceNumber) => {
         setMailPreview(null);
         setPreviewError(null);
         setPreviewLoading(true);
@@ -93,6 +94,9 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
             const url = new URL(route('admin.donations.confirmation-preview', donation.id));
             if (templateId) {
                 url.searchParams.set('template_id', templateId);
+            }
+            if (invoiceNumber) {
+                url.searchParams.set('invoice_number', invoiceNumber);
             }
 
             const response = await fetch(url, {
@@ -113,14 +117,14 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
 
     const openConfirmModal = async (donation) => {
         setConfirmingDonation(donation);
-        await loadMailPreview(donation, selectedTemplateId);
+        await loadMailPreview(donation, selectedTemplateId, statusForm.data.invoice_number);
     };
 
     const changeTemplate = async (templateId) => {
         setSelectedTemplateId(templateId);
 
         if (confirmingDonation) {
-            await loadMailPreview(confirmingDonation, templateId);
+            await loadMailPreview(confirmingDonation, templateId, statusForm.data.invoice_number);
         }
     };
 
@@ -136,6 +140,7 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
         e.preventDefault();
         confirmForm.transform(() => ({
             admin_notes: statusForm.data.admin_notes,
+            invoice_number: statusForm.data.invoice_number,
             template_id: selectedTemplateId,
         }));
         confirmForm.post(route('admin.donations.confirm-send', confirmingDonation.id), {
@@ -343,7 +348,7 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
                                     <p className="text-xs font-bold uppercase tracking-wide text-slate-400">Subject</p>
                                     <p className="mt-1 text-sm font-semibold text-slate-800">{mailPreview.subject}</p>
                                 </div>
-                                <div className="overflow-hidden rounded-xl border border-slate-200">
+                                <div className="overflow-hidden rounded-xl border border-slate-200 p-3">
                                     <iframe
                                         title="Confirmation email preview"
                                         srcDoc={mailPreview.html}
@@ -420,6 +425,16 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
                                     value={statusForm.data.admin_notes}
                                     onChange={(v) => statusForm.setData('admin_notes', v)}
                                     error={statusForm.errors.admin_notes}
+                                />
+                            )}
+                            {statusForm.data.status === 'confirmed' && (
+                                <Field
+                                    label="Invoice Number"
+                                    name="invoice_number"
+                                    value={statusForm.data.invoice_number}
+                                    onChange={(v) => statusForm.setData('invoice_number', v)}
+                                    error={statusForm.errors.invoice_number}
+                                    required
                                 />
                             )}
                             <FormActions

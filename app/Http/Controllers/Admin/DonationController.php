@@ -58,6 +58,7 @@ class DonationController extends Controller
         $data = $request->validate([
             'status' => ['required', 'in:pending,confirmed'],
             'admin_notes' => ['nullable', 'string'],
+            'invoice_number' => ['nullable', 'string', 'max:100'],
         ]);
 
         $donation->update($data);
@@ -72,9 +73,11 @@ class DonationController extends Controller
     {
         $data = $request->validate([
             'template_id' => ['nullable', 'exists:mail_templates,id'],
+            'invoice_number' => ['nullable', 'string', 'max:100'],
         ]);
 
         $donation->status = 'confirmed';
+        $donation->invoice_number = $data['invoice_number'] ?? $donation->invoice_number;
         $template = $data['template_id'] ? MailTemplate::find($data['template_id']) : MailTemplate::donationTemplates()->first();
 
         return response()->json([
@@ -91,11 +94,13 @@ class DonationController extends Controller
         $data = $request->validate([
             'admin_notes' => ['nullable', 'string'],
             'template_id' => ['nullable', 'exists:mail_templates,id'],
+            'invoice_number' => ['nullable', 'string', 'max:100'],
         ]);
 
         $donation->update([
             'status' => 'confirmed',
             'admin_notes' => $data['admin_notes'] ?? $donation->admin_notes,
+            'invoice_number' => $data['invoice_number'] ?? $donation->invoice_number,
         ]);
 
         if (MailSetting::current()->donation_confirmation_enabled) {
@@ -136,6 +141,7 @@ class DonationController extends Controller
             'is_anonymous' => ['nullable', 'boolean'],
             'payment_method' => ['nullable', 'in:bank_transfer,credit_card,paypal,cash,check,other'],
             'payment_reference' => ['nullable', 'string', 'max:255'],
+            'invoice_number' => ['nullable', 'string', 'max:100'],
             'status' => ['required', 'in:pending,confirmed'],
             'admin_notes' => ['nullable', 'string'],
         ]);
