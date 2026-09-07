@@ -53,6 +53,7 @@ class MailSettingController extends Controller
             'from_name' => ['required', 'string', 'max:255'],
             'cc_address' => ['nullable', 'email', 'max:255'],
             'letterhead_path' => ['nullable', 'file', 'mimes:pdf', 'max:10240'],
+            'remove_letterhead' => ['boolean'],
             'donation_confirmation_enabled' => ['boolean'],
         ]);
 
@@ -64,15 +65,21 @@ class MailSettingController extends Controller
             unset($data['password']);
         }
 
-        if ($request->hasFile('letterhead_path')) {
-            if ($settings->letterhead_path) {
-                Storage::disk('public')->delete($settings->letterhead_path);
-            }
+        $removeLetterhead = $request->boolean('remove_letterhead');
 
+        if (($removeLetterhead || $request->hasFile('letterhead_path')) && $settings->letterhead_path) {
+            Storage::disk('public')->delete($settings->letterhead_path);
+        }
+
+        if ($request->hasFile('letterhead_path')) {
             $data['letterhead_path'] = $request->file('letterhead_path')->store('letterheads', 'public');
+        } elseif ($removeLetterhead) {
+            $data['letterhead_path'] = null;
         } else {
             unset($data['letterhead_path']);
         }
+
+        unset($data['remove_letterhead']);
 
         $settings->update($data);
 

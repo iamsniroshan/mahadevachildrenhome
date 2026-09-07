@@ -220,12 +220,13 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
                             }}
                             title="Open generated PDF"
                             aria-label="Open generated PDF"
-                            className="text-rose-900 hover:text-rose-700"
+                                className="flex items-center gap-1 text-rose-900 hover:text-rose-700"
                         >
                             <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
                                 <path d="M6 3h8l4 4v14H6z" />
                                 <path d="M14 3v5h5M8.5 14h2a1.5 1.5 0 0 0 0-3h-2v6M14 17v-6h1.5a3 3 0 0 1 0 6H14M19 11h-3v6" />
                             </svg>
+                                <span className="text-xs font-semibold">PDF</span>
                         </a>
                     )}
                     {donation.invoice_source_path && (
@@ -239,12 +240,13 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
                             }}
                             title="Open attached invoice"
                             aria-label="Open attached invoice"
-                            className="text-teal-700 hover:text-teal-600"
+                                className="flex items-center gap-1 text-teal-700 hover:text-teal-600"
                         >
                             <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
                                 <path d="M7 3h7l4 4v14H7z" />
                                 <path d="M14 3v5h5M9.5 13.5h5M9.5 17h5" />
                             </svg>
+                                <span className="text-xs font-semibold">Invoice</span>
                         </a>
                     )}
                     {!donation.invoice_path && !donation.invoice_source_path && <span className="text-slate-400">—</span>}

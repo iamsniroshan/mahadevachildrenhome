@@ -15,6 +15,7 @@ export default function Mail({ settings }) {
         from_name: settings.from_name ?? '',
         cc_address: settings.cc_address ?? '',
         letterhead_path: null,
+        remove_letterhead: false,
         donation_confirmation_enabled: settings.donation_confirmation_enabled ?? true,
     });
 
@@ -61,11 +62,44 @@ export default function Mail({ settings }) {
                             <Field label="From Name" name="from_name" value={form.data.from_name} onChange={(v) => form.setData('from_name', v)} error={form.errors.from_name} required />
                             <Field label="From Email Address" name="from_address" type="email" value={form.data.from_address} onChange={(v) => form.setData('from_address', v)} error={form.errors.from_address} required />
                             <Field label="CC Email Address" name="cc_address" type="email" value={form.data.cc_address} onChange={(v) => form.setData('cc_address', v)} error={form.errors.cc_address} />
-                            <Field label="Invoice Letterhead (PDF)" name="letterhead_path" type="file" accept="application/pdf" onChange={(v) => form.setData('letterhead_path', v)} error={form.errors.letterhead_path} />
+                            {(!settings.letterhead_path || form.data.remove_letterhead) && (
+                                <Field label="Invoice Letterhead (PDF)" name="letterhead_path" type="file" accept="application/pdf" onChange={(v) => form.setData('letterhead_path', v)} error={form.errors.letterhead_path} />
+                            )}
                         </div>
 
-                        {settings.letterhead_path && (
-                            <p className="-mt-4 text-xs text-slate-500">A letterhead is currently configured. Upload a new PDF to replace it.</p>
+                        {settings.letterhead_path && !form.data.remove_letterhead && (
+                            <div className="-mt-4 flex items-center justify-between gap-3 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
+                                <p className="text-xs font-semibold text-slate-600">
+                                    Attached: {settings.letterhead_path.split('/').pop()}
+                                </p>
+                                <a
+                                    href={`/storage/${settings.letterhead_path}`}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="text-xs font-semibold text-rose-900 hover:underline"
+                                >
+                                    Open PDF
+                                </a>
+                                <button
+                                    type="button"
+                                    onClick={() => form.setData('remove_letterhead', true)}
+                                    className="text-xs font-semibold text-rose-700 hover:underline"
+                                >
+                                    Remove
+                                </button>
+                            </div>
+                        )}
+
+                        {form.data.remove_letterhead && (
+                            <p className="-mt-4 text-xs font-semibold text-rose-700">
+                                Letterhead marked for removal. Upload a new PDF or save to remove it.
+                            </p>
+                        )}
+
+                        {form.data.letterhead_path && (
+                            <p className="-mt-4 text-xs text-teal-700">
+                                New file selected: {form.data.letterhead_path.name}
+                            </p>
                         )}
 
                         {form.data.mailer === 'smtp' && (
