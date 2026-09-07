@@ -11,13 +11,14 @@ export default function Field({
     readOnly = false,
     disabled = false,
     accept = 'image/*',
+    hideLabel = false,
 }) {
     const baseClass =
         'w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-800 focus:border-rose-900 focus:ring-1 focus:ring-rose-900 outline-none';
 
     return (
         <div className={type === 'checkbox' ? 'flex items-center gap-2' : 'space-y-1.5'}>
-            {type !== 'checkbox' && (
+            {type !== 'checkbox' && !hideLabel && (
                 <label htmlFor={name} className="block text-xs font-bold text-slate-600 uppercase tracking-wide">
                     {label} {required && <span className="text-rose-600">*</span>}
                 </label>

@@ -62,9 +62,14 @@ export default function Mail({ settings }) {
                             <Field label="From Name" name="from_name" value={form.data.from_name} onChange={(v) => form.setData('from_name', v)} error={form.errors.from_name} required />
                             <Field label="From Email Address" name="from_address" type="email" value={form.data.from_address} onChange={(v) => form.setData('from_address', v)} error={form.errors.from_address} required />
                             <Field label="CC Email Address" name="cc_address" type="email" value={form.data.cc_address} onChange={(v) => form.setData('cc_address', v)} error={form.errors.cc_address} />
-                            {(!settings.letterhead_path || form.data.remove_letterhead) && (
-                                <Field label="Invoice Letterhead (PDF)" name="letterhead_path" type="file" accept="application/pdf" onChange={(v) => form.setData('letterhead_path', v)} error={form.errors.letterhead_path} />
-                            )}
+                            <div className="space-y-1.5">
+                                <label htmlFor="letterhead_path" className="block text-xs font-bold uppercase tracking-wide text-slate-600">
+                                    Invoice Letterhead (PDF)
+                                </label>
+                                {(!settings.letterhead_path || form.data.remove_letterhead) && (
+                                    <Field label="Invoice Letterhead (PDF)" hideLabel name="letterhead_path" type="file" accept="application/pdf" onChange={(v) => form.setData('letterhead_path', v)} error={form.errors.letterhead_path} />
+                                )}
+                            </div>
                         </div>
 
                         {settings.letterhead_path && !form.data.remove_letterhead && (
