@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Models\Donation;
 use App\Models\MailTemplate;
 use Illuminate\Support\Facades\Storage;
+use Mpdf\Config\ConfigVariables;
+use Mpdf\Config\FontVariables;
 use Mpdf\Mpdf;
 use RuntimeException;
 use setasign\Fpdi\Fpdi;
@@ -24,13 +26,25 @@ class DonationInvoicePdf
         $templatePage = $letterheadPdf->importPage(1);
         $pageSize = $letterheadPdf->getTemplateSize($templatePage);
 
+        $fontConfig = (new ConfigVariables())->getDefaults();
+        $fontData = (new FontVariables())->getDefaults();
         $contentPdf = new Mpdf([
             'format' => [$pageSize['width'], $pageSize['height']],
             'margin_left' => 0,
             'margin_right' => 0,
             'margin_top' => 0,
             'margin_bottom' => 0,
-            'default_font' => 'dejavusans',
+            'fontDir' => array_merge($fontConfig['fontDir'], [resource_path('fonts')]),
+            'fontdata' => $fontData['fontdata'] + [
+                'latha' => [
+                    'R' => 'Latha.ttf',
+                    'B' => 'Latha.ttf',
+                    'I' => 'Latha.ttf',
+                    'BI' => 'Latha.ttf',
+                    'useOTL' => 0xFF,
+                ],
+            ],
+            'default_font' => 'latha',
         ]);
         $contentPdf->WriteHTML($this->mailHtml($donation, $template, $pageSize));
 
@@ -59,18 +73,18 @@ class DonationInvoicePdf
             ? $template->renderForDonation($donation)
             : view('emails.default-donation-template', ['donation' => $donation])->render();
 
-        $left = $pageSize['width'] * 0.53;
-        $right = $pageSize['width'] * 0.06;
+        $left = $pageSize['width'] * 0.40;
+        $right = $pageSize['width'] * 0.04;
 
         $styles = '<style>
-            * { box-sizing: border-box; }
+            * { box-sizing: border-box; font-family: latha !important; }
             div, table, section, article { max-width: 100% !important; width: 100% !important; }
             table { table-layout: fixed; }
             td, th, p, div { overflow-wrap: break-word; word-wrap: break-word; }
             img { max-width: 100% !important; height: auto; }
         </style>';
 
-        return $styles.'<div style="position:absolute;left:'.$left.'mm;right:'.$right.'mm;top:'.$pageSize['height'] * 0.25.'mm;width:auto;color:#000000;font-family:dejavusans, sans-serif;font-size:10pt;line-height:1.45;overflow-wrap:break-word;">'.$mailBody.'</div>';
+        return $styles.'<div style="position:absolute;left:'.$left.'mm;right:'.$right.'mm;top:'.$pageSize['height'] * 0.18.'mm;width:auto;color:#000000;font-family:latha,sans-serif;font-size:10pt;line-height:1.45;overflow-wrap:break-word;">'.$mailBody.'</div>';
     }
 
     private function safeFileName(?string $invoiceNumber): string
