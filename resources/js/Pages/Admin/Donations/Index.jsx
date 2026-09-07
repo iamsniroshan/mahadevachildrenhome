@@ -86,22 +86,25 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
         });
     };
 
-    const loadMailPreview = async (donation, templateId, invoiceNumber) => {
+    const loadMailPreview = async (donation, templateId, invoiceNumber, invoiceFile) => {
         setMailPreview(null);
         setPreviewError(null);
         setPreviewLoading(true);
 
         try {
-            const url = new URL(route('admin.donations.confirmation-preview', donation.id));
-            if (templateId) {
-                url.searchParams.set('template_id', templateId);
-            }
-            if (invoiceNumber) {
-                url.searchParams.set('invoice_number', invoiceNumber);
-            }
+            const formData = new FormData();
+            formData.append('invoice_number', invoiceNumber);
+            formData.append('invoice_file', invoiceFile);
+            if (templateId) formData.append('template_id', templateId);
 
-            const response = await fetch(url, {
-                headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+            const response = await fetch(route('admin.donations.confirmation-preview', donation.id), {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    Accept: 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content ?? '',
+                },
             });
 
             if (!response.ok) {
@@ -118,14 +121,14 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
 
     const openConfirmModal = async (donation) => {
         setConfirmingDonation(donation);
-        await loadMailPreview(donation, selectedTemplateId, statusForm.data.invoice_number);
+        await loadMailPreview(donation, selectedTemplateId, statusForm.data.invoice_number, statusForm.data.invoice_file);
     };
 
     const changeTemplate = async (templateId) => {
         setSelectedTemplateId(templateId);
 
         if (confirmingDonation) {
-            await loadMailPreview(confirmingDonation, templateId, statusForm.data.invoice_number);
+            await loadMailPreview(confirmingDonation, templateId, statusForm.data.invoice_number, statusForm.data.invoice_file);
         }
     };
 
@@ -358,6 +361,40 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
                                         className="h-96 w-full bg-white"
                                         sandbox=""
                                     />
+                                </div>
+                                <div className="space-y-2">
+                                    <div className="flex items-center justify-between gap-3">
+                                        <p className="text-xs font-bold uppercase tracking-wide text-slate-400">Generated Letterhead PDF</p>
+                                        <a
+                                            href={mailPreview.pdf_url}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            className="text-xs font-semibold text-rose-900 hover:underline"
+                                        >
+                                            Open PDF
+                                        </a>
+                                    </div>
+                                    <div className="overflow-hidden rounded-xl border border-slate-200">
+                                        <iframe
+                                            title="Generated letterhead PDF preview"
+                                            src={mailPreview.pdf_url}
+                                            className="h-96 w-full bg-white"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="flex items-center justify-between gap-3 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
+                                    <div>
+                                        <p className="text-xs font-bold uppercase tracking-wide text-slate-400">Attached Invoice</p>
+                                        <p className="text-sm font-semibold text-slate-800">{mailPreview.invoice_name}</p>
+                                    </div>
+                                    <a
+                                        href={mailPreview.invoice_url}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="text-xs font-semibold text-rose-900 hover:underline"
+                                    >
+                                        Open Invoice
+                                    </a>
                                 </div>
                             </>
                         )}

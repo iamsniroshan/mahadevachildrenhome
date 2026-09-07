@@ -42,9 +42,18 @@ class DonationConfirmed extends Mailable
 
     public function attachments(): array
     {
-        return $this->donation->invoice_path ? [
-            Attachment::fromStorageDisk('public', $this->donation->invoice_path)
-                ->as('invoice-'.$this->donation->invoice_number.'.'.pathinfo($this->donation->invoice_path, PATHINFO_EXTENSION)),
-        ] : [];
+        $attachments = [];
+
+        if ($this->donation->invoice_path) {
+            $attachments[] = Attachment::fromStorageDisk('public', $this->donation->invoice_path)
+                ->as('invoice-'.$this->donation->invoice_number.'.pdf');
+        }
+
+        if ($this->donation->invoice_source_path) {
+            $attachments[] = Attachment::fromStorageDisk('public', $this->donation->invoice_source_path)
+                ->as('invoice-original.'.pathinfo($this->donation->invoice_source_path, PATHINFO_EXTENSION));
+        }
+
+        return $attachments;
     }
 }
