@@ -6,6 +6,7 @@ use App\Models\Donation;
 use App\Models\MailTemplate;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
@@ -37,5 +38,13 @@ class DonationConfirmed extends Mailable
             view: 'emails.donation-confirmed',
             with: ['donation' => $this->donation, 'mailBody' => $mailBody],
         );
+    }
+
+    public function attachments(): array
+    {
+        return $this->donation->invoice_path ? [
+            Attachment::fromStorageDisk('public', $this->donation->invoice_path)
+                ->as('invoice-'.$this->donation->invoice_number.'.'.pathinfo($this->donation->invoice_path, PATHINFO_EXTENSION)),
+        ] : [];
     }
 }

@@ -59,7 +59,14 @@ class DonationController extends Controller
             'status' => ['required', 'in:pending,confirmed'],
             'admin_notes' => ['nullable', 'string'],
             'invoice_number' => ['nullable', 'string', 'max:100'],
+            'invoice_file' => [$request->input('status') === 'confirmed' ? 'required' : 'nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:10240'],
         ]);
+
+        if ($data['status'] === 'confirmed' && $request->hasFile('invoice_file')) {
+            $data['invoice_path'] = $request->file('invoice_file')->store('invoices', 'public');
+        }
+
+        unset($data['invoice_file']);
 
         $donation->update($data);
 
@@ -94,13 +101,17 @@ class DonationController extends Controller
         $data = $request->validate([
             'admin_notes' => ['nullable', 'string'],
             'template_id' => ['nullable', 'exists:mail_templates,id'],
-            'invoice_number' => ['nullable', 'string', 'max:100'],
+            'invoice_number' => ['required', 'string', 'max:100'],
+            'invoice_file' => ['required', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:10240'],
         ]);
+
+        $invoicePath = $request->file('invoice_file')->store('invoices', 'public');
 
         $donation->update([
             'status' => 'confirmed',
             'admin_notes' => $data['admin_notes'] ?? $donation->admin_notes,
             'invoice_number' => $data['invoice_number'] ?? $donation->invoice_number,
+            'invoice_path' => $invoicePath,
         ]);
 
         if (MailSetting::current()->donation_confirmation_enabled) {

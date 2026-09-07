@@ -39,8 +39,8 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
     const [previewError, setPreviewError] = useState(null);
     const [selectedTemplateId, setSelectedTemplateId] = useState(mailTemplates[0]?.id ?? '');
 
-    const statusForm = useForm({ status: 'pending', admin_notes: '', invoice_number: '' });
-    const confirmForm = useForm({ admin_notes: '', invoice_number: '', template_id: mailTemplates[0]?.id ?? '' });
+    const statusForm = useForm({ status: 'pending', admin_notes: '', invoice_number: '', invoice_file: null });
+    const confirmForm = useForm({ admin_notes: '', invoice_number: '', invoice_file: null, template_id: mailTemplates[0]?.id ?? '' });
 
     const form = useForm(emptyDonation);
 
@@ -81,6 +81,7 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
 
         statusForm.patch(route('admin.donations.update-status', viewingDonation.id), {
             preserveScroll: true,
+            forceFormData: true,
             onSuccess: () => closeViewModal(),
         });
     };
@@ -141,10 +142,12 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
         confirmForm.transform(() => ({
             admin_notes: statusForm.data.admin_notes,
             invoice_number: statusForm.data.invoice_number,
+            invoice_file: statusForm.data.invoice_file,
             template_id: selectedTemplateId,
         }));
         confirmForm.post(route('admin.donations.confirm-send', confirmingDonation.id), {
             preserveScroll: true,
+            forceFormData: true,
             onSuccess: () => {
                 closeConfirmModal();
                 closeViewModal();
@@ -428,14 +431,26 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
                                 />
                             )}
                             {statusForm.data.status === 'confirmed' && (
-                                <Field
-                                    label="Invoice Number"
-                                    name="invoice_number"
-                                    value={statusForm.data.invoice_number}
-                                    onChange={(v) => statusForm.setData('invoice_number', v)}
-                                    error={statusForm.errors.invoice_number}
-                                    required
-                                />
+                                <>
+                                    <Field
+                                        label="Invoice Number"
+                                        name="invoice_number"
+                                        value={statusForm.data.invoice_number}
+                                        onChange={(v) => statusForm.setData('invoice_number', v)}
+                                        error={statusForm.errors.invoice_number}
+                                        required
+                                    />
+                                    <Field
+                                        label="Invoice File"
+                                        name="invoice_file"
+                                        type="file"
+                                        value={statusForm.data.invoice_file}
+                                        onChange={(v) => statusForm.setData('invoice_file', v)}
+                                        error={statusForm.errors.invoice_file}
+                                        required
+                                    />
+                                    <p className="text-xs text-slate-500">Required: PDF, JPG, JPEG, or PNG up to 10 MB.</p>
+                                </>
                             )}
                             <FormActions
                                 onCancel={closeViewModal}
