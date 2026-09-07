@@ -1,4 +1,4 @@
-export default function FormActions({ onCancel, processing, submitLabel }) {
+export default function FormActions({ onCancel, processing, submitLabel, showSubmit = true }) {
     return (
         <div className="flex items-center justify-end gap-3 border-t border-slate-100 pt-4">
             <button
@@ -8,13 +8,15 @@ export default function FormActions({ onCancel, processing, submitLabel }) {
             >
                 Cancel
             </button>
-            <button
-                type="submit"
-                disabled={processing}
-                className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-700 disabled:opacity-50"
-            >
-                {submitLabel}
-            </button>
+            {showSubmit && (
+                <button
+                    type="submit"
+                    disabled={processing}
+                    className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-700 disabled:opacity-50"
+                >
+                    {submitLabel}
+                </button>
+            )}
         </div>
     );
 }

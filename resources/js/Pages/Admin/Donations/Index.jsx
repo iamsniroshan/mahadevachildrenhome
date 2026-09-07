@@ -27,7 +27,6 @@ const emptyDonation = {
     payment_method: '',
     payment_reference: '',
     status: 'pending',
-    admin_notes: '',
 };
 
 export default function Index({ donations, confirmationMailEnabled, mailTemplates = [] }) {
@@ -35,12 +34,13 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
     const [viewingDonation, setViewingDonation] = useState(null);
     const [confirmingDonation, setConfirmingDonation] = useState(null);
     const [mailPreview, setMailPreview] = useState(null);
+    const [attachmentPreview, setAttachmentPreview] = useState(null);
     const [previewLoading, setPreviewLoading] = useState(false);
     const [previewError, setPreviewError] = useState(null);
     const [selectedTemplateId, setSelectedTemplateId] = useState(mailTemplates[0]?.id ?? '');
 
-    const statusForm = useForm({ status: 'pending', admin_notes: '', invoice_number: '', invoice_file: null });
-    const confirmForm = useForm({ admin_notes: '', invoice_number: '', invoice_file: null, template_id: mailTemplates[0]?.id ?? '' });
+    const statusForm = useForm({ status: 'pending', invoice_number: '', invoice_file: null });
+    const confirmForm = useForm({ invoice_number: '', invoice_file: null, template_id: mailTemplates[0]?.id ?? '' });
 
     const form = useForm(emptyDonation);
 
@@ -59,7 +59,6 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
         setViewingDonation(donation);
         statusForm.setData({
             status: donation.status ?? 'pending',
-            admin_notes: donation.admin_notes ?? '',
             invoice_number: donation.invoice_number ?? '',
         });
     };
@@ -151,7 +150,6 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
     const submitConfirmAndSend = (e) => {
         e.preventDefault();
         confirmForm.transform(() => ({
-            admin_notes: statusForm.data.admin_notes,
             invoice_number: statusForm.data.invoice_number,
             invoice_file: statusForm.data.invoice_file,
             template_id: selectedTemplateId,
@@ -199,6 +197,60 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
             render: (d) => `${d.currency} ${Number(d.amount).toLocaleString()}`,
         },
         { key: 'status', header: 'Status', render: (d) => <StatusBadge value={d.status} map={statusMap} /> },
+        {
+            key: 'mail',
+            header: 'Mail',
+            render: (donation) => donation.mail_sent_at
+                ? <span className="font-semibold text-teal-700">Sent</span>
+                : <span className="text-slate-400">Not sent</span>,
+        },
+        {
+            key: 'attachment',
+            header: 'Attachment',
+            render: (donation) => (
+                <div className="flex items-center gap-2">
+                    {donation.invoice_path && (
+                        <a
+                            href={`/storage/${donation.invoice_path}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            onClick={(event) => {
+                                event.preventDefault();
+                                setAttachmentPreview({ url: `/storage/${donation.invoice_path}`, title: 'Generated PDF' });
+                            }}
+                            title="Open generated PDF"
+                            aria-label="Open generated PDF"
+                            className="text-rose-900 hover:text-rose-700"
+                        >
+                            <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                                <path d="M6 3h8l4 4v14H6z" />
+                                <path d="M14 3v5h5M8.5 14h2a1.5 1.5 0 0 0 0-3h-2v6M14 17v-6h1.5a3 3 0 0 1 0 6H14M19 11h-3v6" />
+                            </svg>
+                        </a>
+                    )}
+                    {donation.invoice_source_path && (
+                        <a
+                            href={`/storage/${donation.invoice_source_path}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            onClick={(event) => {
+                                event.preventDefault();
+                                setAttachmentPreview({ url: `/storage/${donation.invoice_source_path}`, title: 'Attached Invoice' });
+                            }}
+                            title="Open attached invoice"
+                            aria-label="Open attached invoice"
+                            className="text-teal-700 hover:text-teal-600"
+                        >
+                            <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                                <path d="M7 3h7l4 4v14H7z" />
+                                <path d="M14 3v5h5M9.5 13.5h5M9.5 17h5" />
+                            </svg>
+                        </a>
+                    )}
+                    {!donation.invoice_path && !donation.invoice_source_path && <span className="text-slate-400">—</span>}
+                </div>
+            ),
+        },
         {
             key: 'actions',
             header: 'Actions',
@@ -307,7 +359,6 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
 
                     <Field label="Address" name="address" type="textarea" rows={2} value={form.data.address} onChange={(v) => form.setData('address', v)} error={form.errors.address} />
                     <Field label="Message" name="message" type="textarea" rows={2} value={form.data.message} onChange={(v) => form.setData('message', v)} error={form.errors.message} />
-                    <Field label="Admin Notes" name="admin_notes" type="textarea" rows={2} value={form.data.admin_notes} onChange={(v) => form.setData('admin_notes', v)} error={form.errors.admin_notes} />
 
                     <FormActions onCancel={closeModal} processing={form.processing} submitLabel="Record Donation" />
                 </form>
@@ -427,6 +478,8 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
                             <DetailItem label="Amount" value={`${viewingDonation.currency} ${Number(viewingDonation.amount).toLocaleString()}`} />
                             <DetailItem label="Payment Method" value={viewingDonation.payment_method || '—'} className="capitalize" />
                             <DetailItem label="Payment Reference" value={viewingDonation.payment_reference || '—'} />
+                            <DetailItem label="Status" value={<StatusBadge value={viewingDonation.status} map={statusMap} />} />
+                            <DetailItem label="Confirmation Mail" value={viewingDonation.mail_sent_at ? 'Sent' : 'Not sent'} />
                             <DetailItem
                                 label="Receipt"
                                 value={
@@ -451,6 +504,19 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
                             </div>
                         )}
 
+                        {viewingDonation.status === 'confirmed' && (
+                            <div className="grid gap-3 border-t border-slate-100 pt-3 pb-3 sm:grid-cols-2 bg-slate-50">
+                                <DetailItem
+                                    label="Generated Invoice"
+                                    value={viewingDonation.invoice_path ? <a href={`/storage/${viewingDonation.invoice_path}`} target="_blank" rel="noreferrer" className="text-rose-900 hover:underline">Open PDF</a> : '—'}
+                                />
+                                <DetailItem
+                                    label="Attached Invoice"
+                                    value={viewingDonation.invoice_source_path ? <a href={`/storage/${viewingDonation.invoice_source_path}`} target="_blank" rel="noreferrer" className="text-rose-900 hover:underline">Open Attachment</a> : '—'}
+                                />
+                            </div>
+                        )}
+
                         <form onSubmit={submitStatus} className="space-y-3 border-t border-slate-100 pt-3">
                             <Field
                                 label="Status"
@@ -459,23 +525,13 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
                                 value={statusForm.data.status}
                                 onChange={(v) => statusForm.setData('status', v)}
                                 error={statusForm.errors.status}
+                                disabled={viewingDonation.status === 'confirmed'}
                                 options={[
                                     { value: 'pending', label: 'Pending' },
                                     { value: 'confirmed', label: 'Confirmed' },
                                 ]}
                             />
-                            {statusForm.data.status !== 'confirmed' && (
-                                <Field
-                                    label="Admin Notes"
-                                    name="admin_notes"
-                                    type="textarea"
-                                    rows={3}
-                                    value={statusForm.data.admin_notes}
-                                    onChange={(v) => statusForm.setData('admin_notes', v)}
-                                    error={statusForm.errors.admin_notes}
-                                />
-                            )}
-                            {statusForm.data.status === 'confirmed' && (
+                            {statusForm.data.status === 'confirmed' && viewingDonation.status !== 'confirmed' && (
                                 <>
                                     <Field
                                         label="Invoice Number"
@@ -501,9 +557,37 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
                             <FormActions
                                 onCancel={closeViewModal}
                                 processing={statusForm.processing}
-                                submitLabel={statusForm.data.status === 'confirmed' ? 'Review Mail & Confirm' : 'Save Changes'}
+                                showSubmit={viewingDonation.status !== 'confirmed'}
+                                submitLabel={statusForm.data.status === 'confirmed' && viewingDonation.status !== 'confirmed' ? 'Review Mail & Confirm' : 'Save Changes'}
                             />
                         </form>
+                    </div>
+                )}
+            </Modal>
+
+            <Modal
+                open={!!attachmentPreview}
+                onClose={() => setAttachmentPreview(null)}
+                eyebrow="Attachment"
+                title={attachmentPreview?.title ?? 'Document'}
+            >
+                {attachmentPreview && (
+                    <div className="space-y-3">
+                        <div className="flex justify-end">
+                            <a
+                                href={attachmentPreview.url}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="text-xs font-semibold text-rose-900 hover:underline"
+                            >
+                                Open in New Tab
+                            </a>
+                        </div>
+                        <iframe
+                            title={`${attachmentPreview.title} preview`}
+                            src={attachmentPreview.url}
+                            className="h-[70vh] w-full rounded-xl border border-slate-200 bg-white"
+                        />
                     </div>
                 )}
             </Modal>

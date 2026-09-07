@@ -19,7 +19,6 @@ export default function Form({ donation }) {
         payment_method: donation?.payment_method ?? '',
         payment_reference: donation?.payment_reference ?? '',
         status: donation?.status ?? 'pending',
-        admin_notes: donation?.admin_notes ?? '',
     });
 
     const submit = (e) => {
@@ -106,7 +105,6 @@ export default function Form({ donation }) {
 
                 <Field label="Address" name="address" type="textarea" rows={2} value={data.address} onChange={(v) => setData('address', v)} error={errors.address} />
                 <Field label="Message" name="message" type="textarea" rows={2} value={data.message} onChange={(v) => setData('message', v)} error={errors.message} />
-                <Field label="Admin Notes" name="admin_notes" type="textarea" rows={2} value={data.admin_notes} onChange={(v) => setData('admin_notes', v)} error={errors.admin_notes} />
 
                 <div className="flex items-center gap-3 pt-2">
                     <button

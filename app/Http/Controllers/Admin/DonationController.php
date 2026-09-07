@@ -57,12 +57,17 @@ class DonationController extends Controller
 
     public function updateStatus(Request $request, Donation $donation): RedirectResponse
     {
+        $requiresConfirmation = $donation->status !== 'confirmed' && $request->input('status') === 'confirmed';
+
         $data = $request->validate([
             'status' => ['required', 'in:pending,confirmed'],
-            'admin_notes' => ['nullable', 'string'],
             'invoice_number' => ['nullable', 'string', 'max:100'],
-            'invoice_file' => [$request->input('status') === 'confirmed' ? 'required' : 'nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:10240'],
+            'invoice_file' => [$requiresConfirmation ? 'required' : 'nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:10240'],
         ]);
+
+        if ($donation->status === 'confirmed' && $data['status'] !== 'confirmed') {
+            return back()->withErrors(['status' => 'A confirmed donation cannot be changed back to pending.']);
+        }
 
         if ($data['status'] === 'confirmed' && $request->hasFile('invoice_file')) {
             $data['invoice_path'] = $request->file('invoice_file')->store('invoices', 'public');
@@ -107,7 +112,6 @@ class DonationController extends Controller
     public function confirmAndSend(Request $request, Donation $donation, DonationInvoicePdf $invoicePdf): RedirectResponse
     {
         $data = $request->validate([
-            'admin_notes' => ['nullable', 'string'],
             'template_id' => ['nullable', 'exists:mail_templates,id'],
             'invoice_number' => ['required', 'string', 'max:100'],
             'invoice_file' => ['required', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:10240'],
@@ -122,7 +126,6 @@ class DonationController extends Controller
 
             $donation->update([
                 'status' => 'confirmed',
-                'admin_notes' => $data['admin_notes'] ?? $donation->admin_notes,
                 'invoice_number' => $data['invoice_number'],
                 'invoice_path' => $finalInvoicePath,
                 'invoice_source_path' => $sourceInvoicePath,
@@ -138,6 +141,7 @@ class DonationController extends Controller
                 }
 
                 $pendingMail->send(new DonationConfirmed($donation, $template));
+                $donation->update(['mail_sent_at' => now()]);
 
                 return redirect()->route('admin.donations.index')->with('success', 'Donation confirmed and email sent to the donor.');
             }
@@ -174,7 +178,6 @@ class DonationController extends Controller
             'payment_reference' => ['nullable', 'string', 'max:255'],
             'invoice_number' => ['nullable', 'string', 'max:100'],
             'status' => ['required', 'in:pending,confirmed'],
-            'admin_notes' => ['nullable', 'string'],
         ]);
     }
 }
