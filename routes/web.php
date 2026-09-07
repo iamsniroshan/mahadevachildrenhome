@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DonationController as AdminDonationController;
 use App\Http\Controllers\Admin\FundriseController;
 use App\Http\Controllers\Admin\MailSettingController;
+use App\Http\Controllers\Admin\MailTemplateController;
 use App\Http\Controllers\Admin\NewsController as AdminNewsController;
 use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\TeamController as AdminTeamController;
@@ -91,6 +92,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
 
     Route::get('settings/mail', [MailSettingController::class, 'edit'])->name('settings.mail.edit');
     Route::put('settings/mail', [MailSettingController::class, 'update'])->name('settings.mail.update');
+    Route::get('settings/mail/templates', [MailTemplateController::class, 'index'])->name('settings.mail.templates.index');
+    Route::post('settings/mail/templates', [MailTemplateController::class, 'store'])->name('settings.mail.templates.store');
+    Route::put('settings/mail/templates/{template}', [MailTemplateController::class, 'update'])->name('settings.mail.templates.update');
+    Route::delete('settings/mail/templates/{template}', [MailTemplateController::class, 'destroy'])->name('settings.mail.templates.destroy');
 
     Route::get('activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
 

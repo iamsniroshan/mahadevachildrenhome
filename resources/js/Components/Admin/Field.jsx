@@ -8,6 +8,8 @@ export default function Field({
     options,
     required = false,
     rows = 4,
+    readOnly = false,
+    disabled = false,
 }) {
     const baseClass =
         'w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-800 focus:border-rose-900 focus:ring-1 focus:ring-rose-900 outline-none';
@@ -27,6 +29,8 @@ export default function Field({
                     value={value ?? ''}
                     onChange={(e) => onChange(e.target.value)}
                     rows={rows}
+                    readOnly={readOnly}
+                    disabled={disabled}
                     className={baseClass}
                 />
             )}
@@ -37,6 +41,7 @@ export default function Field({
                     name={name}
                     value={value ?? ''}
                     onChange={(e) => onChange(e.target.value)}
+                    disabled={disabled}
                     className={baseClass}
                 >
                     {options.map((option) => (
@@ -55,6 +60,7 @@ export default function Field({
                         type="checkbox"
                         checked={!!value}
                         onChange={(e) => onChange(e.target.checked)}
+                        disabled={disabled}
                         className="w-4 h-4 rounded border-slate-300 text-rose-900 focus:ring-rose-900"
                     />
                     <label htmlFor={name} className="text-sm font-medium text-slate-700">
@@ -70,6 +76,8 @@ export default function Field({
                     type={type}
                     value={value ?? ''}
                     onChange={(e) => onChange(e.target.value)}
+                    readOnly={readOnly}
+                    disabled={disabled}
                     className={baseClass}
                 />
             )}

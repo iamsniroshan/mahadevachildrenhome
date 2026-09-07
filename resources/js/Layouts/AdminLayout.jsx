@@ -72,6 +72,11 @@ const navItems = [
         routeName: 'admin.settings.mail.edit',
         icon: 'M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75',
     },
+    {
+        name: 'Mail Templates',
+        routeName: 'admin.settings.mail.templates.index',
+        icon: 'M4 7.5A2.5 2.5 0 016.5 5h11A2.5 2.5 0 0120 7.5v9A2.5 2.5 0 0117.5 19h-11A2.5 2.5 0 014 16.5v-9zm2 0h12m-7 4h4M6 15h4',
+    },
 ];
 
 export default function AdminLayout({ header, children, headerAction = null, fullHeight = false }) {

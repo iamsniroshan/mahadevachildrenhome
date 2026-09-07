@@ -30,16 +30,17 @@ const emptyDonation = {
     admin_notes: '',
 };
 
-export default function Index({ donations, confirmationMailEnabled }) {
+export default function Index({ donations, confirmationMailEnabled, mailTemplates = [] }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [viewingDonation, setViewingDonation] = useState(null);
     const [confirmingDonation, setConfirmingDonation] = useState(null);
     const [mailPreview, setMailPreview] = useState(null);
     const [previewLoading, setPreviewLoading] = useState(false);
     const [previewError, setPreviewError] = useState(null);
+    const [selectedTemplateId, setSelectedTemplateId] = useState(mailTemplates[0]?.id ?? '');
 
     const statusForm = useForm({ status: 'pending', admin_notes: '' });
-    const confirmForm = useForm({ admin_notes: '' });
+    const confirmForm = useForm({ admin_notes: '', template_id: mailTemplates[0]?.id ?? '' });
 
     const form = useForm(emptyDonation);
 
@@ -90,7 +91,12 @@ export default function Index({ donations, confirmationMailEnabled }) {
         setPreviewLoading(true);
 
         try {
-            const response = await fetch(route('admin.donations.confirmation-preview', donation.id), {
+            const url = new URL(route('admin.donations.confirmation-preview', donation.id));
+            if (selectedTemplateId) {
+                url.searchParams.set('template_id', selectedTemplateId);
+            }
+
+            const response = await fetch(url, {
                 headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
             });
 
@@ -116,14 +122,17 @@ export default function Index({ donations, confirmationMailEnabled }) {
 
     const submitConfirmAndSend = (e) => {
         e.preventDefault();
-        confirmForm.transform(() => ({ admin_notes: statusForm.data.admin_notes }));
+        confirmForm.transform(() => ({
+            admin_notes: statusForm.data.admin_notes,
+            template_id: selectedTemplateId,
+        }));
         confirmForm.post(route('admin.donations.confirm-send', confirmingDonation.id), {
             preserveScroll: true,
             onSuccess: () => {
                 closeConfirmModal();
                 closeViewModal();
-                },
-            });
+            },
+        });
     };
 
     const submit = (e) => {
@@ -371,6 +380,22 @@ export default function Index({ donations, confirmationMailEnabled }) {
 
                         {mailPreview && !previewLoading && (
                             <>
+                                <div className="space-y-2">
+                                    <label className="block text-xs font-bold uppercase tracking-wide text-slate-400">Email Template</label>
+                                    <select
+                                        value={selectedTemplateId}
+                                        onChange={(e) => setSelectedTemplateId(e.target.value)}
+                                        className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-800"
+                                    >
+                                        {mailTemplates.length === 0 ? (
+                                            <option value="">No templates available</option>
+                                        ) : (
+                                            mailTemplates.map((template) => (
+                                                <option key={template.id} value={template.id}>{template.name}</option>
+                                            ))
+                                        )}
+                                    </select>
+                                </div>
                                 <div>
                                     <p className="text-xs font-bold uppercase tracking-wide text-slate-400">Subject</p>
                                     <p className="mt-1 text-sm font-semibold text-slate-800">{mailPreview.subject}</p>

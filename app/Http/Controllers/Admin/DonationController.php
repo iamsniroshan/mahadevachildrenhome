@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\DonationConfirmed;
 use App\Models\Donation;
 use App\Models\MailSetting;
+use App\Models\MailTemplate;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -20,6 +21,11 @@ class DonationController extends Controller
         return Inertia::render('Admin/Donations/Index', [
             'donations' => Donation::latest()->get(),
             'confirmationMailEnabled' => MailSetting::current()->donation_confirmation_enabled,
+            'mailTemplates' => MailTemplate::donationTemplates()->get()->map(fn ($template) => [
+                'id' => $template->id,
+                'name' => $template->name,
+                'subject' => $template->subject,
+            ]),
         ]);
     }
 
@@ -62,13 +68,18 @@ class DonationController extends Controller
     /**
      * Return a rendered preview of the confirmation email for the admin to review.
      */
-    public function confirmationPreview(Donation $donation): JsonResponse
+    public function confirmationPreview(Request $request, Donation $donation): JsonResponse
     {
+        $data = $request->validate([
+            'template_id' => ['nullable', 'exists:mail_templates,id'],
+        ]);
+
         $donation->status = 'confirmed';
+        $template = $data['template_id'] ? MailTemplate::find($data['template_id']) : MailTemplate::donationTemplates()->first();
 
         return response()->json([
-            'subject' => (new DonationConfirmed($donation))->envelope()->subject,
-            'html' => (string) view('emails.donation-confirmed', ['donation' => $donation]),
+            'subject' => (new DonationConfirmed($donation, $template))->envelope()->subject,
+            'html' => (string) view('emails.donation-confirmed', ['donation' => $donation, 'mailBody' => $template ? $template->renderForDonation($donation) : null]),
         ]);
     }
 
@@ -79,6 +90,7 @@ class DonationController extends Controller
     {
         $data = $request->validate([
             'admin_notes' => ['nullable', 'string'],
+            'template_id' => ['nullable', 'exists:mail_templates,id'],
         ]);
 
         $donation->update([
@@ -88,7 +100,8 @@ class DonationController extends Controller
 
         if (MailSetting::current()->donation_confirmation_enabled) {
             try {
-                Mail::to($donation->email)->send(new DonationConfirmed($donation));
+                $template = $data['template_id'] ? MailTemplate::find($data['template_id']) : MailTemplate::donationTemplates()->first();
+                Mail::to($donation->email)->send(new DonationConfirmed($donation, $template));
 
                 return redirect()->route('admin.donations.index')->with('success', 'Donation confirmed and email sent to the donor.');
             } catch (\Throwable $e) {

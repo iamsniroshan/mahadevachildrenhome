@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\MailSetting;
+use App\Models\MailTemplate;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
@@ -28,6 +29,11 @@ class MailSettingController extends Controller
                 'donation_confirmation_enabled' => $settings->donation_confirmation_enabled,
                 'has_password' => filled($settings->password),
             ],
+            'templates' => MailTemplate::donationTemplates()->get()->map(fn ($template) => [
+                'id' => $template->id,
+                'name' => $template->name,
+                'subject' => $template->subject,
+            ]),
         ]);
     }
 
