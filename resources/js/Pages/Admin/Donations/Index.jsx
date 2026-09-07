@@ -81,7 +81,6 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
 
         statusForm.patch(route('admin.donations.update-status', viewingDonation.id), {
             preserveScroll: true,
-            forceFormData: true,
             onSuccess: () => closeViewModal(),
         });
     };
