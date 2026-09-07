@@ -5,8 +5,6 @@ namespace App\Services;
 use App\Models\Donation;
 use App\Models\MailTemplate;
 use Illuminate\Support\Facades\Storage;
-use Mpdf\Config\ConfigVariables;
-use Mpdf\Config\FontVariables;
 use Mpdf\Mpdf;
 use RuntimeException;
 use setasign\Fpdi\Fpdi;
@@ -26,30 +24,13 @@ class DonationInvoicePdf
         $templatePage = $letterheadPdf->importPage(1);
         $pageSize = $letterheadPdf->getTemplateSize($templatePage);
 
-        $fontConfig = (new ConfigVariables())->getDefaults();
-        $fontData = (new FontVariables())->getDefaults();
         $contentPdf = new Mpdf([
             'format' => [$pageSize['width'], $pageSize['height']],
             'margin_left' => 0,
             'margin_right' => 0,
             'margin_top' => 0,
             'margin_bottom' => 0,
-            'fontDir' => array_merge($fontConfig['fontDir'], ['C:/Windows/Fonts']),
-            'fontdata' => $fontData['fontdata'] + [
-                'arial' => [
-                    'R' => 'Nirmala.ttc',
-                    'B' => 'Nirmala.ttc',
-                    'I' => 'Nirmala.ttc',
-                    'BI' => 'Nirmala.ttc',
-                    'TTCfontID' => [
-                        'R' => 1,
-                        'B' => 1,
-                        'I' => 1,
-                        'BI' => 1,
-                    ],
-                ],
-            ],
-            'default_font' => 'nirmala',
+            'default_font' => 'dejavusans',
         ]);
         $contentPdf->WriteHTML($this->mailHtml($donation, $template, $pageSize));
 
@@ -89,7 +70,7 @@ class DonationInvoicePdf
             img { max-width: 100% !important; height: auto; }
         </style>';
 
-        return $styles.'<div style="position:absolute;left:'.$left.'mm;right:'.$right.'mm;top:'.$pageSize['height'] * 0.25.'mm;width:auto;color:#000000;font-family:nirmala, Arial, Helvetica, sans-serif;font-size:10pt;line-height:1.45;overflow-wrap:break-word;">'.$mailBody.'</div>';
+        return $styles.'<div style="position:absolute;left:'.$left.'mm;right:'.$right.'mm;top:'.$pageSize['height'] * 0.25.'mm;width:auto;color:#000000;font-family:dejavusans, sans-serif;font-size:10pt;line-height:1.45;overflow-wrap:break-word;">'.$mailBody.'</div>';
     }
 
     private function safeFileName(?string $invoiceNumber): string
