@@ -42,7 +42,7 @@ class MailTemplate extends Model
             'payment_reference' => $donation->payment_reference ?? 'N/A',
             'invoice_number' => $donation->invoice_number ?? 'N/A',
             'status' => ucfirst((string) ($donation->status ?? 'pending')),
-            'date' => $donation->created_at ? $donation->created_at->format('d M Y') : now()->format('d M Y'),
+            'date' => $donation->created_at ? $donation->created_at->format('d.m.Y') : now()->format('d.m.Y'),
             'app_name' => config('app.name'),
         ];
 
