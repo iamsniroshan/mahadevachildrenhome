@@ -8,6 +8,7 @@ use App\Models\MailTemplate;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -27,6 +28,7 @@ class MailSettingController extends Controller
                 'from_address' => $settings->from_address,
                 'from_name' => $settings->from_name,
                 'cc_address' => $settings->cc_address,
+                'letterhead_path' => $settings->letterhead_path,
                 'donation_confirmation_enabled' => $settings->donation_confirmation_enabled,
                 'has_password' => filled($settings->password),
             ],
@@ -50,6 +52,7 @@ class MailSettingController extends Controller
             'from_address' => ['required', 'email', 'max:255'],
             'from_name' => ['required', 'string', 'max:255'],
             'cc_address' => ['nullable', 'email', 'max:255'],
+            'letterhead_path' => ['nullable', 'file', 'mimes:pdf', 'max:10240'],
             'donation_confirmation_enabled' => ['boolean'],
         ]);
 
@@ -59,6 +62,16 @@ class MailSettingController extends Controller
             $data['password'] = Crypt::encryptString($data['password']);
         } else {
             unset($data['password']);
+        }
+
+        if ($request->hasFile('letterhead_path')) {
+            if ($settings->letterhead_path) {
+                Storage::disk('public')->delete($settings->letterhead_path);
+            }
+
+            $data['letterhead_path'] = $request->file('letterhead_path')->store('letterheads', 'public');
+        } else {
+            unset($data['letterhead_path']);
         }
 
         $settings->update($data);

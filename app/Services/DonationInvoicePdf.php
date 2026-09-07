@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Donation;
 use App\Models\MailTemplate;
+use App\Models\MailSetting;
 use Illuminate\Support\Facades\Storage;
 use Mpdf\Config\ConfigVariables;
 use Mpdf\Config\FontVariables;
@@ -15,7 +16,10 @@ class DonationInvoicePdf
 {
     public function generate(Donation $donation, ?MailTemplate $template): string
     {
-        $letterhead = base_path('letter-head.pdf');
+        $mailSettings = MailSetting::current();
+        $letterhead = $mailSettings->letterhead_path
+            ? Storage::disk('public')->path($mailSettings->letterhead_path)
+            : base_path('letter-head.pdf');
 
         if (! is_file($letterhead)) {
             throw new RuntimeException('Letterhead PDF was not found.');

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 #[Fillable([
     'mailer', 'host', 'port', 'username', 'password', 'encryption',
-    'from_address', 'from_name', 'cc_address', 'donation_confirmation_enabled',
+    'from_address', 'from_name', 'cc_address', 'letterhead_path', 'donation_confirmation_enabled',
 ])]
 class MailSetting extends Model
 {

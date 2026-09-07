@@ -14,12 +14,14 @@ export default function Mail({ settings }) {
         from_address: settings.from_address ?? '',
         from_name: settings.from_name ?? '',
         cc_address: settings.cc_address ?? '',
+        letterhead_path: null,
         donation_confirmation_enabled: settings.donation_confirmation_enabled ?? true,
     });
 
     const submit = (e) => {
         e.preventDefault();
-        form.put(route('admin.settings.mail.update'), { preserveScroll: true });
+        form.transform((data) => ({ ...data, _method: 'put' }));
+        form.post(route('admin.settings.mail.update'), { preserveScroll: true, forceFormData: true });
     };
 
     return (
@@ -59,7 +61,12 @@ export default function Mail({ settings }) {
                             <Field label="From Name" name="from_name" value={form.data.from_name} onChange={(v) => form.setData('from_name', v)} error={form.errors.from_name} required />
                             <Field label="From Email Address" name="from_address" type="email" value={form.data.from_address} onChange={(v) => form.setData('from_address', v)} error={form.errors.from_address} required />
                             <Field label="CC Email Address" name="cc_address" type="email" value={form.data.cc_address} onChange={(v) => form.setData('cc_address', v)} error={form.errors.cc_address} />
+                            <Field label="Invoice Letterhead (PDF)" name="letterhead_path" type="file" accept="application/pdf" onChange={(v) => form.setData('letterhead_path', v)} error={form.errors.letterhead_path} />
                         </div>
+
+                        {settings.letterhead_path && (
+                            <p className="-mt-4 text-xs text-slate-500">A letterhead is currently configured. Upload a new PDF to replace it.</p>
+                        )}
 
                         {form.data.mailer === 'smtp' && (
                             <div className="rounded-xl border border-slate-200 bg-slate-50 p-5">
