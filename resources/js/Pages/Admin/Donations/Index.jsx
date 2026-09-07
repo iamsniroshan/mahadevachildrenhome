@@ -92,6 +92,10 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
         setPreviewLoading(true);
 
         try {
+            if (!invoiceNumber || !invoiceFile) {
+                throw new Error('Enter an invoice number and select an invoice file before reviewing the email.');
+            }
+
             const formData = new FormData();
             formData.append('invoice_number', invoiceNumber);
             formData.append('invoice_file', invoiceFile);
@@ -100,6 +104,7 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
             const response = await fetch(route('admin.donations.confirmation-preview', donation.id), {
                 method: 'POST',
                 body: formData,
+                credentials: 'same-origin',
                 headers: {
                     Accept: 'application/json',
                     'X-Requested-With': 'XMLHttpRequest',
@@ -108,12 +113,16 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
             });
 
             if (!response.ok) {
-                throw new Error('Failed to generate preview');
+                const errorBody = await response.json().catch(() => null);
+                const validationMessage = errorBody?.errors
+                    ? Object.values(errorBody.errors).flat().join(' ')
+                    : errorBody?.message;
+                throw new Error(validationMessage || 'Failed to generate preview');
             }
 
             setMailPreview(await response.json());
         } catch (err) {
-            setPreviewError('Could not load the email preview. Please try again.');
+            setPreviewError(err.message || 'Could not load the email preview. Please try again.');
         } finally {
             setPreviewLoading(false);
         }
@@ -481,6 +490,7 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
                                         label="Invoice File"
                                         name="invoice_file"
                                         type="file"
+                                        accept="application/pdf,image/jpeg,image/png"
                                         value={statusForm.data.invoice_file}
                                         onChange={(v) => statusForm.setData('invoice_file', v)}
                                         error={statusForm.errors.invoice_file}

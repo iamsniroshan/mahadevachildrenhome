@@ -10,6 +10,7 @@ export default function Field({
     rows = 4,
     readOnly = false,
     disabled = false,
+    accept = 'image/*',
 }) {
     const baseClass =
         'w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-800 focus:border-rose-900 focus:ring-1 focus:ring-rose-900 outline-none';
@@ -31,6 +32,7 @@ export default function Field({
                     rows={rows}
                     readOnly={readOnly}
                     disabled={disabled}
+                    required={required}
                     className={baseClass}
                 />
             )}
@@ -42,6 +44,7 @@ export default function Field({
                     value={value ?? ''}
                     onChange={(e) => onChange(e.target.value)}
                     disabled={disabled}
+                    required={required}
                     className={baseClass}
                 >
                     {options.map((option) => (
@@ -61,6 +64,7 @@ export default function Field({
                         checked={!!value}
                         onChange={(e) => onChange(e.target.checked)}
                         disabled={disabled}
+                        required={required}
                         className="w-4 h-4 rounded border-slate-300 text-rose-900 focus:ring-rose-900"
                     />
                     <label htmlFor={name} className="text-sm font-medium text-slate-700">
@@ -78,6 +82,7 @@ export default function Field({
                     onChange={(e) => onChange(e.target.value)}
                     readOnly={readOnly}
                     disabled={disabled}
+                    required={required}
                     className={baseClass}
                 />
             )}
@@ -87,8 +92,9 @@ export default function Field({
                     id={name}
                     name={name}
                     type="file"
-                    accept="image/*"
+                    accept={accept}
                     onChange={(e) => onChange(e.target.files?.[0] ?? null)}
+                    required={required}
                     className={`${baseClass} file:mr-3 file:rounded-md file:border-0 file:bg-rose-900 file:px-3 file:py-1.5 file:text-xs file:font-semibold file:text-white hover:file:bg-rose-950`}
                 />
             )}
@@ -98,9 +104,10 @@ export default function Field({
                     id={name}
                     name={name}
                     type="file"
-                    accept="image/*"
+                    accept={accept}
                     multiple
                     onChange={(e) => onChange(Array.from(e.target.files ?? []))}
+                    required={required}
                     className={`${baseClass} file:mr-3 file:rounded-md file:border-0 file:bg-rose-900 file:px-3 file:py-1.5 file:text-xs file:font-semibold file:text-white hover:file:bg-rose-950`}
                 />
             )}
