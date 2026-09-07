@@ -2,13 +2,38 @@ import AdminLayout from '@/Layouts/AdminLayout';
 import Field from '@/Components/Admin/Field';
 import FormActions from '@/Components/Admin/FormActions';
 import { Head, router, useForm } from '@inertiajs/react';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 
 const emptyTemplate = {
     name: '',
     subject: '',
     body: '',
     is_active: true,
+};
+
+const previewTemplate = (body) => {
+    const sampleValues = {
+        donor_name: 'Sample Donor',
+        amount: '25,000.00',
+        currency: 'LKR',
+        category: 'Education',
+        donation_type: 'One Time',
+        status: 'Confirmed',
+        app_name: 'Mahadeva Children Home',
+    };
+
+    const renderedBody = Object.entries(sampleValues).reduce(
+        (content, [key, value]) => content.replaceAll(`{{ ${key} }}`, value).replaceAll(`{{${key}}}`, value),
+        body ?? '',
+    );
+
+    return `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background:#ffffff;color:#000000;font-family:Arial,Helvetica,sans-serif;">
+${renderedBody}
+</body>
+</html>`;
 };
 
 export default function MailTemplates({ templates = [] }) {
@@ -204,8 +229,13 @@ export default function MailTemplates({ templates = [] }) {
                                         {selectedTemplate.is_active ? 'Active' : 'Inactive'}
                                     </span>
                                 </div>
-                                <div className="min-h-64 whitespace-pre-wrap rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-slate-700">
-                                    {selectedTemplate.body}
+                                <div className="overflow-hidden rounded-xl border border-slate-200 bg-[#edf6fb]">
+                                    <iframe
+                                        title="Email template preview"
+                                        srcDoc={previewTemplate(selectedTemplate.body)}
+                                        className="h-[32rem] w-full bg-[#edf6fb]"
+                                        sandbox=""
+                                    />
                                 </div>
                             </div>
 
@@ -237,15 +267,11 @@ export default function MailTemplates({ templates = [] }) {
                                 error={form.errors.subject}
                                 required
                             />
-                            <Field
-                                label="Email Body"
-                                name="body"
-                                type="textarea"
-                                rows={12}
+                            <RichEmailEditor
+                                editorKey={selectedTemplate?.id ?? 'new'}
                                 value={form.data.body}
                                 onChange={(v) => form.setData('body', v)}
                                 error={form.errors.body}
-                                required
                             />
                             <Field
                                 label="Active"
@@ -277,7 +303,149 @@ export default function MailTemplates({ templates = [] }) {
                         </form>
                     )}
                 </div>
+
             </div>
         </AdminLayout>
+    );
+}
+
+function RichEmailEditor({ editorKey, value, onChange, error }) {
+    const editorRef = useRef(null);
+    const selectionRef = useRef(null);
+
+    const saveSelection = () => {
+        const selection = window.getSelection();
+
+        if (selection?.rangeCount && editorRef.current?.contains(selection.anchorNode)) {
+            selectionRef.current = selection.getRangeAt(0);
+        }
+    };
+
+    const restoreSelection = () => {
+        const selection = window.getSelection();
+
+        if (selectionRef.current && selection) {
+            selection.removeAllRanges();
+            selection.addRange(selectionRef.current);
+        }
+    };
+
+    const applyCommand = (command, commandValue = null) => {
+        editorRef.current?.focus();
+        restoreSelection();
+        document.execCommand(command, false, commandValue);
+        saveSelection();
+    };
+
+    const addLink = () => {
+        const url = window.prompt('Enter link URL');
+
+        if (url) {
+            applyCommand('createLink', url);
+        }
+    };
+
+    return (
+        <div className="space-y-1.5">
+            <label htmlFor="body" className="block text-xs font-bold uppercase tracking-wide text-slate-600">
+                Email Body <span className="text-rose-600">*</span>
+            </label>
+
+            <div className="overflow-hidden rounded-xl border border-slate-300 bg-white focus-within:border-rose-900 focus-within:ring-1 focus-within:ring-rose-900">
+                <div className="flex flex-wrap items-center gap-1 border-b border-slate-200 bg-white p-2">
+                    <EditorButton label="Bold" onClick={() => applyCommand('bold')}>
+                        <strong>B</strong>
+                    </EditorButton>
+                    <EditorButton label="Italic" onClick={() => applyCommand('italic')}>
+                        <em>I</em>
+                    </EditorButton>
+                    <EditorButton label="Underline" onClick={() => applyCommand('underline')}>
+                        <u>U</u>
+                    </EditorButton>
+                    <label className="flex items-center gap-1 rounded-md border border-slate-200 bg-white px-2 py-1 text-xs font-semibold text-slate-700">
+                        Size
+                        <select
+                            aria-label="Font size"
+                            defaultValue="3"
+                            onChange={(event) => applyCommand('fontSize', event.target.value)}
+                            onMouseDown={saveSelection}
+                            className="border-0 bg-transparent p-0 text-xs font-semibold text-slate-700 outline-none"
+                        >
+                            <option value="1">10px</option>
+                            <option value="2">12px</option>
+                            <option value="3">14px</option>
+                            <option value="4">18px</option>
+                            <option value="5">24px</option>
+                            <option value="6">30px</option>
+                            <option value="7">36px</option>
+                        </select>
+                    </label>
+                    <label className="flex items-center gap-1 rounded-md border border-slate-200 bg-white px-2 py-1 text-xs font-semibold text-slate-700">
+                        Color
+                        <input
+                            aria-label="Text color"
+                            type="color"
+                            defaultValue="#000000"
+                            onChange={(event) => applyCommand('foreColor', event.target.value)}
+                            onMouseDown={saveSelection}
+                            className="h-4 w-5 cursor-pointer border-0 bg-transparent p-0"
+                        />
+                    </label>
+                    <EditorButton label="Align left" onClick={() => applyCommand('justifyLeft')}>
+                        Left
+                    </EditorButton>
+                    <EditorButton label="Align center" onClick={() => applyCommand('justifyCenter')}>
+                        Center
+                    </EditorButton>
+                    <EditorButton label="Align right" onClick={() => applyCommand('justifyRight')}>
+                        Right
+                    </EditorButton>
+                    <EditorButton label="Heading" onClick={() => applyCommand('formatBlock', 'h2')}>
+                        H2
+                    </EditorButton>
+                    <EditorButton label="Bulleted list" onClick={() => applyCommand('insertUnorderedList')}>
+                        • List
+                    </EditorButton>
+                    <EditorButton label="Numbered list" onClick={() => applyCommand('insertOrderedList')}>
+                        1. List
+                    </EditorButton>
+                    <EditorButton label="Add link" onClick={addLink}>
+                        Link
+                    </EditorButton>
+                </div>
+
+                <div
+                    key={editorKey}
+                    id="body"
+                    ref={editorRef}
+                    contentEditable
+                    suppressContentEditableWarning
+                    dangerouslySetInnerHTML={{ __html: value ?? '' }}
+                    onMouseUp={saveSelection}
+                    onKeyUp={saveSelection}
+                    onInput={(event) => onChange(event.currentTarget.innerHTML)}
+                    className="min-h-[26rem] bg-white p-4 text-sm text-slate-800 outline-none [&_a]:text-rose-900 [&_a]:underline"
+                />
+            </div>
+
+            {error && <p className="text-xs font-semibold text-rose-600">{error}</p>}
+            <p className="text-xs text-slate-500">
+                Use the toolbar to format the email. Placeholders remain available: {'{{ donor_name }}'}, {'{{ amount }}'}, {'{{ currency }}'}, {'{{ category }}'}, {'{{ donation_type }}'}, {'{{ status }}'}, {'{{ app_name }}'}
+            </p>
+        </div>
+    );
+}
+
+function EditorButton({ label, onClick, children }) {
+    return (
+        <button
+            type="button"
+            title={label}
+            onMouseDown={(event) => event.preventDefault()}
+            onClick={onClick}
+            className="rounded-md border border-slate-200 bg-white px-2.5 py-1 text-xs font-semibold text-slate-700 hover:border-rose-300 hover:bg-rose-50 hover:text-rose-900"
+        >
+            {children}
+        </button>
     );
 }

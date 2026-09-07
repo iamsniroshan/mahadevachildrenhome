@@ -84,16 +84,15 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
         });
     };
 
-    const openConfirmModal = async (donation) => {
-        setConfirmingDonation(donation);
+    const loadMailPreview = async (donation, templateId) => {
         setMailPreview(null);
         setPreviewError(null);
         setPreviewLoading(true);
 
         try {
             const url = new URL(route('admin.donations.confirmation-preview', donation.id));
-            if (selectedTemplateId) {
-                url.searchParams.set('template_id', selectedTemplateId);
+            if (templateId) {
+                url.searchParams.set('template_id', templateId);
             }
 
             const response = await fetch(url, {
@@ -109,6 +108,19 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
             setPreviewError('Could not load the email preview. Please try again.');
         } finally {
             setPreviewLoading(false);
+        }
+    };
+
+    const openConfirmModal = async (donation) => {
+        setConfirmingDonation(donation);
+        await loadMailPreview(donation, selectedTemplateId);
+    };
+
+    const changeTemplate = async (templateId) => {
+        setSelectedTemplateId(templateId);
+
+        if (confirmingDonation) {
+            await loadMailPreview(confirmingDonation, templateId);
         }
     };
 
@@ -283,14 +295,76 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
             </Modal>
 
             <Modal
-                open={!!viewingDonation}
-                onClose={closeViewModal}
+                open={!!viewingDonation || !!confirmingDonation}
+                onClose={confirmingDonation ? closeConfirmModal : closeViewModal}
                 eyebrow="Donation"
-                title="Donation Details"
+                title={confirmingDonation ? 'Review Confirmation Email' : 'Donation Details'}
             >
-                {viewingDonation && (
-                    <div className="space-y-6">
-                        <div className="grid gap-4 sm:grid-cols-2">
+                {confirmingDonation ? (
+                    <div className="space-y-4">
+                        <p className="text-sm text-slate-600">
+                            The following email will be sent to{' '}
+                            <span className="font-semibold text-slate-800">{confirmingDonation.email}</span> when you
+                            confirm this donation. Please review it before sending.
+                        </p>
+
+                        {previewLoading && (
+                            <div className="flex items-center justify-center rounded-xl border border-slate-200 bg-slate-50 py-12 text-sm text-slate-500">
+                                Generating preview…
+                            </div>
+                        )}
+
+                        {previewError && (
+                            <div className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+                                {previewError}
+                            </div>
+                        )}
+
+                        {mailPreview && !previewLoading && (
+                            <>
+                                <div className="space-y-2">
+                                    <label className="block text-xs font-bold uppercase tracking-wide text-slate-400">Email Template</label>
+                                    <select
+                                        value={selectedTemplateId}
+                                        onChange={(e) => changeTemplate(e.target.value)}
+                                        disabled={previewLoading}
+                                        className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-800"
+                                    >
+                                        {mailTemplates.length === 0 ? (
+                                            <option value="">No templates available</option>
+                                        ) : (
+                                            mailTemplates.map((template) => (
+                                                <option key={template.id} value={template.id}>{template.name}</option>
+                                            ))
+                                        )}
+                                    </select>
+                                </div>
+                                <div>
+                                    <p className="text-xs font-bold uppercase tracking-wide text-slate-400">Subject</p>
+                                    <p className="mt-1 text-sm font-semibold text-slate-800">{mailPreview.subject}</p>
+                                </div>
+                                <div className="overflow-hidden rounded-xl border border-slate-200">
+                                    <iframe
+                                        title="Confirmation email preview"
+                                        srcDoc={mailPreview.html}
+                                        className="h-96 w-full bg-white"
+                                        sandbox=""
+                                    />
+                                </div>
+                            </>
+                        )}
+
+                        <form onSubmit={submitConfirmAndSend}>
+                            <FormActions
+                                onCancel={closeConfirmModal}
+                                processing={confirmForm.processing || previewLoading}
+                                submitLabel="Confirm & Send Email"
+                            />
+                        </form>
+                    </div>
+                ) : viewingDonation && (
+                    <div className="space-y-4">
+                        <div className="grid gap-3 sm:grid-cols-2">
                             <DetailItem label="Donor Name" value={viewingDonation.is_anonymous ? 'Anonymous Donor' : viewingDonation.donor_name} />
                             <DetailItem label="Email" value={viewingDonation.email} />
                             <DetailItem label="Phone" value={viewingDonation.phone || '—'} />
@@ -324,7 +398,7 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
                             </div>
                         )}
 
-                        <form onSubmit={submitStatus} className="space-y-4 border-t border-slate-100 pt-4">
+                        <form onSubmit={submitStatus} className="space-y-3 border-t border-slate-100 pt-3">
                             <Field
                                 label="Status"
                                 name="status"
@@ -337,85 +411,21 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
                                     { value: 'confirmed', label: 'Confirmed' },
                                 ]}
                             />
-                            <Field
-                                label="Admin Notes"
-                                name="admin_notes"
-                                type="textarea"
-                                rows={3}
-                                value={statusForm.data.admin_notes}
-                                onChange={(v) => statusForm.setData('admin_notes', v)}
-                                error={statusForm.errors.admin_notes}
-                            />
-                            <FormActions onCancel={closeViewModal} processing={statusForm.processing} submitLabel="Save Changes" />
-                        </form>
-                    </div>
-                )}
-            </Modal>
-
-            <Modal
-                open={!!confirmingDonation}
-                onClose={closeConfirmModal}
-                eyebrow="Donation"
-                title="Review Confirmation Email"
-            >
-                {confirmingDonation && (
-                    <div className="space-y-4">
-                        <p className="text-sm text-slate-600">
-                            The following email will be sent to{' '}
-                            <span className="font-semibold text-slate-800">{confirmingDonation.email}</span> when you
-                            confirm this donation. Please review it before sending.
-                        </p>
-
-                        {previewLoading && (
-                            <div className="flex items-center justify-center rounded-xl border border-slate-200 bg-slate-50 py-16 text-sm text-slate-500">
-                                Generating preview…
-                            </div>
-                        )}
-
-                        {previewError && (
-                            <div className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
-                                {previewError}
-                            </div>
-                        )}
-
-                        {mailPreview && !previewLoading && (
-                            <>
-                                <div className="space-y-2">
-                                    <label className="block text-xs font-bold uppercase tracking-wide text-slate-400">Email Template</label>
-                                    <select
-                                        value={selectedTemplateId}
-                                        onChange={(e) => setSelectedTemplateId(e.target.value)}
-                                        className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-800"
-                                    >
-                                        {mailTemplates.length === 0 ? (
-                                            <option value="">No templates available</option>
-                                        ) : (
-                                            mailTemplates.map((template) => (
-                                                <option key={template.id} value={template.id}>{template.name}</option>
-                                            ))
-                                        )}
-                                    </select>
-                                </div>
-                                <div>
-                                    <p className="text-xs font-bold uppercase tracking-wide text-slate-400">Subject</p>
-                                    <p className="mt-1 text-sm font-semibold text-slate-800">{mailPreview.subject}</p>
-                                </div>
-                                <div className="overflow-hidden rounded-xl border border-slate-200">
-                                    <iframe
-                                        title="Confirmation email preview"
-                                        srcDoc={mailPreview.html}
-                                        className="h-96 w-full bg-white"
-                                        sandbox=""
-                                    />
-                                </div>
-                            </>
-                        )}
-
-                        <form onSubmit={submitConfirmAndSend}>
+                            {statusForm.data.status !== 'confirmed' && (
+                                <Field
+                                    label="Admin Notes"
+                                    name="admin_notes"
+                                    type="textarea"
+                                    rows={3}
+                                    value={statusForm.data.admin_notes}
+                                    onChange={(v) => statusForm.setData('admin_notes', v)}
+                                    error={statusForm.errors.admin_notes}
+                                />
+                            )}
                             <FormActions
-                                onCancel={closeConfirmModal}
-                                processing={confirmForm.processing || previewLoading}
-                                submitLabel="Confirm & Send Email"
+                                onCancel={closeViewModal}
+                                processing={statusForm.processing}
+                                submitLabel={statusForm.data.status === 'confirmed' ? 'Review Mail & Confirm' : 'Save Changes'}
                             />
                         </form>
                     </div>
