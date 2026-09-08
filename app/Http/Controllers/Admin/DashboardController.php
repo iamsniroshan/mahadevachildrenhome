@@ -59,7 +59,7 @@ class DashboardController extends Controller
         ])->values();
 
         $recentDonations = Donation::latest()->limit(5)->get()->map(fn ($donation) => [
-            'donor' => $donation->is_anonymous ? 'Anonymous Donor' : $donation->donor_name,
+            'donor' => $donation->donor_name,
             'category' => $donation->category,
             'amount' => "{$donation->currency} ".number_format((float) $donation->amount),
             'status' => $donation->status,

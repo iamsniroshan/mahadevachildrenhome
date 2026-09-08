@@ -33,7 +33,7 @@ class MailTemplate extends Model
     public function renderForDonation(Donation $donation): string
     {
         $placeholders = [
-            'donor_name' => $donation->is_anonymous ? 'Anonymous Donor' : ($donation->donor_name ?? 'Donor'),
+            'donor_name' => $donation->donor_name ?? 'Donor',
             'email' => $donation->email ?? '',
             'amount' => number_format((float) $donation->amount, 2, '.', ','),
             'currency' => $donation->currency ?? 'LKR',

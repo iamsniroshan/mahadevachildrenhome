@@ -179,7 +179,6 @@ class DonationController extends Controller
             'currency' => ['nullable', 'string', 'max:3'],
             'category' => ['required', 'in:general,education,healthcare,shelter,food,emergency'],
             'message' => ['nullable', 'string'],
-            'is_anonymous' => ['nullable', 'boolean'],
             'payment_method' => ['nullable', 'in:bank_transfer,credit_card,paypal,cash,check,other'],
             'payment_reference' => ['nullable', 'string', 'max:255'],
             'invoice_number' => ['nullable', 'string', 'max:100'],

@@ -16,7 +16,6 @@ export default function Form({ donation }) {
         currency: donation?.currency ?? 'LKR',
         category: donation?.category ?? 'general',
         message: donation?.message ?? '',
-        is_anonymous: donation?.is_anonymous ?? false,
         payment_method: donation?.payment_method ?? '',
         payment_reference: donation?.payment_reference ?? '',
         status: donation?.status ?? 'pending',
@@ -94,7 +93,6 @@ export default function Form({ donation }) {
                             { value: 'confirmed', label: 'Confirmed' },
                         ]}
                     />
-                    <Field label="Anonymous" name="is_anonymous" type="checkbox" value={data.is_anonymous} onChange={(v) => setData('is_anonymous', v)} error={errors.is_anonymous} />
                 </div>
 
                 <Field label="Address" name="address" type="textarea" rows={2} value={data.address} onChange={(v) => setData('address', v)} error={errors.address} />

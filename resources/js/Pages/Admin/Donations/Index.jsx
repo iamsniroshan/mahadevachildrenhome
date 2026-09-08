@@ -24,7 +24,6 @@ const emptyDonation = {
     currency: 'LKR',
     category: 'general',
     message: '',
-    is_anonymous: false,
     payment_method: '',
     payment_reference: '',
     status: 'pending',
@@ -195,7 +194,7 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
             header: 'Donor',
             render: (donation) => (
                 <span className="font-semibold text-slate-800">
-                    {donation.is_anonymous ? 'Anonymous Donor' : donation.donor_name}
+                    {donation.donor_name}
                 </span>
             ),
         },
@@ -359,7 +358,6 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
                                 { value: 'confirmed', label: 'Confirmed' },
                             ]}
                         />
-                        <Field label="Anonymous" name="is_anonymous" type="checkbox" value={form.data.is_anonymous} onChange={(v) => form.setData('is_anonymous', v)} error={form.errors.is_anonymous} />
                     </div>
 
                     <Field label="Address" name="address" type="textarea" rows={2} value={form.data.address} onChange={(v) => form.setData('address', v)} error={form.errors.address} />
@@ -474,7 +472,7 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
                 ) : viewingDonation && (
                     <div className="space-y-4">
                         <div className="grid gap-3 sm:grid-cols-2">
-                            <DetailItem label="Donor Name" value={viewingDonation.is_anonymous ? 'Anonymous Donor' : viewingDonation.donor_name} />
+                            <DetailItem label="Donor Name" value={viewingDonation.donor_name} />
                             <DetailItem label="Email" value={viewingDonation.email} />
                             <DetailItem label="Phone" value={viewingDonation.phone || '—'} />
                             <DetailItem label="Address" value={viewingDonation.address || '—'} />
