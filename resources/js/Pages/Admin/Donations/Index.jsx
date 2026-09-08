@@ -321,8 +321,8 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
                             ]}
                         />
                         <Field
-                            label="Category"
-                            name="category"
+                            label="Donation Category"
+                            name="Donation Category"
                             type="select"
                             value={form.data.category}
                             onChange={(v) => form.setData('category', v)}

@@ -56,8 +56,8 @@ export default function Form({ donation }) {
                         ]}
                     />
                     <Field
-                        label="Category"
-                        name="category"
+                        label="Donation Category"
+                        name="Donation Category"
                         type="select"
                         value={data.category}
                         onChange={(v) => setData('category', v)}
