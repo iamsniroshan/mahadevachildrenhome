@@ -71,6 +71,17 @@ git push origin main   # or your deploy branch, e.g. "prod"
    php artisan storage:link
    ```
 
+   Configure the production domains in the server's `.env` file:
+   ```dotenv
+   APP_URL=https://www.mahadevachildren.com
+   ADMIN_DOMAIN=www.admin.mahadevachildren.com
+   SESSION_DOMAIN=.mahadevachildren.com
+   SESSION_SECURE_COOKIE=true
+   ```
+   Point both domains to the same `public` document root. Create DNS records
+   for `www.mahadevachildren.com` and `www.admin.mahadevachildren.com`, then
+   issue an SSL certificate that covers both names.
+
 ### 4. Deploy on every push
 
 1. In cPanel → Git Version Control, click **Manage** next to the repository.

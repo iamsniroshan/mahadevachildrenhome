@@ -26,6 +26,12 @@ use App\Models\Slider;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+$adminDomain = config('app.admin_domain');
+
+if ($adminDomain) {
+    Route::domain($adminDomain)->get('/', fn () => redirect()->route('login', status: 301));
+}
+
 Route::get('/robots.txt', function () {
     $lines = [
         'User-agent: *',
@@ -75,7 +81,8 @@ Route::post('/contact', [ContactController::class, 'store'])
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(function () {
+$registerAdminRoutes = function () {
+    Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('teams', AdminTeamController::class);
@@ -102,7 +109,14 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     Route::get('contacts', [AdminContactController::class, 'index'])->name('contacts.index');
     Route::put('contacts/{contact}', [AdminContactController::class, 'update'])->name('contacts.update');
     Route::delete('contacts/{contact}', [AdminContactController::class, 'destroy'])->name('contacts.destroy');
-});
+    });
+};
+
+if ($adminDomain) {
+    Route::domain($adminDomain)->group($registerAdminRoutes);
+} else {
+    $registerAdminRoutes();
+}
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -110,4 +124,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+if ($adminDomain) {
+    Route::domain($adminDomain)->group(base_path('routes/auth.php'));
+} else {
+    require __DIR__.'/auth.php';
+}
