@@ -27,6 +27,7 @@ class DonationController extends Controller
                 'id' => $template->id,
                 'name' => $template->name,
                 'subject' => $template->subject,
+                'category' => $template->category,
             ]),
         ]);
     }
@@ -93,7 +94,7 @@ class DonationController extends Controller
 
         $donation->status = 'confirmed';
         $donation->invoice_number = $data['invoice_number'];
-        $template = $data['template_id'] ? MailTemplate::find($data['template_id']) : MailTemplate::donationTemplates()->first();
+        $template = $data['template_id'] ? MailTemplate::find($data['template_id']) : MailTemplate::forCategory($donation->category);
         $pdfPath = $invoicePdf->generate($donation, $template);
         $uploadedInvoicePath = null;
         $invoiceName = null;
@@ -124,7 +125,7 @@ class DonationController extends Controller
         ]);
 
         try {
-            $template = $data['template_id'] ? MailTemplate::find($data['template_id']) : MailTemplate::donationTemplates()->first();
+            $template = $data['template_id'] ? MailTemplate::find($data['template_id']) : MailTemplate::forCategory($donation->category);
             $donation->status = 'confirmed';
             $donation->invoice_number = $data['invoice_number'];
             $finalInvoicePath = $invoicePdf->generate($donation, $template);
@@ -177,7 +178,7 @@ class DonationController extends Controller
             'donation_type' => ['required', 'in:one_time,monthly,yearly'],
             'amount' => ['required', 'numeric'],
             'currency' => ['nullable', 'string', 'max:3'],
-            'category' => ['required', 'in:general,education,healthcare,shelter,food,emergency'],
+            'category' => ['required', 'in:general,special_food'],
             'message' => ['nullable', 'string'],
             'payment_method' => ['nullable', 'in:bank_transfer,credit_card,paypal,cash,check,other'],
             'payment_reference' => ['nullable', 'string', 'max:255'],

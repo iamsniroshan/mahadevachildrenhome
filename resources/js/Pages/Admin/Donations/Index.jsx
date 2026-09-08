@@ -130,7 +130,10 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
 
     const openConfirmModal = async (donation) => {
         setConfirmingDonation(donation);
-        await loadMailPreview(donation, selectedTemplateId, statusForm.data.invoice_number, statusForm.data.invoice_file);
+        const matchedTemplate = mailTemplates.find((template) => template.category === donation.category);
+        const templateId = matchedTemplate?.id ?? mailTemplates[0]?.id ?? '';
+        setSelectedTemplateId(templateId);
+        await loadMailPreview(donation, templateId, statusForm.data.invoice_number, statusForm.data.invoice_file);
     };
 
     const changeTemplate = async (templateId) => {
@@ -345,23 +348,9 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
                                 { value: 'other', label: 'Other' },
                             ]}
                         />
-                        <Field label="Payment Reference" name="payment_reference" value={form.data.payment_reference} onChange={(v) => form.setData('payment_reference', v)} error={form.errors.payment_reference} />
-                        <Field
-                            label="Status"
-                            name="status"
-                            type="select"
-                            value={form.data.status}
-                            onChange={(v) => form.setData('status', v)}
-                            error={form.errors.status}
-                            options={[
-                                { value: 'pending', label: 'Pending' },
-                                { value: 'confirmed', label: 'Confirmed' },
-                            ]}
-                        />
                     </div>
 
                     <Field label="Address" name="address" type="textarea" rows={2} value={form.data.address} onChange={(v) => form.setData('address', v)} error={form.errors.address} />
-                    <Field label="Message" name="message" type="textarea" rows={2} value={form.data.message} onChange={(v) => form.setData('message', v)} error={form.errors.message} />
 
                     <FormActions onCancel={closeModal} processing={form.processing} submitLabel="Record Donation" />
                 </form>

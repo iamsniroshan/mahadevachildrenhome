@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
     'subject',
     'body',
     'type',
+    'category',
     'is_active',
 ])]
 class MailTemplate extends Model
@@ -28,6 +29,15 @@ class MailTemplate extends Model
             ->where('type', 'donation_confirmation')
             ->where('is_active', true)
             ->orderBy('name');
+    }
+
+    /**
+     * Resolve the best matching donation template for the given category, falling back to any active template.
+     */
+    public static function forCategory(?string $category): ?self
+    {
+        return static::donationTemplates()->where('category', $category)->first()
+            ?? static::donationTemplates()->first();
     }
 
     public function renderForDonation(Donation $donation): string

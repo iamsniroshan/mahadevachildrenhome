@@ -3,13 +3,17 @@ import Field from '@/Components/Admin/Field';
 import FormActions from '@/Components/Admin/FormActions';
 import { Head, router, useForm } from '@inertiajs/react';
 import { useMemo, useRef, useState } from 'react';
+import { DONATION_CATEGORIES } from '@/constants/donations';
 
 const emptyTemplate = {
     name: '',
+    category: '',
     subject: '',
     body: '',
     is_active: true,
 };
+
+const categoryLabel = (value) => DONATION_CATEGORIES.find((option) => option.value === value)?.label ?? value;
 
 const previewTemplate = (body) => {
     const sampleValues = {
@@ -86,10 +90,16 @@ export default function MailTemplates({ templates = [] }) {
         form.reset();
         form.setData({
             name: template.name,
+            category: template.category,
             subject: template.subject,
             body: template.body,
             is_active: template.is_active,
         });
+    };
+
+    const handleCategoryChange = (value) => {
+        form.setData('category', value);
+        form.setData('name', categoryLabel(value));
     };
 
     const resetForm = () => {
@@ -153,6 +163,11 @@ export default function MailTemplates({ templates = [] }) {
                                                 <div className="min-w-0">
                                                     <p className="truncate text-sm font-semibold text-slate-800">{template.name}</p>
                                                     <p className="truncate text-xs text-slate-500">{template.subject}</p>
+                                                    {template.category && (
+                                                        <span className="mt-1 inline-block rounded-full bg-rose-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-rose-700">
+                                                            {categoryLabel(template.category)}
+                                                        </span>
+                                                    )}
                                                 </div>
                                             </button>
 
@@ -211,8 +226,8 @@ export default function MailTemplates({ templates = [] }) {
                     {mode === 'view' && selectedTemplate ? (
                         <div className="space-y-6">
                             <div>
-                                <p className="mb-1 text-xs font-bold uppercase tracking-wide text-slate-500">Template Name</p>
-                                <p className="text-base font-semibold text-slate-900">{selectedTemplate.name}</p>
+                                <p className="mb-1 text-xs font-bold uppercase tracking-wide text-slate-500">Donation Category</p>
+                                <p className="text-base font-semibold text-slate-900">{categoryLabel(selectedTemplate.category)}</p>
                             </div>
 
                             <div>
@@ -256,9 +271,11 @@ export default function MailTemplates({ templates = [] }) {
                             <Field
                                 label="Template Name"
                                 name="name"
-                                value={form.data.name}
-                                onChange={(v) => form.setData('name', v)}
-                                error={form.errors.name}
+                                type="select"
+                                value={form.data.category}
+                                onChange={handleCategoryChange}
+                                error={form.errors.category ?? form.errors.name}
+                                options={DONATION_CATEGORIES}
                                 required
                             />
                             <Field

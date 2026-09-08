@@ -26,7 +26,7 @@ class DonationController extends Controller
             'donation_type' => ['required', 'in:one_time,monthly,yearly'],
             'amount' => ['required', 'numeric', 'min:1'],
             'currency' => ['nullable', 'string', 'max:3'],
-            'category' => ['required', 'in:general,education,healthcare,shelter,food,emergency'],
+            'category' => ['required', 'in:general,special_food'],
             'message' => ['nullable', 'string'],
             'payment_method' => ['nullable', 'in:bank_transfer,credit_card,paypal,cash,check,other'],
             'payment_reference' => ['nullable', 'string', 'max:255'],

@@ -21,6 +21,7 @@ class MailTemplateController extends Controller
     {
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            'category' => ['required', 'in:general,special_food'],
             'subject' => ['required', 'string', 'max:255'],
             'body' => ['required', 'string'],
             'is_active' => ['nullable', 'boolean'],
@@ -29,6 +30,7 @@ class MailTemplateController extends Controller
         MailTemplate::create([
             'name' => $data['name'],
             'type' => 'donation_confirmation',
+            'category' => $data['category'],
             'subject' => $data['subject'],
             'body' => $data['body'],
             'is_active' => $data['is_active'] ?? true,
@@ -41,6 +43,7 @@ class MailTemplateController extends Controller
     {
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            'category' => ['required', 'in:general,special_food'],
             'subject' => ['required', 'string', 'max:255'],
             'body' => ['required', 'string'],
             'is_active' => ['nullable', 'boolean'],
@@ -48,6 +51,7 @@ class MailTemplateController extends Controller
 
         $template->update([
             'name' => $data['name'],
+            'category' => $data['category'],
             'subject' => $data['subject'],
             'body' => $data['body'],
             'is_active' => $data['is_active'] ?? $template->is_active,

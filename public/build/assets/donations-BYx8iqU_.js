@@ -1,0 +1,1 @@
+var e=[{value:`general`,label:`General - பொது`},{value:`special_food`,label:`Special Food - சிறப்பு உணவு`}];export{e as t};
