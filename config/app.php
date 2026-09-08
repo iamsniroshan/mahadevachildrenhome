@@ -56,20 +56,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Admin Panel Domain
-    |--------------------------------------------------------------------------
-    |
-    | Hostname only (e.g. "admin.example.com"). A scheme or port is stripped
-    | automatically so values like "https://admin.example.com" still work.
-    |
-    */
-
-    'admin_domain' => ($adminDomain = trim((string) env('ADMIN_DOMAIN', ''))) !== ''
-        ? parse_url(str_contains($adminDomain, '://') ? $adminDomain : "https://{$adminDomain}", PHP_URL_HOST)
-        : null,
-
-    /*
-    |--------------------------------------------------------------------------
     | Application Timezone
     |--------------------------------------------------------------------------
     |

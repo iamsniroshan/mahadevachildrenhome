@@ -74,13 +74,11 @@ git push origin main   # or your deploy branch, e.g. "prod"
    Configure the production domains in the server's `.env` file:
    ```dotenv
    APP_URL=https://www.mahadevachildrenhome.com
-   ADMIN_DOMAIN=admin.mahadevachildrenhome.com
-   SESSION_DOMAIN=.mahadevachildrenhome.com
+   SESSION_DOMAIN=www.mahadevachildrenhome.com
    SESSION_SECURE_COOKIE=true
    ```
-   Point both domains to the same `public` document root. Create DNS records
-   for `www.mahadevachildrenhome.com` and `admin.mahadevachildrenhome.com`, then
-   issue an SSL certificate that covers both names.
+   Point the domain to the `public` document root and issue an SSL certificate
+   for it. The admin panel is available at `/admin` on the same domain.
 
 ### 4. Deploy on every push
 

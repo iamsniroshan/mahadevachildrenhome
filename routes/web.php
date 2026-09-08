@@ -26,12 +26,6 @@ use App\Models\Slider;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-$adminDomain = config('app.admin_domain');
-
-if ($adminDomain) {
-    Route::domain($adminDomain)->get('/', fn () => redirect()->route('login', status: 301));
-}
-
 Route::get('/robots.txt', function () {
     $lines = [
         'User-agent: *',
@@ -112,11 +106,7 @@ $registerAdminRoutes = function () {
     });
 };
 
-if ($adminDomain) {
-    Route::domain($adminDomain)->group($registerAdminRoutes);
-} else {
-    $registerAdminRoutes();
-}
+$registerAdminRoutes();
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -124,8 +114,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-if ($adminDomain) {
-    Route::domain($adminDomain)->group(base_path('routes/auth.php'));
-} else {
-    require __DIR__.'/auth.php';
-}
+require __DIR__.'/auth.php';
