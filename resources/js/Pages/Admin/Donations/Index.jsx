@@ -136,14 +136,6 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
         await loadMailPreview(donation, templateId, statusForm.data.invoice_number, statusForm.data.invoice_file);
     };
 
-    const changeTemplate = async (templateId) => {
-        setSelectedTemplateId(templateId);
-
-        if (confirmingDonation) {
-            await loadMailPreview(confirmingDonation, templateId, statusForm.data.invoice_number, statusForm.data.invoice_file);
-        }
-    };
-
     const closeConfirmModal = () => {
         setConfirmingDonation(null);
         setMailPreview(null);
@@ -386,20 +378,10 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
                             <>
                                 <div className="space-y-2">
                                     <label className="block text-xs font-bold uppercase tracking-wide text-slate-400">Email Template</label>
-                                    <select
-                                        value={selectedTemplateId}
-                                        onChange={(e) => changeTemplate(e.target.value)}
-                                        disabled={previewLoading}
-                                        className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-800"
-                                    >
-                                        {mailTemplates.length === 0 ? (
-                                            <option value="">No templates available</option>
-                                        ) : (
-                                            mailTemplates.map((template) => (
-                                                <option key={template.id} value={template.id}>{template.name}</option>
-                                            ))
-                                        )}
-                                    </select>
+                                    <p className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-800">
+                                        {mailTemplates.find((template) => String(template.id) === String(selectedTemplateId))?.name ?? 'No template available'}
+                                    </p>
+                                    <p className="text-xs text-slate-400">Determined automatically by the donation's category.</p>
                                 </div>
                                 <div>
                                     <p className="text-xs font-bold uppercase tracking-wide text-slate-400">Subject</p>
