@@ -2,6 +2,7 @@ import { useForm, usePage } from '@inertiajs/react';
 import Seo from '@/Components/Seo';
 import SiteNav from '@/Components/Site/SiteNav';
 import SiteFooter from '@/Components/Site/SiteFooter';
+import { DONATION_CATEGORIES } from '@/constants/donations';
 
 export default function Donate() {
     const { flash } = usePage().props;
@@ -180,12 +181,9 @@ export default function Donate() {
                                             onChange={(e) => setData('category', e.target.value)}
                                             className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-rose-900 focus:ring-1 focus:ring-rose-900 outline-none"
                                         >
-                                            <option value="general">General</option>
-                                            <option value="education">Education</option>
-                                            <option value="healthcare">Healthcare</option>
-                                            <option value="shelter">Shelter</option>
-                                            <option value="food">Food</option>
-                                            <option value="emergency">Emergency</option>
+                                            {DONATION_CATEGORIES.map((category) => (
+                                                <option key={category.value} value={category.value}>{category.label}</option>
+                                            ))}
                                         </select>
                                         {errors.category && <p className="text-xs font-semibold text-rose-600">{errors.category}</p>}
                                     </div>

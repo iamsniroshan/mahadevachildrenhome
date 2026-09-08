@@ -68,7 +68,6 @@ export default function Contact() {
                                 </div>
                                 <div>
                                     <span className="block text-[11px] font-bold uppercase text-rose-900 tracking-wide">Phone</span>
-                                    <span className="text-sm text-slate-600 block">+94 21 228 5678</span>
                                     <span className="text-sm text-slate-600 block">+94 77 827 7450</span>
                                     <span className="text-sm text-slate-600 block">+94 76 705 3911</span>
                                 </div>

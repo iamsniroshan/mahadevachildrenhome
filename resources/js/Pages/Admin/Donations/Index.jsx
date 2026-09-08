@@ -5,6 +5,7 @@ import DataTable from '@/Components/Admin/DataTable';
 import ActionButtons from '@/Components/Admin/ActionButtons';
 import Modal from '@/Components/Admin/Modal';
 import FormActions from '@/Components/Admin/FormActions';
+import { DONATION_CATEGORIES } from '@/constants/donations';
 import { Head, router, useForm } from '@inertiajs/react';
 import { useState } from 'react';
 
@@ -326,14 +327,7 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
                             value={form.data.category}
                             onChange={(v) => form.setData('category', v)}
                             error={form.errors.category}
-                            options={[
-                                { value: 'general', label: 'General' },
-                                { value: 'education', label: 'Education' },
-                                { value: 'healthcare', label: 'Healthcare' },
-                                { value: 'shelter', label: 'Shelter' },
-                                { value: 'food', label: 'Food' },
-                                { value: 'emergency', label: 'Emergency' },
-                            ]}
+                            options={DONATION_CATEGORIES}
                         />
                         <Field
                             label="Payment Method"

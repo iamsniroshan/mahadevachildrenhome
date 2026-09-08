@@ -1,5 +1,6 @@
 import AdminLayout from '@/Layouts/AdminLayout';
 import Field from '@/Components/Admin/Field';
+import { DONATION_CATEGORIES } from '@/constants/donations';
 import { Head, Link, useForm } from '@inertiajs/react';
 
 export default function Form({ donation }) {
@@ -61,14 +62,7 @@ export default function Form({ donation }) {
                         value={data.category}
                         onChange={(v) => setData('category', v)}
                         error={errors.category}
-                        options={[
-                            { value: 'general', label: 'General' },
-                            { value: 'education', label: 'Education' },
-                            { value: 'healthcare', label: 'Healthcare' },
-                            { value: 'shelter', label: 'Shelter' },
-                            { value: 'food', label: 'Food' },
-                            { value: 'emergency', label: 'Emergency' },
-                        ]}
+                        options={DONATION_CATEGORIES}
                     />
                     <Field
                         label="Payment Method"
