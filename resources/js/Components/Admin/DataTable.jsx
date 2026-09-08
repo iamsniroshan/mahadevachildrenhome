@@ -41,7 +41,7 @@ export default function DataTable({ columns, data, keyField = 'id', emptyMessage
                     rowKey={keyField}
                     columns={antColumns}
                     dataSource={filteredData}
-                    pagination={{ pageSize: 10, hideOnSinglePage: true }}
+                    pagination={false}
                     locale={{ emptyText: records.length === 0 ? emptyMessage : 'No matching records found.' }}
                     size="middle"
                     footer={() => (

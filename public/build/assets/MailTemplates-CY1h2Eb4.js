@@ -1,4 +1,4 @@
-import{a as e,l as t,n,o as r,p as i,t as a}from"./jsx-runtime-Ba1o_9ji.js";import{t as o}from"./AdminLayout-DSo61tl4.js";import{t as s}from"./Field-Bt4P26Zc.js";import{t as c}from"./FormActions-CMWNn9WV.js";var l=i(t(),1),u=a(),d={name:``,subject:``,body:``,is_active:!0},f=e=>`<!DOCTYPE html>
+import{a as e,l as t,n,o as r,p as i,t as a}from"./jsx-runtime-Ba1o_9ji.js";import{t as o}from"./AdminLayout-CI05FS3b.js";import{t as s}from"./Field-B5BAZP-_.js";import{t as c}from"./FormActions-BV28Op7c.js";var l=i(t(),1),u=a(),d={name:``,subject:``,body:``,is_active:!0},f=e=>`<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
 <body lang="en" style="margin:0;padding:0;background:#ffffff;color:#000000;font-family:Arial,Helvetica,'Nirmala UI','Nirmala',sans-serif;">

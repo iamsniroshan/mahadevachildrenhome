@@ -15,7 +15,7 @@ const getInitials = (name = 'Administrator') => {
 };
 
 const NavIcon = ({ path }) => (
-    <svg className="w-4 h-4 shrink-0 stroke-current" fill="none" strokeWidth={2} viewBox="0 0 24 24">
+    <svg className="w-[15px] h-[15px] shrink-0 stroke-current" fill="none" strokeWidth={2} viewBox="0 0 24 24">
         <path d={path} />
     </svg>
 );
@@ -113,10 +113,10 @@ export default function AdminLayout({ header, children, headerAction = null, ful
             <Link
                 href={route(item.routeName)}
                 onClick={() => setIsSidebarOpen(false)}
-                className="flex items-center gap-2 text-sm font-medium leading-none text-rose-50/90 no-underline hover:text-white"
-                style={{ display: 'flex', alignItems: 'center', gap: '10px' }}
+                className="flex items-center gap-2 font-medium leading-none text-rose-50/90 no-underline hover:text-white"
+                style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '15px' }}
             >
-                <span className="truncate leading-none">{item.name}</span>
+                <span className="truncate leading-none" style={{ fontSize: '15px' }}>{item.name}</span>
             </Link>
         ),
     }));
@@ -138,7 +138,7 @@ export default function AdminLayout({ header, children, headerAction = null, ful
                     mode="inline"
                     selectedKeys={[activeKey]}
                     items={menuItems}
-                    className="!bg-transparent !border-none [&_.ant-menu-item]:!m-0 [&_.ant-menu-item]:!mb-1 [&_.ant-menu-item]:!rounded-xl [&_.ant-menu-item]:!px-3 [&_.ant-menu-item]:!py-2 [&_.ant-menu-item-selected]:!bg-[#5d1234] [&_.ant-menu-item-selected]:!text-white [&_.ant-menu-item:hover]:!bg-[#5d1234]/80 [&_.ant-menu-item>.ant-menu-item-icon]:!flex [&_.ant-menu-item>.ant-menu-item-icon]:!items-center [&_.ant-menu-item>.ant-menu-item-icon]:!justify-center [&_.ant-menu-item>.ant-menu-item-icon]:!shrink-0 [&_.ant-menu-item>.ant-menu-item-icon>svg]:!w-4 [&_.ant-menu-item>.ant-menu-item-icon>svg]:!h-4 [&_.ant-menu-item>.ant-menu-title-content]:!flex [&_.ant-menu-item>.ant-menu-title-content]:!items-center [&_.ant-menu-item>.ant-menu-title-content]:!w-full [&_.ant-menu-item>.ant-menu-title-content]:!leading-none [&_.ant-menu-item>.ant-menu-title-content>a]:!flex [&_.ant-menu-item>.ant-menu-title-content>a]:!items-center [&_.ant-menu-item>.ant-menu-title-content>a]:!gap-2 [&_.ant-menu-item>.ant-menu-title-content>a]:!text-[13px] [&_.ant-menu-item>.ant-menu-title-content>a]:!leading-none [&_.ant-menu-item>.ant-menu-title-content>a]:!text-rose-50/90 [&_.ant-menu-item-selected>.ant-menu-title-content>a]:!text-white [&_.ant-menu-item>.ant-menu-title-content>a:hover]:!text-white"
+                    className="!bg-transparent !border-none [&_.ant-menu-item]:!m-0 [&_.ant-menu-item]:!mb-1 [&_.ant-menu-item]:!rounded-xl [&_.ant-menu-item]:!px-3 [&_.ant-menu-item]:!py-2 [&_.ant-menu-item-selected]:!bg-[#5d1234] [&_.ant-menu-item-selected]:!text-white [&_.ant-menu-item:hover]:!bg-[#5d1234]/80 [&_.ant-menu-item>.ant-menu-item-icon]:!flex [&_.ant-menu-item>.ant-menu-item-icon]:!items-center [&_.ant-menu-item>.ant-menu-item-icon]:!justify-center [&_.ant-menu-item>.ant-menu-item-icon]:!shrink-0 [&_.ant-menu-item>.ant-menu-item-icon>svg]:!w-[15px] [&_.ant-menu-item>.ant-menu-item-icon>svg]:!h-[15px] [&_.ant-menu-item>.ant-menu-title-content]:!flex [&_.ant-menu-item>.ant-menu-title-content]:!items-center [&_.ant-menu-item>.ant-menu-title-content]:!w-full [&_.ant-menu-item>.ant-menu-title-content]:!leading-none [&_.ant-menu-item>.ant-menu-title-content>a]:!flex [&_.ant-menu-item>.ant-menu-title-content>a]:!items-center [&_.ant-menu-item>.ant-menu-title-content>a]:!gap-2 [&_.ant-menu-item>.ant-menu-title-content>a]:!text-[15px] [&_.ant-menu-item>.ant-menu-title-content>a]:!leading-none [&_.ant-menu-item>.ant-menu-title-content>a]:!text-rose-50/90 [&_.ant-menu-item-selected>.ant-menu-title-content>a]:!text-white [&_.ant-menu-item>.ant-menu-title-content>a:hover]:!text-white"
                 />
             </div>
         </div>
