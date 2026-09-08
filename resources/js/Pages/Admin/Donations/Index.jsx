@@ -90,13 +90,15 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
         setPreviewLoading(true);
 
         try {
-            if (!invoiceNumber || !invoiceFile) {
-                throw new Error('Enter an invoice number and select an invoice file before reviewing the email.');
+            if (!invoiceNumber) {
+                throw new Error('Enter an invoice number before reviewing the email.');
             }
 
             const formData = new FormData();
             formData.append('invoice_number', invoiceNumber);
-            formData.append('invoice_file', invoiceFile);
+            if (invoiceFile) {
+                formData.append('invoice_file', invoiceFile);
+            }
             if (templateId) formData.append('template_id', templateId);
 
             const response = await fetch(route('admin.donations.confirmation-preview', donation.id), {
@@ -149,11 +151,18 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
 
     const submitConfirmAndSend = (e) => {
         e.preventDefault();
-        confirmForm.transform(() => ({
-            invoice_number: statusForm.data.invoice_number,
-            invoice_file: statusForm.data.invoice_file,
-            template_id: selectedTemplateId,
-        }));
+        confirmForm.transform(() => {
+            const data = {
+                invoice_number: statusForm.data.invoice_number,
+                template_id: selectedTemplateId,
+            };
+
+            if (statusForm.data.invoice_file) {
+                data.invoice_file = statusForm.data.invoice_file;
+            }
+
+            return data;
+        });
         confirmForm.post(route('admin.donations.confirm-send', confirmingDonation.id), {
             preserveScroll: true,
             forceFormData: true,
@@ -551,9 +560,8 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
                                         value={statusForm.data.invoice_file}
                                         onChange={(v) => statusForm.setData('invoice_file', v)}
                                         error={statusForm.errors.invoice_file}
-                                        required
                                     />
-                                    <p className="text-xs text-slate-500">Required: PDF, JPG, JPEG, or PNG up to 10 MB.</p>
+                                    <p className="text-xs text-slate-500">Optional: PDF, JPG, JPEG, or PNG up to 10 MB.</p>
                                 </>
                             )}
                             <FormActions

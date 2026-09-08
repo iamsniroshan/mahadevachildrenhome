@@ -88,21 +88,27 @@ class DonationController extends Controller
         $data = $request->validate([
             'template_id' => ['nullable', 'exists:mail_templates,id'],
             'invoice_number' => ['required', 'string', 'max:100'],
-            'invoice_file' => ['required', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:10240'],
+            'invoice_file' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:10240'],
         ]);
 
         $donation->status = 'confirmed';
         $donation->invoice_number = $data['invoice_number'];
         $template = $data['template_id'] ? MailTemplate::find($data['template_id']) : MailTemplate::donationTemplates()->first();
         $pdfPath = $invoicePdf->generate($donation, $template);
-        $uploadedInvoicePath = $request->file('invoice_file')->store('invoice-preview', 'public');
+        $uploadedInvoicePath = null;
+        $invoiceName = null;
+
+        if ($request->hasFile('invoice_file')) {
+            $uploadedInvoicePath = $request->file('invoice_file')->store('invoice-preview', 'public');
+            $invoiceName = $request->file('invoice_file')->getClientOriginalName();
+        }
 
         return response()->json([
             'subject' => (new DonationConfirmed($donation, $template))->envelope()->subject,
             'html' => (string) view('emails.donation-confirmed', ['donation' => $donation, 'mailBody' => $template ? $template->renderForDonation($donation) : null]),
             'pdf_url' => Storage::disk('public')->url($pdfPath),
-            'invoice_url' => Storage::disk('public')->url($uploadedInvoicePath),
-            'invoice_name' => $request->file('invoice_file')->getClientOriginalName(),
+            'invoice_url' => $uploadedInvoicePath ? Storage::disk('public')->url($uploadedInvoicePath) : null,
+            'invoice_name' => $invoiceName,
         ]);
     }
 
@@ -114,7 +120,7 @@ class DonationController extends Controller
         $data = $request->validate([
             'template_id' => ['nullable', 'exists:mail_templates,id'],
             'invoice_number' => ['required', 'string', 'max:100'],
-            'invoice_file' => ['required', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:10240'],
+            'invoice_file' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:10240'],
         ]);
 
         try {
@@ -122,7 +128,7 @@ class DonationController extends Controller
             $donation->status = 'confirmed';
             $donation->invoice_number = $data['invoice_number'];
             $finalInvoicePath = $invoicePdf->generate($donation, $template);
-            $sourceInvoicePath = $request->file('invoice_file')->store('invoice-source', 'public');
+            $sourceInvoicePath = $request->hasFile('invoice_file') ? $request->file('invoice_file')->store('invoice-source', 'public') : null;
 
             $donation->update([
                 'status' => 'confirmed',
