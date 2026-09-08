@@ -1,6 +1,9 @@
-import Dropdown from '@/Components/Dropdown';
 import { Link, usePage } from '@inertiajs/react';
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
+import { Layout, Menu, Avatar, Dropdown, Drawer, Button } from 'antd';
+import { MenuOutlined, DownOutlined } from '@ant-design/icons';
+
+const { Sider, Header, Content } = Layout;
 
 const getInitials = (name = 'Administrator') => {
     return name
@@ -10,6 +13,12 @@ const getInitials = (name = 'Administrator') => {
         .map((part) => part[0]?.toUpperCase() ?? '')
         .join('') || 'AD';
 };
+
+const NavIcon = ({ path }) => (
+    <svg className="w-5 h-5 stroke-current" fill="none" strokeWidth={2} viewBox="0 0 24 24">
+        <path d={path} />
+    </svg>
+);
 
 const navItems = [
     {
@@ -86,138 +95,119 @@ export default function AdminLayout({ header, children, headerAction = null, ful
     const roleLabel = user?.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : 'Admin';
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-    useEffect(() => {
-        document.body.style.overflow = isSidebarOpen ? 'hidden' : '';
-        return () => {
-            document.body.style.overflow = '';
-        };
-    }, [isSidebarOpen]);
+    const activeKey = useMemo(
+        () => navItems.find((item) => route().current(`${item.routeName.replace(/\.index$/, '')}*`))?.routeName ?? '',
+        [route().current()]
+    );
+
+    const menuItems = navItems.map((item) => ({
+        key: item.routeName,
+        icon: <NavIcon path={item.icon} />,
+        label: (
+            <Link href={route(item.routeName)} onClick={() => setIsSidebarOpen(false)}>
+                {item.name}
+            </Link>
+        ),
+    }));
+
+    const sidebarContent = (
+        <div className="flex h-full flex-col bg-[#3b0a24] text-white">
+            <div className="h-20 flex items-center gap-3 px-6 border-b border-rose-900/40 flex-shrink-0">
+                <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
+                    <img src="/storage/users/logo.jpg" alt="Mahadeva Home logo" className="w-full h-full object-cover" />
+                </div>
+                <div className="min-w-0">
+                    <span className="font-bold text-base text-rose-100 block leading-tight truncate">Mahadeva Home</span>
+                    <span className="text-[11px] text-amber-500 font-medium uppercase tracking-wider">Admin Portal</span>
+                </div>
+            </div>
+            <div className="min-h-0 flex-1 overflow-y-auto py-2">
+                <Menu
+                    theme="dark"
+                    mode="inline"
+                    selectedKeys={[activeKey]}
+                    items={menuItems}
+                    className="!bg-transparent !border-none"
+                />
+            </div>
+        </div>
+    );
+
+    const userMenuItems = [
+        {
+            key: 'header',
+            label: (
+                <div className="px-1 py-1">
+                    <p className="text-sm font-semibold text-slate-800">{user?.name ?? 'Administrator'}</p>
+                    <p className="text-xs text-slate-500">{user?.email ?? 'admin@mahadevachildrenhome.com'}</p>
+                </div>
+            ),
+            disabled: true,
+        },
+        { type: 'divider' },
+        { key: 'profile', label: <Link href={route('profile.edit')}>Profile</Link> },
+        { key: 'logout', label: <Link href={route('logout')} method="post" as="button">Log Out</Link> },
+    ];
 
     return (
-        <div className="bg-amber-50/20 text-slate-800 font-sans antialiased flex h-screen overflow-hidden">
-            {/* Mobile overlay */}
-            {isSidebarOpen && (
-                <div
-                    className="fixed inset-0 z-30 bg-slate-900/50 lg:hidden"
-                    onClick={() => setIsSidebarOpen(false)}
-                    aria-hidden="true"
-                />
-            )}
+        <Layout className="!bg-amber-50/20 !min-h-screen h-screen overflow-hidden font-sans antialiased">
+            <Sider width={256} className="hidden lg:block" style={{ background: '#3b0a24' }}>
+                {sidebarContent}
+            </Sider>
 
-            {/* Sidebar */}
-            <aside
-                className={`fixed inset-y-0 left-0 z-40 w-64 bg-[#3b0a24] text-white flex flex-col justify-between flex-shrink-0 transform transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${
-                    isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-                }`}
+            <Drawer
+                placement="left"
+                open={isSidebarOpen}
+                onClose={() => setIsSidebarOpen(false)}
+                closable={false}
+                width={256}
+                styles={{ body: { padding: 0, background: '#3b0a24' } }}
+                className="lg:hidden"
             >
-                <div className="min-h-0 flex-1 overflow-y-auto">
-                    <div className="h-20 flex items-center gap-3 px-6 border-b border-rose-900/40">
-                        <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
-                            <img src="/storage/users/logo.jpg" alt="Mahadeva Home logo" className="w-full h-full object-cover" />
-                        </div>
-                        <div className="min-w-0">
-                            <span className="font-bold text-base text-rose-100 block leading-tight truncate">Mahadeva Home</span>
-                            <span className="text-[11px] text-amber-500 font-medium uppercase tracking-wider">Admin Portal</span>
-                        </div>
-                        <button
-                            type="button"
-                            onClick={() => setIsSidebarOpen(false)}
-                            aria-label="Close menu"
-                            className="ml-auto lg:hidden rounded-lg p-1.5 text-rose-100/70 hover:bg-rose-900/40 hover:text-white"
-                        >
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </button>
-                    </div>
+                {sidebarContent}
+            </Drawer>
 
-                    <nav className="p-4 space-y-1">
-                        {navItems.map((item) => {
-                            const base = item.routeName.replace(/\.index$/, '');
-                            const isActive = route().current(`${base}*`);
-
-                            return (
-                                <Link
-                                    key={item.name}
-                                    href={route(item.routeName)}
-                                    onClick={() => setIsSidebarOpen(false)}
-                                    className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition ${
-                                        isActive
-                                            ? 'bg-rose-900/50 text-amber-400 font-semibold'
-                                            : 'text-rose-100/70 hover:bg-rose-900/30 hover:text-white font-medium'
-                                    }`}
-                                >
-                                    <svg className="w-5 h-5 stroke-current flex-shrink-0" fill="none" strokeWidth={2} viewBox="0 0 24 24">
-                                        <path d={item.icon} />
-                                    </svg>
-                                    {item.name}
-                                </Link>
-                            );
-                        })}
-                    </nav>
-                </div>
-            </aside>
-
-            {/* Main Content Wrapper */}
-            <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-                <header className="h-16 lg:h-20 bg-white border-b border-slate-100 flex items-center justify-between gap-3 px-4 sm:px-6 lg:px-8 flex-shrink-0">
+            <Layout className="!bg-transparent min-w-0 overflow-hidden">
+                <Header className="!h-16 lg:!h-20 !bg-white !border-b !border-slate-100 flex items-center justify-between gap-3 !px-4 sm:!px-6 lg:!px-8 flex-shrink-0 !leading-normal">
                     <div className="flex items-center gap-3 min-w-0">
-                        <button
-                            type="button"
+                        <Button
+                            type="text"
+                            className="lg:hidden flex-shrink-0"
+                            icon={<MenuOutlined />}
                             onClick={() => setIsSidebarOpen(true)}
                             aria-label="Open menu"
-                            className="lg:hidden rounded-lg p-2 text-slate-600 hover:bg-slate-100 flex-shrink-0"
-                        >
-                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-                            </svg>
-                        </button>
-                        <h1 className="text-base sm:text-xl font-bold text-rose-950 truncate">{header}</h1>
+                        />
+                        <h1 className="text-base sm:text-xl font-bold text-rose-950 truncate m-0">{header}</h1>
                     </div>
                     <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
                         {headerAction && headerAction}
 
-                        <Dropdown>
-                            <Dropdown.Trigger>
-                                <button
-                                    type="button"
-                                    className="flex items-center gap-2 sm:gap-3 rounded-full border border-slate-200 bg-slate-50 px-2 py-1.5 sm:pr-3 text-left transition hover:border-rose-200 hover:bg-rose-50"
+                        <Dropdown menu={{ items: userMenuItems }} trigger={['click']}>
+                            <button
+                                type="button"
+                                className="flex items-center gap-2 sm:gap-3 rounded-full border border-slate-200 bg-slate-50 px-2 py-1.5 sm:pr-3 text-left transition hover:border-rose-200 hover:bg-rose-50"
+                            >
+                                <Avatar
+                                    size={36}
+                                    src={user?.profile_pic ? `/storage/${user.profile_pic}` : undefined}
+                                    style={{ backgroundColor: '#881337' }}
                                 >
-                                    <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-rose-900 text-sm font-bold text-white flex-shrink-0">
-                                        {user?.profile_pic ? (
-                                            <img src={`/storage/${user.profile_pic}`} alt={user?.name ?? 'Administrator'} className="h-full w-full object-cover" />
-                                        ) : (
-                                            initials
-                                        )}
-                                    </div>
-                                    <div className="hidden sm:block">
-                                        <div className="text-sm font-semibold text-slate-800">{user?.name ?? 'Administrator'}</div>
-                                        <div className="text-[10px] font-medium uppercase tracking-[0.14em] text-slate-500">{roleLabel}</div>
-                                    </div>
-                                    <svg className="hidden sm:block h-4 w-4 text-slate-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                        <path
-                                            fillRule="evenodd"
-                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                            clipRule="evenodd"
-                                        />
-                                    </svg>
-                                </button>
-                            </Dropdown.Trigger>
-
-                            <Dropdown.Content align="right" width="48">
-                                <div className="border-b border-slate-100 px-4 py-3">
-                                    <p className="text-sm font-semibold text-slate-800">{user?.name ?? 'Administrator'}</p>
-                                    <p className="text-xs text-slate-500">{user?.email ?? 'admin@mahadevachildrenhome.com'}</p>
+                                    {initials}
+                                </Avatar>
+                                <div className="hidden sm:block">
+                                    <div className="text-sm font-semibold text-slate-800">{user?.name ?? 'Administrator'}</div>
+                                    <div className="text-[10px] font-medium uppercase tracking-[0.14em] text-slate-500">{roleLabel}</div>
                                 </div>
-                                <Dropdown.Link href={route('profile.edit')}>Profile</Dropdown.Link>
-                                <Dropdown.Link href={route('logout')} method="post" as="button">Log Out</Dropdown.Link>
-                            </Dropdown.Content>
+                                <DownOutlined className="hidden sm:block text-slate-500" style={{ fontSize: 12 }} />
+                            </button>
                         </Dropdown>
                     </div>
-                </header>
+                </Header>
 
-                <main className={fullHeight ? 'flex-1 min-h-0 overflow-y-auto p-3 sm:p-6 lg:overflow-hidden' : 'flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8'}>{children}</main>
-            </div>
-        </div>
+                <Content className={fullHeight ? 'min-h-0 overflow-y-auto p-3 sm:p-6 lg:overflow-hidden' : 'overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8'}>
+                    {children}
+                </Content>
+            </Layout>
+        </Layout>
     );
 }

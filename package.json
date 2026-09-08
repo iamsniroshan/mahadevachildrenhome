@@ -7,11 +7,13 @@
         "dev": "vite"
     },
     "devDependencies": {
+        "@ant-design/icons": "^6.3.4",
         "@headlessui/react": "^2.0.0",
         "@inertiajs/react": "^2.0.0",
         "@tailwindcss/forms": "^0.5.3",
         "@tailwindcss/vite": "^4.0.0",
         "@vitejs/plugin-react": "^4.2.0",
+        "antd": "^6.6.3",
         "autoprefixer": "^10.4.12",
         "concurrently": "^10.0.3",
         "laravel-vite-plugin": "^3.1",

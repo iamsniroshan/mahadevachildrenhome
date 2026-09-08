@@ -1,3 +1,6 @@
+import { Input, Select, Checkbox, Upload, Button } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
+
 export default function Field({
     label,
     type = 'text',
@@ -13,9 +16,6 @@ export default function Field({
     accept = 'image/*',
     hideLabel = false,
 }) {
-    const baseClass =
-        'w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-800 focus:border-rose-900 focus:ring-1 focus:ring-rose-900 outline-none';
-
     return (
         <div className={type === 'checkbox' ? 'flex items-center gap-2' : 'space-y-1.5'}>
             {type !== 'checkbox' && !hideLabel && (
@@ -25,7 +25,7 @@ export default function Field({
             )}
 
             {type === 'textarea' && (
-                <textarea
+                <Input.TextArea
                     id={name}
                     name={name}
                     value={value ?? ''}
@@ -34,48 +34,37 @@ export default function Field({
                     readOnly={readOnly}
                     disabled={disabled}
                     required={required}
-                    className={baseClass}
+                    status={error ? 'error' : undefined}
                 />
             )}
 
             {type === 'select' && (
-                <select
+                <Select
                     id={name}
-                    name={name}
-                    value={value ?? ''}
-                    onChange={(e) => onChange(e.target.value)}
+                    className="w-full"
+                    value={value ?? undefined}
+                    onChange={(v) => onChange(v)}
                     disabled={disabled}
-                    required={required}
-                    className={baseClass}
-                >
-                    {options.map((option) => (
-                        <option key={option.value} value={option.value}>
-                            {option.label}
-                        </option>
-                    ))}
-                </select>
+                    status={error ? 'error' : undefined}
+                    options={options}
+                />
             )}
 
             {type === 'checkbox' && (
-                <>
-                    <input
-                        id={name}
-                        name={name}
-                        type="checkbox"
-                        checked={!!value}
-                        onChange={(e) => onChange(e.target.checked)}
-                        disabled={disabled}
-                        required={required}
-                        className="w-4 h-4 rounded border-slate-300 text-rose-900 focus:ring-rose-900"
-                    />
-                    <label htmlFor={name} className="text-sm font-medium text-slate-700">
-                        {label}
-                    </label>
-                </>
+                <Checkbox
+                    id={name}
+                    name={name}
+                    checked={!!value}
+                    onChange={(e) => onChange(e.target.checked)}
+                    disabled={disabled}
+                    required={required}
+                >
+                    {label}
+                </Checkbox>
             )}
 
-            {['text', 'number', 'date', 'datetime-local', 'email', 'password'].includes(type) && (
-                <input
+            {['text', 'number', 'date', 'datetime-local', 'email'].includes(type) && (
+                <Input
                     id={name}
                     name={name}
                     type={type}
@@ -84,33 +73,43 @@ export default function Field({
                     readOnly={readOnly}
                     disabled={disabled}
                     required={required}
-                    className={baseClass}
+                    status={error ? 'error' : undefined}
+                />
+            )}
+
+            {type === 'password' && (
+                <Input.Password
+                    id={name}
+                    name={name}
+                    value={value ?? ''}
+                    onChange={(e) => onChange(e.target.value)}
+                    readOnly={readOnly}
+                    disabled={disabled}
+                    required={required}
+                    status={error ? 'error' : undefined}
                 />
             )}
 
             {type === 'file' && (
-                <input
-                    id={name}
-                    name={name}
-                    type="file"
+                <Upload
+                    beforeUpload={() => false}
+                    maxCount={1}
                     accept={accept}
-                    onChange={(e) => onChange(e.target.files?.[0] ?? null)}
-                    required={required}
-                    className={`${baseClass} file:mr-3 file:rounded-md file:border-0 file:bg-rose-900 file:px-3 file:py-1.5 file:text-xs file:font-semibold file:text-white hover:file:bg-rose-950`}
-                />
+                    onChange={({ fileList }) => onChange(fileList[0]?.originFileObj ?? null)}
+                >
+                    <Button icon={<UploadOutlined />}>Choose File</Button>
+                </Upload>
             )}
 
             {type === 'file-multi' && (
-                <input
-                    id={name}
-                    name={name}
-                    type="file"
-                    accept={accept}
+                <Upload
+                    beforeUpload={() => false}
                     multiple
-                    onChange={(e) => onChange(Array.from(e.target.files ?? []))}
-                    required={required}
-                    className={`${baseClass} file:mr-3 file:rounded-md file:border-0 file:bg-rose-900 file:px-3 file:py-1.5 file:text-xs file:font-semibold file:text-white hover:file:bg-rose-950`}
-                />
+                    accept={accept}
+                    onChange={({ fileList }) => onChange(fileList.map((f) => f.originFileObj).filter(Boolean))}
+                >
+                    <Button icon={<UploadOutlined />}>Choose Files</Button>
+                </Upload>
             )}
 
             {error && <p className="text-xs font-semibold text-rose-600">{error}</p>}
