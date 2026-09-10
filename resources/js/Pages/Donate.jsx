@@ -274,7 +274,7 @@ export default function Donate() {
                         <div className="mt-8 rounded-[2rem] border border-white/70 bg-white/60 p-6 text-center text-sm text-slate-600 shadow-[0_18px_40px_rgba(15,23,42,0.05)] backdrop-blur-xl">
                             <p className="font-semibold">Need Help?</p>
                             <p>If you have any questions about making a donation or need assistance with the process, please contact us:</p>
-                            <p className="mt-2">📧 rasa46@yahoo.com &nbsp;·&nbsp; 📞 +94 21 228 5678 &nbsp;·&nbsp; 💬 WhatsApp +94 77 827 7450</p>
+                            <p className="mt-2">📧 rasa46@yahoo.com &nbsp;·&nbsp; 📞 +94 21 492 3118 &nbsp;·&nbsp; 💬 WhatsApp +94 77 827 7450</p>
                         </div>
                     </div>
                 </section>

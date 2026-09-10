@@ -97,7 +97,7 @@ export default function SiteFooter() {
                             </li>
                             <li>
                                 <span className="block text-[11px] font-bold uppercase text-rose-200/60 tracking-wide">Phone</span>
-                                +94 21 228 5678
+                                +94 21 492 3118
                             </li>
                             <li>
                                 <span className="block text-[11px] font-bold uppercase text-rose-200/60 tracking-wide">Email</span>
