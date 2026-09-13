@@ -84,7 +84,7 @@ export default function Contact() {
                                             href="tel:+94773124278"
                                             className="flex items-center gap-2 text-sm text-slate-600 hover:text-blue-600"
                                         >
-                                            <Phone className="w-4 h-4 text-blue-600" />
+                                            <span className="w-4 h-4 text-blue-600">📱</span>
                                             <span>Mobile: +94 77 312 4278</span>
                                         </a>
 
