@@ -46,7 +46,7 @@ export default function Donate() {
                 <SiteNav />
 
                 <section className="relative overflow-hidden rounded-b-[3rem] bg-gradient-to-br from-rose-950 via-rose-900 to-red-950 pt-16 pb-16 text-white shadow-[0_25px_60px_rgba(146,19,53,0.12)]">
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.12),transparent_40%)]" />
+                    <div className="absolute inset-0 bg-blue-950" />
                     <div className="relative mx-auto max-w-7xl px-6 text-center space-y-3">
                         <span className="inline-block rounded-full bg-rose-900/60 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-rose-200">
                             Make a Donation

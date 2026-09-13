@@ -67,9 +67,45 @@ export default function Contact() {
                                     </svg>
                                 </div>
                                 <div>
-                                    <span className="block text-[11px] font-bold uppercase text-rose-900 tracking-wide">Phone</span>
-                                    <span className="text-sm text-slate-600 block">+94 77 827 7450</span>
-                                    <span className="text-sm text-slate-600 block">+94 76 705 3911</span>
+                                    <div className="space-y-2">
+                                        {/* WhatsApp */}
+                                        <a
+                                            href="https://wa.me/94778277450"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="flex items-center gap-2 text-sm text-slate-600 hover:text-green-600"
+                                        >
+                                            <span className="text-green-600">💬</span>
+                                            <span>WhatsApp: +94 77 827 7450</span>
+                                        </a>
+
+                                        {/* Mobile */}
+                                        <a
+                                            href="tel:+94773124278"
+                                            className="flex items-center gap-2 text-sm text-slate-600 hover:text-blue-600"
+                                        >
+                                            <Phone className="w-4 h-4 text-blue-600" />
+                                            <span>Mobile: +94 77 312 4278</span>
+                                        </a>
+
+                                        {/* Landline */}
+                                        <a
+                                            href="tel:+94214923118"
+                                            className="flex items-center gap-2 text-sm text-slate-600 hover:text-blue-600"
+                                        >
+                                            <span>☎️</span>
+                                            <span>Land: 021 492 3118</span>
+                                        </a>
+
+                                        {/* Other */}
+                                        <a
+                                            href="tel:+94212283385"
+                                            className="flex items-center gap-2 text-sm text-slate-600 hover:text-blue-600"
+                                        >
+                                            <span>☎️</span>
+                                            <span>Other: 021 228 3385</span>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
 
