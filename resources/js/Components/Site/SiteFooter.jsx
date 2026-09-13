@@ -1,4 +1,5 @@
 import { Link } from '@inertiajs/react';
+import { FacebookFilled, InstagramFilled, WhatsAppOutlined, YoutubeFilled } from '@ant-design/icons';
 
 const quickLinks = [
     { label: 'Home', routeName: 'home' },
@@ -12,27 +13,27 @@ const quickLinks = [
 const socialLinks = [
     {
         label: 'Facebook',
-        href: 'https://www.facebook.com',
+        href: 'https://www.facebook.com/profile.php?id=100064529386821',
         colorClass: 'bg-[#1877F2]',
-        path: 'M13.5 9H15V6.5h-1.5C11.6 6.5 10 8.1 10 10.2V12H8v2.5h2V21h2.5v-6.5H15l.5-2.5h-3v-1.5c0-.6.4-1 1-1z',
+        Icon: FacebookFilled,
     },
-    {
-        label: 'Instagram',
-        href: 'https://www.instagram.com',
-        colorClass: 'bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400',
-        path: 'M12 8.25a3.75 3.75 0 100 7.5 3.75 3.75 0 000-7.5zM12 10a2 2 0 110 4 2 2 0 010-4zM17.25 6a1 1 0 100 2 1 1 0 000-2zM7 3.5h10A3.5 3.5 0 0120.5 7v10A3.5 3.5 0 0117 20.5H7A3.5 3.5 0 013.5 17V7A3.5 3.5 0 017 3.5zm0 1.5A2 2 0 005 7v10a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2H7z',
-    },
-    {
-        label: 'YouTube',
-        href: 'https://www.youtube.com',
-        colorClass: 'bg-[#FF0000]',
-        path: 'M21.6 7.2s-.2-1.5-.8-2.1c-.8-.8-1.7-.8-2.1-.9C15.9 4 12 4 12 4h0s-3.9 0-6.7.2c-.4 0-1.3.1-2.1.9-.6.6-.8 2.1-.8 2.1S2.2 9 2.2 10.7v1.4C2.2 13.9 2.4 15.6 2.4 15.6s.2 1.5.8 2.1c.8.8 1.9.8 2.3.9 1.7.2 7.5.2 7.5.2s3.9 0 6.7-.2c.4 0 1.3-.1 2.1-.9.6-.6.8-2.1.8-2.1s.2-1.7.2-3.5v-1.4c0-1.7-.2-3.5-.2-3.5zM9.9 14.6V8.9l5.4 2.9-5.4 2.8z',
-    },
+    // {
+    //     label: 'Instagram',
+    //     href: 'https://www.instagram.com',
+    //     colorClass: 'bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400',
+    //     Icon: InstagramFilled,
+    // },
+    // {
+    //     label: 'YouTube',
+    //     href: 'https://www.youtube.com',
+    //     colorClass: 'bg-[#FF0000]',
+    //     Icon: YoutubeFilled,
+    // },
     {
         label: 'WhatsApp',
         href: 'https://wa.me/+94778277450',
         colorClass: 'bg-[#25D366]',
-        path: 'M12 2a9.9 9.9 0 00-8.6 14.8L2 22l5.4-1.4A9.9 9.9 0 1012 2zm0 1.7a8.2 8.2 0 016.9 12.6l-.2.3.8 2.9-3-.8-.3.2A8.2 8.2 0 1112 3.7zm-2.1 3.7c-.2 0-.5.1-.7.4-.2.3-.9.9-.9 2.2s.9 2.5 1 2.7c.1.2 1.8 2.9 4.5 4 2.2.9 2.7.7 3.2.7.5-.1 1.6-.7 1.8-1.3.2-.6.2-1.1.1-1.3-.1-.1-.3-.2-.7-.4-.3-.2-1.6-.8-1.8-.9-.2-.1-.4-.1-.6.1-.2.3-.7.9-.8 1.1-.2.2-.3.2-.6.1-.3-.1-1.1-.4-2.1-1.3-.8-.7-1.3-1.5-1.5-1.8-.2-.3 0-.5.1-.6l.5-.6c.1-.2.2-.3.1-.5-.1-.2-.6-1.5-.8-2-.2-.4-.4-.4-.6-.4h-.6z',
+        Icon: WhatsAppOutlined,
     },
 ];
 
@@ -69,9 +70,7 @@ export default function SiteFooter() {
                                     aria-label={social.label}
                                     className={`w-8 h-8 rounded-full ${social.colorClass} hover:brightness-110 flex items-center justify-center transition`}
                                 >
-                                    <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                                        <path d={social.path} />
-                                    </svg>
+                                    <social.Icon className="text-base" />
                                 </a>
                             ))}
                         </div>
