@@ -88,7 +88,7 @@ class DonationController extends Controller
     {
         $data = $request->validate([
             'template_id' => ['nullable', 'exists:mail_templates,id'],
-            'invoice_number' => ['required', 'string', 'max:100'],
+            'invoice_number' => ['required', 'numeric'],
             'invoice_file' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:10240'],
         ]);
 
@@ -120,7 +120,7 @@ class DonationController extends Controller
     {
         $data = $request->validate([
             'template_id' => ['nullable', 'exists:mail_templates,id'],
-            'invoice_number' => ['required', 'string', 'max:100'],
+            'invoice_number' => ['required', 'numeric'],
             'invoice_file' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:10240'],
         ]);
 
@@ -176,10 +176,13 @@ class DonationController extends Controller
             'phone' => ['nullable', 'string', 'max:20'],
             'address' => ['nullable', 'string'],
             'donation_type' => ['required', 'in:one_time,monthly,yearly'],
+            'contribution_date' => ['required', 'date'],
             'amount' => ['required', 'numeric'],
-            'currency' => ['nullable', 'string', 'max:3'],
+            'currency' => ['required', 'string', 'max:30'],
             'category' => ['required', 'in:general,special_food'],
             'message' => ['nullable', 'string'],
+            'reason' => ['nullable', 'string', 'max:255'],
+            'meal_option' => ['nullable', 'string', 'max:255'],
             'payment_method' => ['nullable', 'in:bank_transfer,credit_card,paypal,cash,check,other'],
             'payment_reference' => ['nullable', 'string', 'max:255'],
             'invoice_number' => ['nullable', 'string', 'max:100'],

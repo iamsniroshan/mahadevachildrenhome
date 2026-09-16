@@ -27,5 +27,8 @@
     },
     "optionalDependencies": {
         "@laravel/multiplex": "^0.4.1"
+    },
+    "dependencies": {
+        "tamil-to-unicode-convertor": "^1.0.0"
     }
 }

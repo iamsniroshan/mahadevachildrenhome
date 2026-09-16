@@ -32,12 +32,11 @@ class MailTemplate extends Model
     }
 
     /**
-     * Resolve the best matching donation template for the given category, falling back to any active template.
+     * Resolve the default active donation template.
      */
     public static function forCategory(?string $category): ?self
     {
-        return static::donationTemplates()->where('category', $category)->first()
-            ?? static::donationTemplates()->first();
+        return static::donationTemplates()->first();
     }
 
     public function renderForDonation(Donation $donation): string
@@ -45,14 +44,17 @@ class MailTemplate extends Model
         $placeholders = [
             'donor_name' => $donation->donor_name ?? 'Donor',
             'email' => $donation->email ?? '',
-            'amount' => number_format((float) $donation->amount, 2, '.', ','),
-            'currency' => $donation->currency ?? 'LKR',
+            'amount' => number_format((float) $donation->amount, 0, '.', ','),
+            'currency' => $donation->currency ?? 'ரூபா',
             'category' => ucfirst((string) ($donation->category ?? '')),
             'donation_type' => str_replace('_', ' ', (string) ($donation->donation_type ?? '')),
+            'contribution_date' => $donation->contribution_date?->format('d/m/Y') ?? ($donation->created_at?->format('d/m/Y') ?? now()->format('d/m/Y')),
+            'reason' => $donation->reason ?? '',
+            'meal_option' => $donation->meal_option ?? '',
             'payment_reference' => $donation->payment_reference ?? 'N/A',
             'invoice_number' => $donation->invoice_number ?? 'N/A',
             'status' => ucfirst((string) ($donation->status ?? 'pending')),
-            'date' => $donation->created_at ? $donation->created_at->format('d.m.Y') : now()->format('d.m.Y'),
+            'date' => $donation->contribution_date?->format('d/m/Y') ?? ($donation->created_at?->format('d/m/Y') ?? now()->format('d/m/Y')),
             'app_name' => config('app.name'),
         ];
 

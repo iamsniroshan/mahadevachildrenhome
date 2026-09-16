@@ -3,25 +3,23 @@ import Field from '@/Components/Admin/Field';
 import FormActions from '@/Components/Admin/FormActions';
 import { Head, router, useForm } from '@inertiajs/react';
 import { useMemo, useRef, useState } from 'react';
-import { DONATION_CATEGORIES } from '@/constants/donations';
 
 const emptyTemplate = {
     name: '',
-    category: '',
     subject: '',
     body: '',
     is_active: true,
 };
-
-const categoryLabel = (value) => DONATION_CATEGORIES.find((option) => option.value === value)?.label ?? value;
 
 const previewTemplate = (body) => {
     const sampleValues = {
         donor_name: 'Sample Donor',
         amount: '25,000.00',
         currency: 'LKR',
-        category: 'Education',
         donation_type: 'One Time',
+        contribution_date: '16/09/2026',
+        reason: 'பிறந்தநாள்',
+        meal_option: 'மதிய நேரச் சிறப்புணவு',
         status: 'Confirmed',
         invoice_number: 'INV-2026-0001',
         date: '07.09.2026',
@@ -90,16 +88,10 @@ export default function MailTemplates({ templates = [] }) {
         form.reset();
         form.setData({
             name: template.name,
-            category: template.category,
             subject: template.subject,
             body: template.body,
             is_active: template.is_active,
         });
-    };
-
-    const handleCategoryChange = (value) => {
-        form.setData('category', value);
-        form.setData('name', categoryLabel(value));
     };
 
     const resetForm = () => {
@@ -163,11 +155,6 @@ export default function MailTemplates({ templates = [] }) {
                                                 <div className="min-w-0">
                                                     <p className="truncate text-sm font-semibold text-slate-800">{template.name}</p>
                                                     <p className="truncate text-xs text-slate-500">{template.subject}</p>
-                                                    {template.category && (
-                                                        <span className="mt-1 inline-block rounded-full bg-rose-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-rose-700">
-                                                            {categoryLabel(template.category)}
-                                                        </span>
-                                                    )}
                                                 </div>
                                             </button>
 
@@ -226,11 +213,6 @@ export default function MailTemplates({ templates = [] }) {
                     {mode === 'view' && selectedTemplate ? (
                         <div className="space-y-6">
                             <div>
-                                <p className="mb-1 text-xs font-bold uppercase tracking-wide text-slate-500">Donation Category</p>
-                                <p className="text-base font-semibold text-slate-900">{categoryLabel(selectedTemplate.category)}</p>
-                            </div>
-
-                            <div>
                                 <p className="mb-1 text-xs font-bold uppercase tracking-wide text-slate-500">Email Subject</p>
                                 <p className="text-base text-slate-800">{selectedTemplate.subject}</p>
                             </div>
@@ -271,11 +253,9 @@ export default function MailTemplates({ templates = [] }) {
                             <Field
                                 label="Template Name"
                                 name="name"
-                                type="select"
-                                value={form.data.category}
-                                onChange={handleCategoryChange}
-                                error={form.errors.category ?? form.errors.name}
-                                options={DONATION_CATEGORIES}
+                                value={form.data.name}
+                                onChange={(v) => form.setData('name', v)}
+                                error={form.errors.name}
                                 required
                             />
                             <Field
@@ -302,7 +282,7 @@ export default function MailTemplates({ templates = [] }) {
                             />
 
                             <p className="text-xs text-slate-500">
-                                Available placeholders: {'{{ donor_name }}'}, {'{{ amount }}'}, {'{{ currency }}'}, {'{{ category }}'}, {'{{ donation_type }}'}, {'{{ status }}'}, {'{{ invoice_number }}'}, {'{{ date }}'}, {'{{ app_name }}'}
+                                Available placeholders: {'{{ donor_name }}'}, {'{{ amount }}'}, {'{{ currency }}'}, {'{{ category }}'}, {'{{ donation_type }}'}, {'{{ contribution_date }}'}, {'{{ reason }}'}, {'{{ meal_option }}'}, {'{{ status }}'}, {'{{ invoice_number }}'}, {'{{ date }}'}, {'{{ app_name }}'}
                             </p>
 
                             <FormActions

@@ -5,8 +5,10 @@ import DataTable from '@/Components/Admin/DataTable';
 import ActionButtons from '@/Components/Admin/ActionButtons';
 import Modal from '@/Components/Admin/Modal';
 import FormActions from '@/Components/Admin/FormActions';
-import { DONATION_CATEGORIES } from '@/constants/donations';
+import { DONATION_CATEGORIES, MEAL_OPTIONS } from '@/constants/donations';
+import { convertBaminiToUnicode } from '@/utils/bamini';
 import { Head, router, useForm } from '@inertiajs/react';
+import { Input } from 'antd';
 import { useState } from 'react';
 
 const statusMap = {
@@ -20,10 +22,15 @@ const emptyDonation = {
     phone: '',
     address: '',
     donation_type: 'one_time',
+    contribution_date: new Date().toISOString().slice(0, 10),
     amount: '',
-    currency: 'LKR',
+    currency: 'ரூபா',
     category: 'general',
     message: '',
+    reason: '',
+    meal_option: '',
+    meal_options: [''],
+    meal_amounts: [''],
     payment_method: '',
     payment_reference: '',
     status: 'pending',
@@ -53,6 +60,59 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
     const closeModal = () => {
         setIsModalOpen(false);
         form.reset();
+    };
+
+    const updateMealOptions = (mealOptions, mealAmounts = form.data.meal_amounts) => {
+        const selectedMeals = mealOptions
+            .map((value, index) => ({
+                option: MEAL_OPTIONS.find((meal) => meal.value === value),
+                amount: mealAmounts[index],
+            }))
+            .filter((meal) => meal.option);
+
+        form.setData((data) => ({
+            ...data,
+            meal_options: mealOptions,
+            meal_amounts: mealAmounts,
+            meal_option: selectedMeals.map((meal) => meal.option.label).join(', '),
+            amount: selectedMeals.reduce((total, meal) => total + (Number(meal.amount) || 0), 0) || data.amount,
+        }));
+    };
+
+    const handleMealOptionChange = (index, value) => {
+        const mealOptions = [...form.data.meal_options];
+        const mealAmounts = [...form.data.meal_amounts];
+        mealOptions[index] = value;
+        mealAmounts[index] = MEAL_OPTIONS.find((option) => option.value === value)?.amount ?? '';
+        updateMealOptions(mealOptions, mealAmounts);
+    };
+
+    const handleMealAmountChange = (index, value) => {
+        const mealAmounts = [...form.data.meal_amounts];
+        mealAmounts[index] = value;
+        updateMealOptions(form.data.meal_options, mealAmounts);
+    };
+
+    const addMealOption = () => {
+        form.setData((data) => ({
+            ...data,
+            meal_options: [...data.meal_options, ''],
+            meal_amounts: [...data.meal_amounts, ''],
+        }));
+    };
+
+    const removeMealOption = (index) => {
+        const mealOptions = form.data.meal_options.filter((_, optionIndex) => optionIndex !== index);
+        const mealAmounts = form.data.meal_amounts.filter((_, optionIndex) => optionIndex !== index);
+        updateMealOptions(mealOptions.length ? mealOptions : [''], mealAmounts.length ? mealAmounts : ['']);
+    };
+
+    const convertReasonToUnicode = () => {
+        form.setData('reason', convertBaminiToUnicode(form.data.reason));
+    };
+
+    const convertDonorNameToUnicode = () => {
+        form.setData('donor_name', convertBaminiToUnicode(form.data.donor_name));
     };
 
     const openViewModal = (donation) => {
@@ -296,11 +356,119 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
             >
                 <form onSubmit={submit} className="space-y-6">
                     <div className="grid gap-6 md:grid-cols-2">
-                        <Field label="Donor Name" name="donor_name" value={form.data.donor_name} onChange={(v) => form.setData('donor_name', v)} error={form.errors.donor_name} required />
+                        <div className="space-y-1.5">
+                            <label htmlFor="donor_name" className="block text-xs font-bold uppercase tracking-wide text-slate-600">Donor Name <span className="text-rose-600">*</span></label>
+                            <div className="flex items-center gap-2">
+                                <Input
+                                    id="donor_name"
+                                    name="donor_name"
+                                    value={form.data.donor_name ?? ''}
+                                    onChange={(event) => form.setData('donor_name', event.target.value)}
+                                    placeholder="Type Bamini text"
+                                    required
+                                    className="flex-1"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={convertDonorNameToUnicode}
+                                    className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-slate-300 bg-white text-xs font-bold text-rose-900 hover:border-rose-300 hover:bg-rose-50"
+                                    title="Convert Bamini to Tamil Unicode"
+                                    aria-label="Convert Bamini to Tamil Unicode"
+                                >
+                                    அ⇄
+                                </button>
+                            </div>
+                            {form.errors.donor_name && <p className="text-xs font-semibold text-rose-600">{form.errors.donor_name}</p>}
+                        </div>
                         <Field label="Email" name="email" type="email" value={form.data.email} onChange={(v) => form.setData('email', v)} error={form.errors.email} required />
                         <Field label="Phone" name="phone" value={form.data.phone} onChange={(v) => form.setData('phone', v)} error={form.errors.phone} />
-                        <Field label="Amount" name="amount" type="number" value={form.data.amount} onChange={(v) => form.setData('amount', v)} error={form.errors.amount} required />
-                        <Field label="Currency" name="currency" value={form.data.currency} onChange={(v) => form.setData('currency', v)} error={form.errors.currency} />
+                        <Field label="Contribution Date" name="contribution_date" type="date" value={form.data.contribution_date} onChange={(v) => form.setData('contribution_date', v)} error={form.errors.contribution_date} required />
+                        <div className="md:col-span-2">
+                            <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_220px] md:items-end">
+                                <div>
+                                    <div className="mb-2 flex items-center justify-between gap-3">
+                                        <label className="text-sm font-semibold text-slate-700">Meal Option / Reason</label>
+                                        <button
+                                            type="button"
+                                            onClick={addMealOption}
+                                            className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-rose-900 text-lg font-semibold leading-none text-white hover:bg-rose-950"
+                                            title="Add another meal option"
+                                            aria-label="Add another meal option"
+                                        >
+                                            +
+                                        </button>
+                                    </div>
+                                    <div className="space-y-2">
+                                        {form.data.meal_options.map((mealOption, index) => (
+                                            <div key={`meal-option-${index}`} className="flex items-center gap-2">
+                                                <select
+                                                    value={mealOption}
+                                                    onChange={(event) => handleMealOptionChange(index, event.target.value)}
+                                                    className="block w-full rounded-lg border-slate-300 text-sm shadow-sm focus:border-rose-500 focus:ring-rose-500"
+                                                >
+                                                    <option value="">Select meal option</option>
+                                                    {MEAL_OPTIONS.map((option) => (
+                                                        <option
+                                                            key={option.value}
+                                                            value={option.value}
+                                                            disabled={form.data.meal_options.includes(option.value) && option.value !== mealOption}
+                                                        >
+                                                            {option.label} - {option.amount.toLocaleString()}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                                <input
+                                                    type="number"
+                                                    min="0"
+                                                    value={form.data.meal_amounts[index] ?? ''}
+                                                    onChange={(event) => handleMealAmountChange(index, event.target.value)}
+                                                    placeholder="Amount"
+                                                    aria-label={`Amount for meal option ${index + 1}`}
+                                                    className="w-32 rounded-lg border-slate-300 text-sm shadow-sm focus:border-rose-500 focus:ring-rose-500"
+                                                />
+                                                {form.data.meal_options.length > 1 && (
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => removeMealOption(index)}
+                                                        className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-slate-300 text-lg text-slate-500 hover:border-rose-300 hover:text-rose-700"
+                                                        title="Remove meal option"
+                                                        aria-label="Remove meal option"
+                                                    >
+                                                        −
+                                                    </button>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                    {form.errors.meal_option && <p className="mt-1 text-sm text-red-600">{form.errors.meal_option}</p>}
+                                </div>
+                                <Field label="Total Amount" name="amount" type="number" value={form.data.amount} onChange={(v) => form.setData('amount', v)} error={form.errors.amount} required />
+                            </div>
+                        </div>
+                        <div className="space-y-1.5">
+                            <label htmlFor="reason" className="block text-xs font-bold uppercase tracking-wide text-slate-600">Reason / Occasion</label>
+                            <div className="flex items-center gap-2">
+                                <Input
+                                    id="reason"
+                                    name="reason"
+                                    value={form.data.reason ?? ''}
+                                    onChange={(event) => form.setData('reason', event.target.value)}
+                                    placeholder="Type Bamini text"
+                                    className="flex-1"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={convertReasonToUnicode}
+                                    className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-slate-300 bg-white text-xs font-bold text-rose-900 hover:border-rose-300 hover:bg-rose-50"
+                                    title="Convert Bamini to Tamil Unicode"
+                                    aria-label="Convert Bamini to Tamil Unicode"
+                                >
+                                    அ⇄
+                                </button>
+                            </div>
+                            {form.errors.reason && <p className="text-xs font-semibold text-rose-600">{form.errors.reason}</p>}
+                        </div>
+                        <Field label="Currency" name="currency" type="select" value={form.data.currency} onChange={(v) => form.setData('currency', v)} error={form.errors.currency} options={[{ value: 'ரூபா', label: 'ரூபா (LKR / Rupees)' }]} />
                         <Field
                             label="Donation Type"
                             name="donation_type"
@@ -510,6 +678,7 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
                                     <Field
                                         label="Invoice Number"
                                         name="invoice_number"
+                                        type="number"
                                         value={statusForm.data.invoice_number}
                                         onChange={(v) => statusForm.setData('invoice_number', v)}
                                         error={statusForm.errors.invoice_number}
