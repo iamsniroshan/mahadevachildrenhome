@@ -18,7 +18,7 @@ export default function GuestLayout({ children }) {
                         <img src="/storage/users/logo.jpg" alt="Mahadeva Home logo" className="h-full w-full object-cover" />
                     </div>
                     <div className="leading-tight">
-                        <span className="block font-serif text-lg font-extrabold">Mahadeva Swamigal Children Home(MSCH)</span>
+                        <span className="block font-serif text-lg font-extrabold">Mahadeva Swamigal Children Home (MSCH)</span>
                         <span className="block text-[11px] font-bold uppercase tracking-[0.2em] text-amber-300">
                             Kilinochchi, Sri Lanka
                         </span>
@@ -38,7 +38,7 @@ export default function GuestLayout({ children }) {
                 </div>
 
                 <p className="relative text-xs text-rose-200/60">
-                    © 2004 - 2026 Mahadeva Swamigal Children Home - All Rights Reserved
+                    © 2004 - 2026 Mahadeva Swamigal Children Home (MSCH) - All Rights Reserved
                 </p>
             </div>
 
@@ -49,7 +49,7 @@ export default function GuestLayout({ children }) {
                         <img src="/storage/users/logo.jpg" alt="Mahadeva Home logo" className="h-full w-full object-cover" />
                     </div>
                     <div className="leading-tight">
-                        <span className="block font-serif text-lg font-extrabold text-blue-900">Mahadeva Swamigal Children Home(MSCH)</span>
+                        <span className="block font-serif text-lg font-extrabold text-blue-900">Mahadeva Swamigal Children Home (MSCH)</span>
                         <span className="block text-[11px] font-bold uppercase tracking-[0.2em] text-blue-700">
                             Kilinochchi, Sri Lanka
                         </span>

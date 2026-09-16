@@ -4,7 +4,7 @@
 
 
 
-# Mahadeva Swamigal Children Home(MSCH)
+# Mahadeva Swamigal Children Home (MSCH)
 
 Laravel + Inertia (React) application.
 

@@ -67,7 +67,7 @@ export default function Show({ newsItem, relatedNews = [] }) {
         <>
             <Seo
                 title={newsItem.title}
-                description={newsItem.excerpt || `Read the latest news from Mahadeva Swamigal Children Home: ${newsItem.title}.`}
+                description={newsItem.excerpt || `Read the latest news from Mahadeva Swamigal Children Home (MSCH): ${newsItem.title}.`}
                 type="article"
                 image={newsItem.image}
                 jsonLd={{

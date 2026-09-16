@@ -1,9 +1,9 @@
 import { Head, usePage } from '@inertiajs/react';
 
 const DEFAULT_DESCRIPTION =
-    'Mahadeva Swamigal Children Home provides shelter, education, healthcare, and vocational support to orphaned and vulnerable children in Kilinochchi, Sri Lanka.';
+    'Mahadeva Swamigal Children Home (MSCH) provides shelter, education, healthcare, and vocational support to orphaned and vulnerable children in Kilinochchi, Sri Lanka.';
 const DEFAULT_IMAGE = '/images/home/emotional-support.jpg';
-const SITE_NAME = import.meta.env.VITE_APP_NAME || 'Mahadeva Swamigal Children Home';
+const SITE_NAME = import.meta.env.VITE_APP_NAME || 'Mahadeva Swamigal Children Home (MSCH)';
 
 /**
  * Shared SEO head tags for public pages: title, description, canonical,

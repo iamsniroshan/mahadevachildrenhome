@@ -54,7 +54,7 @@ export default function SiteFooter() {
                             <span className="font-serif font-bold text-white leading-tight">
                                 Mahadeva Swamigal
                                 <br />
-                                Children Home
+                                Children Home (MSCH)
                             </span>
                         </div>
                         <p className="text-xs text-rose-100/70 leading-relaxed">
@@ -114,7 +114,7 @@ export default function SiteFooter() {
                         <h3 className="text-sm font-bold uppercase tracking-wider text-amber-500">Location</h3>
                         <div className="overflow-hidden rounded-xl border border-rose-300/20 shadow-lg">
                             <iframe
-                                title="Mahadeva Swamigal Children Home(MSCH) location"
+                                title="Mahadeva Swamigal Children Home (MSCH) location"
                                 src={locationMapUrl}
                                 className="h-40 w-full border-0"
                                 loading="lazy"
@@ -134,7 +134,7 @@ export default function SiteFooter() {
                 </div>
 
                 <div className="flex flex-col md:flex-row items-center justify-between gap-3 pt-6 border-t border-rose-900/30 text-xs text-rose-200/50">
-                    <span>© 2004 - 2026 Mahadeva Swamigal Children Home - All Rights Reserved</span>
+                    <span>© 2004 - 2026 Mahadeva Swamigal Children Home (MSCH) - All Rights Reserved</span>
                     <span>Probation Reg: NP/24/2/1/CH/13</span>
                     <span className="text-white">
                         Designed &amp; developed by{' '}

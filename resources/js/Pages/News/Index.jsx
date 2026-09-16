@@ -10,7 +10,7 @@ export default function Index({ newsItems }) {
         <>
             <Seo
                 title="News & Updates"
-                description="Read the latest news and updates from Mahadeva Swamigal Children Home in Kilinochchi, Sri Lanka."
+                description="Read the latest news and updates from Mahadeva Swamigal Children Home (MSCH) in Kilinochchi, Sri Lanka."
             />
             <div className="bg-amber-50/20 text-slate-800 font-sans antialiased">
                 <SiteNav />
@@ -22,7 +22,7 @@ export default function Index({ newsItems }) {
                         </span>
                         <h1 className="text-4xl font-extrabold tracking-tight">Latest News & Stories</h1>
                         <p className="text-rose-100/80 max-w-xl mx-auto">
-                            Read about our recent activities, events, and milestones at Mahadeva Swamigal Children Home(MSCH).
+                            Read about our recent activities, events, and milestones at Mahadeva Swamigal Children Home (MSCH).
                         </p>
                     </div>
                 </section>

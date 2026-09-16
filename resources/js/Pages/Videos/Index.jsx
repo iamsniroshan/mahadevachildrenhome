@@ -78,7 +78,7 @@ export default function Index({ videos = [] }) {
         <>
             <Seo
                 title="Videos"
-                description="Watch stories, events, and moments from Mahadeva Swamigal Children Home in Kilinochchi, Sri Lanka."
+                description="Watch stories, events, and moments from Mahadeva Swamigal Children Home (MSCH) in Kilinochchi, Sri Lanka."
             />
             <div className="bg-amber-50/20 text-slate-800 font-sans antialiased">
                 <SiteNav />
@@ -90,7 +90,7 @@ export default function Index({ videos = [] }) {
                         </span>
                         <h1 className="text-4xl font-extrabold tracking-tight">Our Videos</h1>
                         <p className="text-rose-100/80 max-w-xl mx-auto">
-                            Stories, events, and moments from Mahadeva Swamigal Children Home(MSCH) captured on camera.
+                            Stories, events, and moments from Mahadeva Swamigal Children Home (MSCH) captured on camera.
                         </p>
                     </div>
                 </section>

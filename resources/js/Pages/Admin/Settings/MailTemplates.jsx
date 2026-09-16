@@ -23,7 +23,7 @@ const previewTemplate = (body) => {
         status: 'Confirmed',
         invoice_number: 'INV-2026-0001',
         date: '07.09.2026',
-        app_name: 'Mahadeva Swamigal Children Home(MSCH)',
+        app_name: 'Mahadeva Swamigal Children Home (MSCH)',
     };
 
     const renderedBody = Object.entries(sampleValues).reduce(

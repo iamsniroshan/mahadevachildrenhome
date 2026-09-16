@@ -186,11 +186,11 @@ export default function Home({ sliders = [], newsItems = [], causes = [] }) {
         <>
             <Seo
                 title="Home"
-                description="Mahadeva Swamigal Children Home provides shelter, education, healthcare, and holistic care for orphaned and vulnerable children in Kilinochchi, Sri Lanka."
+                description="Mahadeva Swamigal Children Home (MSCH) provides shelter, education, healthcare, and holistic care for orphaned and vulnerable children in Kilinochchi, Sri Lanka."
                 jsonLd={{
                     '@context': 'https://schema.org',
                     '@type': 'NGO',
-                    name: 'Mahadeva Swamigal Children Home',
+                    name: 'Mahadeva Swamigal Children Home (MSCH)',
                     url: typeof window !== 'undefined' ? window.location.origin : '',
                     logo: typeof window !== 'undefined' ? `${window.location.origin}/storage/users/logo.jpg` : '/storage/users/logo.jpg',
                     address: {
@@ -376,7 +376,7 @@ export default function Home({ sliders = [], newsItems = [], causes = [] }) {
                                     Supporting Vulnerable Children Since 2004
                                 </h2>
                                 <p className="text-slate-600 leading-relaxed text-sm sm:text-base">
-                                    Founded to care for children affected by conflict and severe hardship, Mahadeva Swamigal Children Home offers an oasis of safety, holistic care, and continuous educational advancement in Kilinochchi.
+                                    Founded to care for children affected by conflict and severe hardship, Mahadeva Swamigal Children Home (MSCH) offers an oasis of safety, holistic care, and continuous educational advancement in Kilinochchi.
                                 </p>
                             </div>
                         </div>

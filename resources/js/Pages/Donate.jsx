@@ -32,7 +32,7 @@ export default function Donate() {
         <>
             <Seo
                 title="Donate"
-                description="Support the children of Mahadeva Swamigal Children Home with a one-time or recurring donation towards education, healthcare, and shelter."
+                description="Support the children of Mahadeva Swamigal Children Home (MSCH) with a one-time or recurring donation towards education, healthcare, and shelter."
             />
             <div className="relative overflow-hidden bg-[radial-gradient(circle_at_top_left,_rgba(255,214,102,0.18),transparent_20%),radial-gradient(circle_at_bottom_right,_rgba(251,113,133,0.18),transparent_25%),linear-gradient(180deg,_#fffaf5_0%,_#fff7ed_35%,_#fffdfb_100%)] text-slate-800 font-sans antialiased">
                 <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -71,7 +71,7 @@ export default function Donate() {
                             </div>
                             <div className="grid gap-6 p-8 sm:grid-cols-2">
                                 {[
-                                    ['Account Name', 'Mahadeva Swamigal Children Home'],
+                                    ['Account Name', 'Mahadeva Swamigal Children Home (MSCH)'],
                                     ['Account Number', '9991351'],
                                     ['Branch', 'Kilinochchi Branch'],
                                     ['Branch Code', '093'],

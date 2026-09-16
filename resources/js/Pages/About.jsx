@@ -7,7 +7,7 @@ export default function About() {
         <>
             <Seo
                 title="About Us"
-                description="Learn the story of Mahadeva Swamigal Children Home: our vision, mission, and unwavering commitment to the children of Kilinochchi, Sri Lanka."
+                description="Learn the story of Mahadeva Swamigal Children Home (MSCH): our vision, mission, and unwavering commitment to the children of Kilinochchi, Sri Lanka."
             />
             <div className="bg-amber-50/20 text-slate-800 font-sans antialiased">
                 <SiteNav />
@@ -17,7 +17,7 @@ export default function About() {
                         <span className="bg-rose-900/60 text-rose-200 text-xs font-semibold uppercase tracking-wider px-3 py-1 rounded-full inline-block">
                             About Us
                         </span>
-                        <h1 className="text-4xl font-extrabold tracking-tight">Mahadeva Swamigal Children Home</h1>
+                        <h1 className="text-4xl font-extrabold tracking-tight">Mahadeva Swamigal Children Home (MSCH)</h1>
                         <p className="text-rose-100/80 max-w-2xl mx-auto">
                             A story of compassion, resilience, and unwavering commitment to the children of Kilinochchi.
                         </p>

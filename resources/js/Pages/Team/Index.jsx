@@ -129,7 +129,7 @@ export default function Index({ committee = [], executive = [], staff = [] }) {
         <>
             <Seo
                 title="Our Team"
-                description="Meet the committee, executives, and staff caring for the children of Mahadeva Swamigal Children Home."
+                description="Meet the committee, executives, and staff caring for the children of Mahadeva Swamigal Children Home (MSCH)."
             />
             <div className="bg-amber-50/20 text-slate-800 font-sans antialiased">
                 <SiteNav />
