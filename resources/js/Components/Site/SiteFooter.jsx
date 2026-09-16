@@ -114,7 +114,7 @@ export default function SiteFooter() {
                         <h3 className="text-sm font-bold uppercase tracking-wider text-amber-500">Location</h3>
                         <div className="overflow-hidden rounded-xl border border-rose-300/20 shadow-lg">
                             <iframe
-                                title="Mahadeva Children Home location"
+                                title="Mahadeva Swamigal Children Home(MSCH) location"
                                 src={locationMapUrl}
                                 className="h-40 w-full border-0"
                                 loading="lazy"

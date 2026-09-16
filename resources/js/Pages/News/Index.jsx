@@ -22,7 +22,7 @@ export default function Index({ newsItems }) {
                         </span>
                         <h1 className="text-4xl font-extrabold tracking-tight">Latest News & Stories</h1>
                         <p className="text-rose-100/80 max-w-xl mx-auto">
-                            Read about our recent activities, events, and milestones at Mahadeva Children Home.
+                            Read about our recent activities, events, and milestones at Mahadeva Swamigal Children Home(MSCH).
                         </p>
                     </div>
                 </section>

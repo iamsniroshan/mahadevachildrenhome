@@ -123,7 +123,7 @@ export default function Contact() {
 
                             <div className="overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
                                 <iframe
-                                    title="Mahadeva Children Home location"
+                                    title="Mahadeva Swamigal Children Home(MSCH) location"
                                     src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3936.2999848148097!2d80.3788103!3d9.3950485!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3afe94bceea30b55%3A0xbed4850328432c60!2sMahadeva%20Swamikal%20Children%20Home!5e0!3m2!1sen!2slk!4v1787902169662!5m2!1sen!2slk"
                                     className="h-56 w-full border-0"
                                     loading="lazy"

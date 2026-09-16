@@ -28,7 +28,7 @@ export default function Login({ status, canResetPassword }) {
             <div className="mb-6 space-y-1">
                 <span className="text-xs font-bold uppercase tracking-wider text-rose-900">Admin Portal</span>
                 <h2 className="text-2xl font-bold text-slate-900">Welcome Back</h2>
-                <p className="text-sm text-slate-500">Sign in to manage the Mahadeva Children Home dashboard.</p>
+                <p className="text-sm text-slate-500">Sign in to manage the Mahadeva Swamigal Children Home(MSCH) dashboard.</p>
             </div>
 
             {status && (

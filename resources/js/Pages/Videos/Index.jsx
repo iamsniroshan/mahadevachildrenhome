@@ -90,7 +90,7 @@ export default function Index({ videos = [] }) {
                         </span>
                         <h1 className="text-4xl font-extrabold tracking-tight">Our Videos</h1>
                         <p className="text-rose-100/80 max-w-xl mx-auto">
-                            Stories, events, and moments from Mahadeva Children Home captured on camera.
+                            Stories, events, and moments from Mahadeva Swamigal Children Home(MSCH) captured on camera.
                         </p>
                     </div>
                 </section>

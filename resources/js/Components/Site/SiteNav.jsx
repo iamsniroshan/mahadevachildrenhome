@@ -29,7 +29,7 @@ export default function SiteNav() {
                     </div>
                     <div className="flex flex-col justify-center md:pb-4 leading-tight min-w-0">
                         <Link href={route('home')} className="font-serif font-extrabold text-sm sm:text-lg md:text-2xl text-blue-900 tracking-tight truncate">
-                            Mahadeva Children Home
+                            Mahadeva Swamigal Children Home(MSCH)
                         </Link>
                         <span className="text-[9px] sm:text-[11px] font-bold uppercase tracking-[0.15em] md:tracking-[0.2em] text-blue-700 truncate">
                             Kilinochchi, Sri Lanka
