@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Model;
     'subject',
     'body',
     'type',
-    'category',
     'is_active',
 ])]
 class MailTemplate extends Model
@@ -34,7 +33,7 @@ class MailTemplate extends Model
     /**
      * Resolve the default active donation template.
      */
-    public static function forCategory(?string $category): ?self
+    public static function defaultTemplate(): ?self
     {
         return static::donationTemplates()->first();
     }
@@ -46,7 +45,6 @@ class MailTemplate extends Model
             'email' => $donation->email ?? '',
             'amount' => number_format((float) $donation->amount, 0, '.', ','),
             'currency' => $donation->currency ?? 'ரூபா',
-            'category' => ucfirst((string) ($donation->category ?? '')),
             'donation_type' => str_replace('_', ' ', (string) ($donation->donation_type ?? '')),
             'contribution_date' => $donation->contribution_date?->format('d/m/Y') ?? ($donation->created_at?->format('d/m/Y') ?? now()->format('d/m/Y')),
             'reason' => $donation->reason ?? '',

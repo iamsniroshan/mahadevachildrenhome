@@ -5,7 +5,7 @@ import DataTable from '@/Components/Admin/DataTable';
 import ActionButtons from '@/Components/Admin/ActionButtons';
 import Modal from '@/Components/Admin/Modal';
 import FormActions from '@/Components/Admin/FormActions';
-import { DONATION_CATEGORIES, MEAL_OPTIONS } from '@/constants/donations';
+import { MEAL_OPTIONS } from '@/constants/donations';
 import { convertBaminiToUnicode } from '@/utils/bamini';
 import { Head, router, useForm } from '@inertiajs/react';
 import { Input } from 'antd';
@@ -25,7 +25,6 @@ const emptyDonation = {
     contribution_date: new Date().toISOString().slice(0, 10),
     amount: '',
     currency: 'ரூபா',
-    category: 'general',
     message: '',
     reason: '',
     meal_option: '',
@@ -44,6 +43,7 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
     const [attachmentPreview, setAttachmentPreview] = useState(null);
     const [previewLoading, setPreviewLoading] = useState(false);
     const [previewError, setPreviewError] = useState(null);
+    const [createStep, setCreateStep] = useState(1);
     const [selectedTemplateId, setSelectedTemplateId] = useState(mailTemplates[0]?.id ?? '');
 
     const statusForm = useForm({ status: 'pending', invoice_number: '', invoice_file: null });
@@ -54,12 +54,50 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
     const openCreateModal = () => {
         form.reset();
         form.setData(emptyDonation);
+        setCreateStep(1);
         setIsModalOpen(true);
     };
 
     const closeModal = () => {
         setIsModalOpen(false);
+        setCreateStep(1);
         form.reset();
+    };
+
+    const validateCreateStep = (step) => {
+        const requiredFields = step === 1
+            ? [
+                ['donor_name', 'Enter the donor name.'],
+                ['email', 'Enter the donor email.'],
+            ]
+            : step === 2
+                ? [
+                    ['contribution_date', 'Select the contribution date.'],
+                ]
+                : step === 3
+                    ? [
+                        ['amount', 'Enter the total amount.'],
+                    ]
+                : [];
+        const missingFields = requiredFields.filter(([field]) => !String(form.data[field] ?? '').trim());
+
+        form.clearErrors(...requiredFields.map(([field]) => field));
+        missingFields.forEach(([field, message]) => form.setError(field, message));
+
+        return missingFields.length === 0;
+    };
+
+    const moveToCreateStep = (step) => {
+        if (step > createStep) {
+            for (let currentStep = createStep; currentStep < step; currentStep += 1) {
+                if (!validateCreateStep(currentStep)) {
+                    setCreateStep(currentStep);
+                    return;
+                }
+            }
+        }
+
+        setCreateStep(step);
     };
 
     const updateMealOptions = (mealOptions, mealAmounts = form.data.meal_amounts) => {
@@ -190,8 +228,7 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
 
     const openConfirmModal = async (donation) => {
         setConfirmingDonation(donation);
-        const matchedTemplate = mailTemplates.find((template) => template.category === donation.category);
-        const templateId = matchedTemplate?.id ?? mailTemplates[0]?.id ?? '';
+        const templateId = mailTemplates[0]?.id ?? '';
         setSelectedTemplateId(templateId);
         await loadMailPreview(donation, templateId, statusForm.data.invoice_number, statusForm.data.invoice_file);
     };
@@ -253,7 +290,6 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
                 </span>
             ),
         },
-        { key: 'category', header: 'Category', className: 'text-slate-600 capitalize', render: (d) => d.category },
         {
             key: 'amount',
             header: 'Amount',
@@ -355,164 +391,123 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
                 title="Record New Donation"
             >
                 <form onSubmit={submit} className="space-y-6">
-                    <div className="grid gap-6 md:grid-cols-2">
-                        <div className="space-y-1.5">
-                            <label htmlFor="donor_name" className="block text-xs font-bold uppercase tracking-wide text-slate-600">Donor Name <span className="text-rose-600">*</span></label>
-                            <div className="flex items-center gap-2">
-                                <Input
-                                    id="donor_name"
-                                    name="donor_name"
-                                    value={form.data.donor_name ?? ''}
-                                    onChange={(event) => form.setData('donor_name', event.target.value)}
-                                    placeholder="Type Bamini text"
-                                    required
-                                    className="flex-1"
-                                />
-                                <button
-                                    type="button"
-                                    onClick={convertDonorNameToUnicode}
-                                    className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-slate-300 bg-white text-xs font-bold text-rose-900 hover:border-rose-300 hover:bg-rose-50"
-                                    title="Convert Bamini to Tamil Unicode"
-                                    aria-label="Convert Bamini to Tamil Unicode"
-                                >
-                                    அ⇄
-                                </button>
+                    <div className="grid grid-cols-4 gap-2 rounded-xl border border-slate-200 bg-slate-50 p-2">
+                        {['Donor', 'Contribution', 'Meal & Occasion', 'Payment'].map((step, index) => (
+                            <button
+                                key={step}
+                                type="button"
+                                onClick={() => moveToCreateStep(index + 1)}
+                                className={`rounded-lg px-3 py-2 text-xs font-bold transition ${createStep === index + 1 ? 'bg-rose-900 text-white shadow-sm' : 'text-slate-500 hover:bg-white hover:text-slate-800'}`}
+                            >
+                                <span className="mr-1.5">{index + 1}.</span>{step}
+                            </button>
+                        ))}
+                    </div>
+
+                    {createStep === 1 && (
+                        <div className="space-y-5">
+                            <div>
+                                <h3 className="text-lg font-bold text-slate-900">Donor details</h3>
+                                <p className="mt-1 text-sm text-slate-500">Add the person or family making this contribution.</p>
                             </div>
-                            {form.errors.donor_name && <p className="text-xs font-semibold text-rose-600">{form.errors.donor_name}</p>}
-                        </div>
-                        <Field label="Email" name="email" type="email" value={form.data.email} onChange={(v) => form.setData('email', v)} error={form.errors.email} required />
-                        <Field label="Phone" name="phone" value={form.data.phone} onChange={(v) => form.setData('phone', v)} error={form.errors.phone} />
-                        <Field label="Contribution Date" name="contribution_date" type="date" value={form.data.contribution_date} onChange={(v) => form.setData('contribution_date', v)} error={form.errors.contribution_date} required />
-                        <div className="md:col-span-2">
-                            <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_220px] md:items-end">
-                                <div>
-                                    <div className="mb-2 flex items-center justify-between gap-3">
-                                        <label className="text-sm font-semibold text-slate-700">Meal Option / Reason</label>
-                                        <button
-                                            type="button"
-                                            onClick={addMealOption}
-                                            className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-rose-900 text-lg font-semibold leading-none text-white hover:bg-rose-950"
-                                            title="Add another meal option"
-                                            aria-label="Add another meal option"
-                                        >
-                                            +
-                                        </button>
+                            <div className="grid gap-5 md:grid-cols-2">
+                                <div className="space-y-1.5 md:col-span-2">
+                                    <label htmlFor="donor_name" className="block text-xs font-bold uppercase tracking-wide text-slate-600">Donor Name <span className="text-rose-600">*</span></label>
+                                    <div className="flex items-center gap-2">
+                                        <Input id="donor_name" name="donor_name" value={form.data.donor_name ?? ''} onChange={(event) => form.setData('donor_name', event.target.value)} placeholder="Type Bamini text" required className="flex-1" />
+                                        <button type="button" onClick={convertDonorNameToUnicode} className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-amber-500 bg-amber-400 text-xs font-bold text-amber-950 transition hover:border-amber-600 hover:bg-amber-500" title="Convert Bamini to Tamil Unicode" aria-label="Convert Bamini to Tamil Unicode">அ⇄</button>
                                     </div>
+                                    {form.errors.donor_name && <p className="text-xs font-semibold text-rose-600">{form.errors.donor_name}</p>}
+                                </div>
+                                <Field label="Email" name="email" type="email" value={form.data.email} onChange={(v) => form.setData('email', v)} error={form.errors.email} required />
+                                <Field label="Phone" name="phone" value={form.data.phone} onChange={(v) => form.setData('phone', v)} error={form.errors.phone} />
+                                <div className="md:col-span-2">
+                                    <Field label="Address" name="address" type="textarea" rows={3} value={form.data.address} onChange={(v) => form.setData('address', v)} error={form.errors.address} />
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {createStep === 2 && (
+                        <div className="space-y-5">
+                            <div>
+                                <h3 className="text-lg font-bold text-slate-900">Contribution details</h3>
+                                <p className="mt-1 text-sm text-slate-500">Choose the meal service and confirm the contribution amount.</p>
+                            </div>
+                            <div className="grid gap-5 md:grid-cols-2">
+                                <Field label="Contribution Date" name="contribution_date" type="date" value={form.data.contribution_date} onChange={(v) => form.setData('contribution_date', v)} error={form.errors.contribution_date} required />
+                                <Field label="Currency" name="currency" type="select" value={form.data.currency} onChange={(v) => form.setData('currency', v)} error={form.errors.currency} options={[{ value: 'ரூபா', label: 'ரூபா (LKR / Rupees)' }]} />
+                                <Field label="Donation Type" name="donation_type" type="select" value={form.data.donation_type} onChange={(v) => form.setData('donation_type', v)} error={form.errors.donation_type} options={[{ value: 'one_time', label: 'One Time' }, { value: 'monthly', label: 'Monthly' }, { value: 'yearly', label: 'Yearly' }]} />
+                            </div>
+                        </div>
+                    )}
+
+                    {createStep === 3 && (
+                        <div className="space-y-5">
+                            <div>
+                                <h3 className="text-lg font-bold text-slate-900">Meal and occasion</h3>
+                                <p className="mt-1 text-sm text-slate-500">Add the reason and select one or more meal services.</p>
+                            </div>
+                            <div className="space-y-5">
+                                <div className="space-y-1.5">
+                                    <label htmlFor="reason" className="block text-xs font-bold uppercase tracking-wide text-slate-600">Reason / Occasion</label>
+                                    <div className="flex items-center gap-2">
+                                        <Input.TextArea id="reason" name="reason" value={form.data.reason ?? ''} onChange={(event) => form.setData('reason', event.target.value)} placeholder="Type Bamini text" rows={3} className="flex-1" />
+                                        <button type="button" onClick={convertReasonToUnicode} className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-amber-500 bg-amber-400 text-xs font-bold text-amber-950 transition hover:border-amber-600 hover:bg-amber-500" title="Convert Bamini to Tamil Unicode" aria-label="Convert Bamini to Tamil Unicode">அ⇄</button>
+                                    </div>
+                                    {form.errors.reason && <p className="text-xs font-semibold text-rose-600">{form.errors.reason}</p>}
+                                </div>
+                                <div>
+                                    <div className="mb-2 flex items-center justify-between gap-3"><label className="text-sm font-semibold text-slate-700">Meal Option / Reason</label></div>
                                     <div className="space-y-2">
                                         {form.data.meal_options.map((mealOption, index) => (
                                             <div key={`meal-option-${index}`} className="flex items-center gap-2">
-                                                <select
-                                                    value={mealOption}
-                                                    onChange={(event) => handleMealOptionChange(index, event.target.value)}
-                                                    className="block w-full rounded-lg border-slate-300 text-sm shadow-sm focus:border-rose-500 focus:ring-rose-500"
-                                                >
+                                                <select value={mealOption} onChange={(event) => handleMealOptionChange(index, event.target.value)} className="block w-full rounded-lg border-slate-300 text-sm shadow-sm focus:border-rose-500 focus:ring-rose-500">
                                                     <option value="">Select meal option</option>
-                                                    {MEAL_OPTIONS.map((option) => (
-                                                        <option
-                                                            key={option.value}
-                                                            value={option.value}
-                                                            disabled={form.data.meal_options.includes(option.value) && option.value !== mealOption}
-                                                        >
-                                                            {option.label} - {option.amount.toLocaleString()}
-                                                        </option>
-                                                    ))}
+                                                    {MEAL_OPTIONS.map((option) => <option key={option.value} value={option.value} disabled={form.data.meal_options.includes(option.value) && option.value !== mealOption}>{option.label} - {option.amount.toLocaleString()}</option>)}
                                                 </select>
-                                                <input
-                                                    type="number"
-                                                    min="0"
-                                                    value={form.data.meal_amounts[index] ?? ''}
-                                                    onChange={(event) => handleMealAmountChange(index, event.target.value)}
-                                                    placeholder="Amount"
-                                                    aria-label={`Amount for meal option ${index + 1}`}
-                                                    className="w-32 rounded-lg border-slate-300 text-sm shadow-sm focus:border-rose-500 focus:ring-rose-500"
-                                                />
-                                                {form.data.meal_options.length > 1 && (
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => removeMealOption(index)}
-                                                        className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-slate-300 text-lg text-slate-500 hover:border-rose-300 hover:text-rose-700"
-                                                        title="Remove meal option"
-                                                        aria-label="Remove meal option"
-                                                    >
-                                                        −
-                                                    </button>
-                                                )}
+                                                <input type="number" min="0" value={form.data.meal_amounts[index] ?? ''} onChange={(event) => handleMealAmountChange(index, event.target.value)} placeholder="Amount" aria-label={`Amount for meal option ${index + 1}`} className="w-32 rounded-lg border-slate-300 text-sm shadow-sm focus:border-rose-500 focus:ring-rose-500" />
+                                                <div className="flex w-[4.25rem] shrink-0 items-center justify-start gap-1">
+                                                    {form.data.meal_options.length > 1 && <button type="button" onClick={() => removeMealOption(index)} className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-slate-300 text-lg text-slate-500 hover:border-rose-300 hover:text-rose-700" title="Remove meal option" aria-label="Remove meal option">−</button>}
+                                                    {form.data.meal_options.length === 1 && <span className="h-8 w-8 shrink-0" aria-hidden="true" />}
+                                                    {index === form.data.meal_options.length - 1 && <button type="button" onClick={addMealOption} className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-rose-900 text-lg font-semibold leading-none text-white hover:bg-rose-950" title="Add another meal option" aria-label="Add another meal option">+</button>}
+                                                </div>
                                             </div>
                                         ))}
+                                        <div className="flex justify-end border-t border-slate-100 pt-3">
+                                            <div className="w-full md:w-56">
+                                                <Field label="Total Amount" name="amount" type="number" value={form.data.amount} onChange={(v) => form.setData('amount', v)} error={form.errors.amount} required />
+                                            </div>
+                                        </div>
                                     </div>
                                     {form.errors.meal_option && <p className="mt-1 text-sm text-red-600">{form.errors.meal_option}</p>}
                                 </div>
-                                <Field label="Total Amount" name="amount" type="number" value={form.data.amount} onChange={(v) => form.setData('amount', v)} error={form.errors.amount} required />
                             </div>
                         </div>
-                        <div className="space-y-1.5">
-                            <label htmlFor="reason" className="block text-xs font-bold uppercase tracking-wide text-slate-600">Reason / Occasion</label>
-                            <div className="flex items-center gap-2">
-                                <Input
-                                    id="reason"
-                                    name="reason"
-                                    value={form.data.reason ?? ''}
-                                    onChange={(event) => form.setData('reason', event.target.value)}
-                                    placeholder="Type Bamini text"
-                                    className="flex-1"
-                                />
-                                <button
-                                    type="button"
-                                    onClick={convertReasonToUnicode}
-                                    className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-slate-300 bg-white text-xs font-bold text-rose-900 hover:border-rose-300 hover:bg-rose-50"
-                                    title="Convert Bamini to Tamil Unicode"
-                                    aria-label="Convert Bamini to Tamil Unicode"
-                                >
-                                    அ⇄
-                                </button>
+                    )}
+
+                    {createStep === 4 && (
+                        <div className="space-y-5">
+                            <div>
+                                <h3 className="text-lg font-bold text-slate-900">Payment and review</h3>
+                                <p className="mt-1 text-sm text-slate-500">Choose how the donation was received, then save the record.</p>
                             </div>
-                            {form.errors.reason && <p className="text-xs font-semibold text-rose-600">{form.errors.reason}</p>}
+                            <div className="grid gap-5 md:grid-cols-2">
+                                <Field label="Payment Method" name="payment_method" type="select" value={form.data.payment_method} onChange={(v) => form.setData('payment_method', v)} error={form.errors.payment_method} options={[{ value: '', label: 'Select method' }, { value: 'bank_transfer', label: 'Bank Transfer' }, { value: 'credit_card', label: 'Credit Card' }, { value: 'paypal', label: 'PayPal' }, { value: 'cash', label: 'Cash' }, { value: 'check', label: 'Check' }, { value: 'other', label: 'Other' }]} />
+                                <Field label="Payment Reference" name="payment_reference" value={form.data.payment_reference} onChange={(v) => form.setData('payment_reference', v)} error={form.errors.payment_reference} />
+                            </div>
+                            <div className="grid gap-3 rounded-xl border border-rose-100 bg-rose-50 p-4 sm:grid-cols-3">
+                                <DetailItem label="Donor" value={form.data.donor_name || 'Not entered'} />
+                                <DetailItem label="Amount" value={`${form.data.currency} ${Number(form.data.amount || 0).toLocaleString()}`} />
+                                <DetailItem label="Meal" value={form.data.meal_option || 'Not selected'} />
+                            </div>
                         </div>
-                        <Field label="Currency" name="currency" type="select" value={form.data.currency} onChange={(v) => form.setData('currency', v)} error={form.errors.currency} options={[{ value: 'ரூபா', label: 'ரூபா (LKR / Rupees)' }]} />
-                        <Field
-                            label="Donation Type"
-                            name="donation_type"
-                            type="select"
-                            value={form.data.donation_type}
-                            onChange={(v) => form.setData('donation_type', v)}
-                            error={form.errors.donation_type}
-                            options={[
-                                { value: 'one_time', label: 'One Time' },
-                                { value: 'monthly', label: 'Monthly' },
-                                { value: 'yearly', label: 'Yearly' },
-                            ]}
-                        />
-                        <Field
-                            label="Donation Category"
-                            name="Donation Category"
-                            type="select"
-                            value={form.data.category}
-                            onChange={(v) => form.setData('category', v)}
-                            error={form.errors.category}
-                            options={DONATION_CATEGORIES}
-                        />
-                        <Field
-                            label="Payment Method"
-                            name="payment_method"
-                            type="select"
-                            value={form.data.payment_method}
-                            onChange={(v) => form.setData('payment_method', v)}
-                            error={form.errors.payment_method}
-                            options={[
-                                { value: '', label: 'Select method' },
-                                { value: 'bank_transfer', label: 'Bank Transfer' },
-                                { value: 'credit_card', label: 'Credit Card' },
-                                { value: 'paypal', label: 'PayPal' },
-                                { value: 'cash', label: 'Cash' },
-                                { value: 'check', label: 'Check' },
-                                { value: 'other', label: 'Other' },
-                            ]}
-                        />
+                    )}
+
+                    <div className="flex items-center justify-between border-t border-slate-100 pt-4">
+                        <button type="button" onClick={createStep === 1 ? closeModal : () => setCreateStep((step) => step - 1)} className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50">{createStep === 1 ? 'Cancel' : 'Back'}</button>
+                        {createStep < 4 ? <button type="button" onClick={() => moveToCreateStep(createStep + 1)} className="rounded-lg bg-rose-900 px-5 py-2 text-sm font-semibold text-white hover:bg-rose-950">Continue</button> : <button type="submit" disabled={form.processing} className="rounded-lg bg-rose-900 px-5 py-2 text-sm font-semibold text-white hover:bg-rose-950 disabled:opacity-50">{form.processing ? 'Saving...' : 'Record Donation'}</button>}
                     </div>
-
-                    <Field label="Address" name="address" type="textarea" rows={2} value={form.data.address} onChange={(v) => form.setData('address', v)} error={form.errors.address} />
-
-                    <FormActions onCancel={closeModal} processing={form.processing} submitLabel="Record Donation" />
                 </form>
             </Modal>
 
@@ -549,7 +544,7 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
                                     <p className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-800">
                                         {mailTemplates.find((template) => String(template.id) === String(selectedTemplateId))?.name ?? 'No template available'}
                                     </p>
-                                    <p className="text-xs text-slate-400">Determined automatically by the donation's category.</p>
+                                    <p className="text-xs text-slate-400">The default active donation template is selected automatically.</p>
                                 </div>
                                 <div>
                                     <p className="text-xs font-bold uppercase tracking-wide text-slate-400">Subject</p>
@@ -616,7 +611,6 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
                             <DetailItem label="Phone" value={viewingDonation.phone || '—'} />
                             <DetailItem label="Address" value={viewingDonation.address || '—'} />
                             <DetailItem label="Donation Type" value={viewingDonation.donation_type} className="capitalize" />
-                            <DetailItem label="Category" value={viewingDonation.category} className="capitalize" />
                             <DetailItem label="Amount" value={`${viewingDonation.currency} ${Number(viewingDonation.amount).toLocaleString()}`} />
                             <DetailItem label="Payment Method" value={viewingDonation.payment_method || '—'} className="capitalize" />
                             <DetailItem label="Payment Reference" value={viewingDonation.payment_reference || '—'} />

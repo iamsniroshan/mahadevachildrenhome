@@ -282,7 +282,7 @@ export default function MailTemplates({ templates = [] }) {
                             />
 
                             <p className="text-xs text-slate-500">
-                                Available placeholders: {'{{ donor_name }}'}, {'{{ amount }}'}, {'{{ currency }}'}, {'{{ category }}'}, {'{{ donation_type }}'}, {'{{ contribution_date }}'}, {'{{ reason }}'}, {'{{ meal_option }}'}, {'{{ status }}'}, {'{{ invoice_number }}'}, {'{{ date }}'}, {'{{ app_name }}'}
+                                Available placeholders: {'{{ donor_name }}'}, {'{{ amount }}'}, {'{{ currency }}'}, {'{{ donation_type }}'}, {'{{ contribution_date }}'}, {'{{ reason }}'}, {'{{ meal_option }}'}, {'{{ status }}'}, {'{{ invoice_number }}'}, {'{{ date }}'}, {'{{ app_name }}'}
                             </p>
 
                             <FormActions
@@ -429,7 +429,7 @@ function RichEmailEditor({ editorKey, value, onChange, error }) {
 
             {error && <p className="text-xs font-semibold text-rose-600">{error}</p>}
             <p className="text-xs text-slate-500">
-                Use the toolbar to format the email. Placeholders remain available: {'{{ donor_name }}'}, {'{{ amount }}'}, {'{{ currency }}'}, {'{{ category }}'}, {'{{ donation_type }}'}, {'{{ status }}'}, {'{{ invoice_number }}'}, {'{{ date }}'}, {'{{ app_name }}'}
+                Use the toolbar to format the email. Placeholders remain available: {'{{ donor_name }}'}, {'{{ amount }}'}, {'{{ currency }}'}, {'{{ donation_type }}'}, {'{{ status }}'}, {'{{ invoice_number }}'}, {'{{ date }}'}, {'{{ app_name }}'}
             </p>
         </div>
     );

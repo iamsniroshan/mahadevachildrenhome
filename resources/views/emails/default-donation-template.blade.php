@@ -11,10 +11,6 @@
                 <td align="right" style="padding:12px 14px;border-bottom:1px solid #d9d9d9;color:#000000;font-weight:bold;">{{ $donation->currency ?? 'LKR' }} {{ number_format((float) $donation->amount, 2, '.', ',') }}</td>
             </tr>
             <tr>
-                <td style="padding:12px 14px;border-bottom:1px solid #d9d9d9;color:#000000;font-weight:bold;">Category</td>
-                <td align="right" style="padding:12px 14px;border-bottom:1px solid #d9d9d9;color:#000000;">{{ ucfirst((string) ($donation->category ?? 'general')) }}</td>
-            </tr>
-            <tr>
                 <td style="padding:12px 14px;border-bottom:1px solid #d9d9d9;color:#000000;font-weight:bold;">Donation Type</td>
                 <td align="right" style="padding:12px 14px;border-bottom:1px solid #d9d9d9;color:#000000;">{{ str_replace('_', ' ', (string) ($donation->donation_type ?? 'one_time')) }}</td>
             </tr>

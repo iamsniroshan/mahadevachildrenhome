@@ -27,7 +27,6 @@ class DonationController extends Controller
                 'id' => $template->id,
                 'name' => $template->name,
                 'subject' => $template->subject,
-                'category' => $template->category,
             ]),
         ]);
     }
@@ -94,7 +93,7 @@ class DonationController extends Controller
 
         $donation->status = 'confirmed';
         $donation->invoice_number = $data['invoice_number'];
-        $template = $data['template_id'] ? MailTemplate::find($data['template_id']) : MailTemplate::forCategory($donation->category);
+        $template = $data['template_id'] ? MailTemplate::find($data['template_id']) : MailTemplate::defaultTemplate();
         $pdfPath = $invoicePdf->generate($donation, $template);
         $uploadedInvoicePath = null;
         $invoiceName = null;
@@ -125,7 +124,7 @@ class DonationController extends Controller
         ]);
 
         try {
-            $template = $data['template_id'] ? MailTemplate::find($data['template_id']) : MailTemplate::forCategory($donation->category);
+            $template = $data['template_id'] ? MailTemplate::find($data['template_id']) : MailTemplate::defaultTemplate();
             $donation->status = 'confirmed';
             $donation->invoice_number = $data['invoice_number'];
             $finalInvoicePath = $invoicePdf->generate($donation, $template);
@@ -179,7 +178,6 @@ class DonationController extends Controller
             'contribution_date' => ['required', 'date'],
             'amount' => ['required', 'numeric'],
             'currency' => ['required', 'string', 'max:30'],
-            'category' => ['required', 'in:general,special_food'],
             'message' => ['nullable', 'string'],
             'reason' => ['nullable', 'string', 'max:255'],
             'meal_option' => ['nullable', 'string', 'max:255'],

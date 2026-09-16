@@ -9,10 +9,6 @@ import {
     YAxis,
     CartesianGrid,
     Tooltip,
-    PieChart,
-    Pie,
-    Cell,
-    Legend,
 } from 'recharts';
 
 const donationStatusMap = {
@@ -26,14 +22,11 @@ const actionMap = {
     deleted: { label: 'Deleted', className: 'bg-rose-100 text-rose-800' },
 };
 
-const PIE_COLORS = ['#0f766e', '#e11d48', '#d97706', '#0284c7', '#7c3aed', '#65a30d'];
-
 const currency = (value) => `LKR ${Number(value ?? 0).toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
 
 export default function Dashboard({
     kpis = {},
     monthlyTrend = [],
-    categoryBreakdown = [],
     causeGoals = [],
     recentDonations = [],
     recentLogs = [],
@@ -107,8 +100,8 @@ export default function Dashboard({
                     </div>
 
                     {/* Charts */}
-                    <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:min-h-0">
-                        <div className={`min-h-72 lg:min-h-0 lg:col-span-2 rounded-2xl border-t-4 ${panelAccents[0]} bg-white/70 shadow-[0_8px_30px_rgba(15,23,42,0.08)] backdrop-blur-xl p-4 flex flex-col`}>
+                    <div className="grid grid-cols-1 gap-4 lg:min-h-0">
+                        <div className={`min-h-72 lg:min-h-0 rounded-2xl border-t-4 ${panelAccents[0]} bg-white/70 shadow-[0_8px_30px_rgba(15,23,42,0.08)] backdrop-blur-xl p-4 flex flex-col`}>
                             <h2 className="font-bold text-sm text-slate-900 mb-2 flex-shrink-0">Donations Trend (Last 6 Months)</h2>
                             <div className="flex-1 min-h-0">
                                 <ResponsiveContainer width="100%" height="100%">
@@ -126,36 +119,6 @@ export default function Dashboard({
                                         <Area type="monotone" dataKey="total" stroke="#0f766e" strokeWidth={2} fill="url(#donationFill)" name="Amount" />
                                     </AreaChart>
                                 </ResponsiveContainer>
-                            </div>
-                        </div>
-
-                        <div className={`min-h-72 lg:min-h-0 rounded-2xl border-t-4 ${panelAccents[1]} bg-white/70 shadow-[0_8px_30px_rgba(15,23,42,0.08)] backdrop-blur-xl p-4 flex flex-col`}>
-                            <h2 className="font-bold text-sm text-slate-900 mb-2 flex-shrink-0">Donations by Category</h2>
-                            <div className="flex-1 min-h-0">
-                                {categoryBreakdown.length > 0 ? (
-                                    <ResponsiveContainer width="100%" height="100%">
-                                        <PieChart>
-                                            <Pie
-                                                data={categoryBreakdown}
-                                                dataKey="value"
-                                                nameKey="name"
-                                                innerRadius="45%"
-                                                outerRadius="70%"
-                                                paddingAngle={2}
-                                            >
-                                                {categoryBreakdown.map((entry, index) => (
-                                                    <Cell key={entry.name} fill={PIE_COLORS[index % PIE_COLORS.length]} />
-                                                ))}
-                                            </Pie>
-                                            <Tooltip formatter={(value) => currency(value)} />
-                                            <Legend wrapperStyle={{ fontSize: 11 }} />
-                                        </PieChart>
-                                    </ResponsiveContainer>
-                                ) : (
-                                    <div className="h-full flex items-center justify-center text-xs text-slate-400">
-                                        No completed donations yet.
-                                    </div>
-                                )}
                             </div>
                         </div>
                     </div>

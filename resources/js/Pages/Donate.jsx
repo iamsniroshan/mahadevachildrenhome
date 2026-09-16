@@ -2,7 +2,6 @@ import { useForm, usePage } from '@inertiajs/react';
 import Seo from '@/Components/Seo';
 import SiteNav from '@/Components/Site/SiteNav';
 import SiteFooter from '@/Components/Site/SiteFooter';
-import { DONATION_CATEGORIES } from '@/constants/donations';
 
 export default function Donate() {
     const { flash } = usePage().props;
@@ -14,7 +13,6 @@ export default function Donate() {
         donation_type: 'one_time',
         amount: '',
         currency: 'LKR',
-        category: 'general',
         message: '',
         payment_method: 'bank_transfer',
         payment_reference: '',
@@ -173,19 +171,6 @@ export default function Donate() {
                                             className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-rose-900 focus:ring-1 focus:ring-rose-900 outline-none"
                                         />
                                         {errors.currency && <p className="text-xs font-semibold text-rose-600">{errors.currency}</p>}
-                                    </div>
-                                    <div className="space-y-1.5">
-                                        <label className="block text-xs font-bold text-slate-600 uppercase tracking-wide">Donation Category</label>
-                                        <select
-                                            value={data.category}
-                                            onChange={(e) => setData('category', e.target.value)}
-                                            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-rose-900 focus:ring-1 focus:ring-rose-900 outline-none"
-                                        >
-                                            {DONATION_CATEGORIES.map((category) => (
-                                                <option key={category.value} value={category.value}>{category.label}</option>
-                                            ))}
-                                        </select>
-                                        {errors.category && <p className="text-xs font-semibold text-rose-600">{errors.category}</p>}
                                     </div>
                                     <div className="space-y-1.5">
                                         <label className="block text-xs font-bold text-slate-600 uppercase tracking-wide">Donation Type</label>

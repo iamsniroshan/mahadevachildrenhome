@@ -31,7 +31,7 @@ class DonationConfirmed extends Mailable
 
     public function content(): Content
     {
-        $template = $this->template ?? MailTemplate::forCategory($this->donation->category);
+        $template = $this->template ?? MailTemplate::defaultTemplate();
         $mailBody = $template ? $template->renderForDonation($this->donation) : view('emails.donation-confirmed', ['donation' => $this->donation])->render();
 
         return new Content(

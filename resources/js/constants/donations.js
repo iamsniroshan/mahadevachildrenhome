@@ -1,8 +1,3 @@
-export const DONATION_CATEGORIES = [
-    { value: 'general', label: 'General - பொது' },
-    { value: 'special_food', label: 'Special Food - சிறப்பு உணவு' },
-];
-
 export const MEAL_OPTIONS = [
     { value: 'காலை நேரச் சிறப்புணவு', label: 'காலை நேரச் சிறப்புணவு', amount: 25000 },
     { value: 'மதிய நேரச் சிறப்புணவு', label: 'மதிய நேரச் சிறப்புணவு', amount: 50000 },

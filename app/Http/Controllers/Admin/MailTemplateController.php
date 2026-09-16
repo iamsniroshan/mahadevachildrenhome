@@ -29,7 +29,6 @@ class MailTemplateController extends Controller
         MailTemplate::create([
             'name' => $data['name'],
             'type' => 'donation_confirmation',
-            'category' => null,
             'subject' => $data['subject'],
             'body' => $data['body'],
             'is_active' => $data['is_active'] ?? true,
@@ -49,7 +48,6 @@ class MailTemplateController extends Controller
 
         $template->update([
             'name' => $data['name'],
-            'category' => null,
             'subject' => $data['subject'],
             'body' => $data['body'],
             'is_active' => $data['is_active'] ?? $template->is_active,

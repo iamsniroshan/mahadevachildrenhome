@@ -44,13 +44,6 @@ class DashboardController extends Controller
             ];
         })->values();
 
-        $categoryBreakdown = Donation::whereIn('status', $completedStatuses)
-            ->selectRaw('category, SUM(amount) as total')
-            ->groupBy('category')
-            ->orderByDesc('total')
-            ->get()
-            ->map(fn ($row) => ['name' => ucfirst($row->category), 'value' => (float) $row->total]);
-
         $causeGoals = $activeCauses->map(fn ($cause) => [
             'name' => $cause->title,
             'percent' => $cause->goal_amount > 0
@@ -60,7 +53,6 @@ class DashboardController extends Controller
 
         $recentDonations = Donation::latest()->limit(5)->get()->map(fn ($donation) => [
             'donor' => $donation->donor_name,
-            'category' => $donation->category,
             'amount' => "{$donation->currency} ".number_format((float) $donation->amount),
             'status' => $donation->status,
         ]);
@@ -81,7 +73,6 @@ class DashboardController extends Controller
                 'newContacts' => $newContacts,
             ],
             'monthlyTrend' => $monthlyTrend,
-            'categoryBreakdown' => $categoryBreakdown,
             'causeGoals' => $causeGoals,
             'recentDonations' => $recentDonations,
             'recentLogs' => $recentLogs,
