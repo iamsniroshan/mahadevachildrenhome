@@ -9,6 +9,10 @@ import {
     YAxis,
     CartesianGrid,
     Tooltip,
+    PieChart,
+    Pie,
+    Cell,
+    Legend,
 } from 'recharts';
 
 const donationStatusMap = {
@@ -21,6 +25,8 @@ const actionMap = {
     updated: { label: 'Updated', className: 'bg-amber-100 text-amber-800' },
     deleted: { label: 'Deleted', className: 'bg-rose-100 text-rose-800' },
 };
+
+const PIE_COLORS = ['#0f766e', '#e11d48', '#d97706', '#0284c7', '#7c3aed', '#65a30d'];
 
 const currency = (value) => `LKR ${Number(value ?? 0).toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
 
