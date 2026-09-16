@@ -38,7 +38,9 @@ class DonationController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        Donation::create($this->validated($request));
+        $data = $this->validated($request);
+        $data['source'] = 'admin';
+        Donation::create($data);
 
         return redirect()->route('admin.donations.index')->with('success', 'Donation recorded.');
     }
@@ -87,7 +89,7 @@ class DonationController extends Controller
     {
         $data = $request->validate([
             'template_id' => ['nullable', 'exists:mail_templates,id'],
-            'invoice_number' => ['required', 'numeric'],
+            'invoice_number' => ['required', 'string', 'max:100'],
             'invoice_file' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:10240'],
         ]);
 
@@ -119,7 +121,7 @@ class DonationController extends Controller
     {
         $data = $request->validate([
             'template_id' => ['nullable', 'exists:mail_templates,id'],
-            'invoice_number' => ['required', 'numeric'],
+            'invoice_number' => ['required', 'string', 'max:100'],
             'invoice_file' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:10240'],
         ]);
 

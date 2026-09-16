@@ -87,6 +87,13 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
         return missingFields.length === 0;
     };
 
+    const submitDonation = () => {
+        form.post(route('admin.donations.store'), {
+            preserveScroll: true,
+            onSuccess: () => closeModal(),
+        });
+    };
+
     const moveToCreateStep = (step) => {
         if (step > createStep) {
             for (let currentStep = createStep; currentStep < step; currentStep += 1) {
@@ -267,11 +274,6 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
 
     const submit = (e) => {
         e.preventDefault();
-
-        form.post(route('admin.donations.store'), {
-            preserveScroll: true,
-            onSuccess: () => closeModal(),
-        });
     };
 
     const handleDelete = (donation) => {
@@ -287,6 +289,15 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
             render: (donation) => (
                 <span className="font-semibold text-slate-800">
                     {donation.donor_name}
+                </span>
+            ),
+        },
+        {
+            key: 'source',
+            header: 'Source',
+            render: (donation) => (
+                <span className={`inline-flex rounded-full px-2 py-1 text-[10px] font-bold uppercase tracking-wide ${donation.source === 'web' ? 'bg-sky-100 text-sky-700' : 'bg-amber-100 text-amber-800'}`}>
+                    {donation.source === 'web' ? 'Web' : 'Admin'}
                 </span>
             ),
         },
@@ -506,7 +517,7 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
 
                     <div className="flex items-center justify-between border-t border-slate-100 pt-4">
                         <button type="button" onClick={createStep === 1 ? closeModal : () => setCreateStep((step) => step - 1)} className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50">{createStep === 1 ? 'Cancel' : 'Back'}</button>
-                        {createStep < 4 ? <button type="button" onClick={() => moveToCreateStep(createStep + 1)} className="rounded-lg bg-rose-900 px-5 py-2 text-sm font-semibold text-white hover:bg-rose-950">Continue</button> : <button type="submit" disabled={form.processing} className="rounded-lg bg-rose-900 px-5 py-2 text-sm font-semibold text-white hover:bg-rose-950 disabled:opacity-50">{form.processing ? 'Saving...' : 'Record Donation'}</button>}
+                        {createStep < 4 ? <button type="button" onClick={() => moveToCreateStep(createStep + 1)} className="rounded-lg bg-rose-900 px-5 py-2 text-sm font-semibold text-white hover:bg-rose-950">Continue</button> : <button type="button" onClick={submitDonation} disabled={form.processing} className="rounded-lg bg-rose-900 px-5 py-2 text-sm font-semibold text-white hover:bg-rose-950 disabled:opacity-50">{form.processing ? 'Saving...' : 'Record Donation'}</button>}
                     </div>
                 </form>
             </Modal>
@@ -611,6 +622,14 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
                             <DetailItem label="Phone" value={viewingDonation.phone || '—'} />
                             <DetailItem label="Address" value={viewingDonation.address || '—'} />
                             <DetailItem label="Donation Type" value={viewingDonation.donation_type} className="capitalize" />
+                            <DetailItem
+                                label="Source"
+                                value={(
+                                    <span className={`inline-flex rounded-full px-2 py-1 text-[10px] font-bold uppercase tracking-wide ${viewingDonation.source === 'web' ? 'bg-sky-100 text-sky-700' : 'bg-amber-100 text-amber-800'}`}>
+                                        {viewingDonation.source === 'web' ? 'Web' : 'Admin'}
+                                    </span>
+                                )}
+                            />
                             <DetailItem label="Amount" value={`${viewingDonation.currency} ${Number(viewingDonation.amount).toLocaleString()}`} />
                             <DetailItem label="Payment Method" value={viewingDonation.payment_method || '—'} className="capitalize" />
                             <DetailItem label="Payment Reference" value={viewingDonation.payment_reference || '—'} />
@@ -672,7 +691,8 @@ export default function Index({ donations, confirmationMailEnabled, mailTemplate
                                     <Field
                                         label="Invoice Number"
                                         name="invoice_number"
-                                        type="number"
+                                        type="text"
+                                        placeholder="e.g. INV-1045"
                                         value={statusForm.data.invoice_number}
                                         onChange={(v) => statusForm.setData('invoice_number', v)}
                                         error={statusForm.errors.invoice_number}

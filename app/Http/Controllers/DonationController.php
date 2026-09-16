@@ -44,6 +44,8 @@ class DonationController extends Controller
             $data
         );
 
+        $data['source'] = 'web';
+
         if ($request->hasFile('document')) {
             $file = $request->file('document');
 
